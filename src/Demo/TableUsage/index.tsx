@@ -1,7 +1,7 @@
-import { CascaderEditor } from '@zsheet/zsheet/core/editor/cascaderEditor';
-import { DateEditor } from '@zsheet/zsheet/core/editor/dateEditor';
-import { NumberEditor } from '@zsheet/zsheet/core/editor/numberEditor';
-import { GetSelectEditor } from '@zsheet/zsheet/core/editor/selectEditor';
+import { CascaderEditor } from '@harvest/sheet/core/editor/cascaderEditor';
+import { DateEditor } from '@harvest/sheet/core/editor/dateEditor';
+import { NumberEditor } from '@harvest/sheet/core/editor/numberEditor';
+import { GetSelectEditor } from '@harvest/sheet/core/editor/selectEditor';
 import { range } from 'lodash';
 import React, { useState } from 'react';
 import Table from '../../core/table';

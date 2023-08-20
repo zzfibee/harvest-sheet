@@ -1,4 +1,4 @@
-import { useSheetEvent } from '@zsheet/zsheet/hooks';
+import { useSheetEvent } from '@harvest/sheet/hooks';
 import { FC, useEffect } from 'react';
 
 type SheetEventName = 'newRow' | 'deleteRow' | string;

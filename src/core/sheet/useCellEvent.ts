@@ -1,4 +1,4 @@
-import { Dispatch } from '@zsheet/zsheet/hooks/useMiddlewareReducer';
+import { Dispatch } from '@harvest/sheet/hooks/useMiddlewareReducer';
 import { useEffect } from 'react';
 import { sideEffectReducer } from '../reducers';
 

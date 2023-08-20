@@ -1,4 +1,4 @@
-import Table from '@zsheet/zsheet/core/table';
+import Table from '@harvest/sheet/core/table';
 import 'antd/dist/antd.css';
 import React, { useCallback, useState } from 'react';
 

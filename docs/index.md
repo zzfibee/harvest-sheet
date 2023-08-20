@@ -1,4 +1,4 @@
-<!-- ---
+---
 hero:
   title: Harvest-Sheet
   description: A react library developed with dumi
@@ -17,6 +17,4 @@ features:
   - title: '!'
     emoji: 🚀
     description: Put ! description here
---- -->
-
-<code src="../src/example/sheet.tsx"></code>
+---

@@ -1,7 +1,7 @@
 import {
   MinusOutlined as UnCollapse,
   PlusOutlined as Collapse,
-} from '@zsheet/zsheet/svgs';
+} from '@harvest/sheet/svgs';
 import classNames from 'classnames';
 import { useCallback, useMemo, useRef } from 'react';
 

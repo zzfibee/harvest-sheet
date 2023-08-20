@@ -1,7 +1,7 @@
 import { InputNumber } from 'antd';
 import { useEffect, useRef } from 'react';
 
-import { thousandsSeparator } from '@zsheet/zsheet/standardUtils';
+import { thousandsSeparator } from '@harvest/sheet/standardUtils';
 
 const InputForNumber = (props: {
   value: number;

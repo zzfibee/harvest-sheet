@@ -1,4 +1,4 @@
-import { Sheet } from '@zsheet/zsheet';
+import { Sheet } from '@harvest/sheet';
 import React, { useState } from 'react';
 
 const grid = [
