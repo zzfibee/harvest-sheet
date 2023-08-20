@@ -1,0 +1,267 @@
+@import './var.less';
+
+.harvest-sheet-container{
+  overflow: auto;
+  display: block;
+  position:  relative ;
+  // scroll-behavior:smooth;
+}
+
+.harvest-sheet-container .header{
+  z-index: 2;
+  
+}
+
+
+
+
+span.harvest-sheet-container, span.harvest-sheet-container:focus {
+  outline: none;
+}
+
+.harvest-sheet-container .harvest-sheet {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  
+  tr{
+    height:var(--row-height);
+
+    th{
+      line-height: var(--row-height);
+    }
+
+    td{
+      line-height: var(--row-height);
+    }
+  }
+
+} 
+
+.harvest-sheet-container .harvest-sheet .cell {
+  height: 17px;
+  font-size: var(--cell-font-size);
+  padding-top: var(--cell-padding-vertical);
+  padding-right: var(--cell-padding-horizontal);
+  padding-bottom: var(--cell-padding-vertical);
+  padding-left: var(--cell-padding-horizontal);
+  border: 1px solid var(--cell-border-color);
+  background-color: var(--cell-background-color);
+  cursor: cell;
+  text-align: right;
+  transition: box-shadow 100ms ease-out;
+  user-select: none;
+  vertical-align: bottom;
+  position: relative;
+
+} 
+
+
+.harvest-sheet-container .harvest-sheet .cell.fixed{
+  position: sticky;
+  z-index: 2;
+
+  &.cell-title{
+    z-index: 3;
+
+  }
+  
+  
+  &::before{
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    border-color: var(--cell-border-color);
+    border-top: 1px solid var(--cell-border-color);
+    content: "";
+  }
+
+  &.fixed-left::after{
+    position: absolute;
+    top: 0;
+    bottom: -1px;
+    right: -1px;
+    width: 30px;
+    border-left: 1px solid var(--cell-border-color);
+    content: "";
+    pointer-events: none;
+    transform: translate(100%);
+    transition: box-shadow .3s;
+    box-shadow: var(--cell-fixed-box-shadow-left);
+  }
+
+  &.fixed-right::after{
+    position: absolute;
+    top: 0;
+    bottom: -1px;
+    left: -1px;
+    width: 30px;
+    border-right: 1px solid var(--cell-border-color);
+    content: "";
+    pointer-events: none;
+    transform: translate(-100%);
+    transition: box-shadow .3s;
+    box-shadow: var(--cell-fixed-box-shadow-right);
+
+
+  }
+}
+
+
+.harvest-sheet-container .harvest-sheet .cell.selected {
+  border:1px double;
+  border-left-color: var(--cell-border-color);
+  border-right-color: var(--cell-border-color);
+  border-top-color: var(--cell-border-color);
+  border-bottom-color: var(--cell-border-color);
+  box-shadow: var(--cell-box-shadow);
+}
+
+.harvest-sheet-container .harvest-sheet .cell.selected-start {
+  box-shadow: none;
+}
+
+.harvest-sheet-container .harvest-sheet .cell.selected-top{
+  border-top-color: var(--resizer) !important;
+}
+
+.harvest-sheet-container .harvest-sheet .cell.selected-left{
+  border-left-color: var(--resizer) !important;
+}
+
+.harvest-sheet-container .harvest-sheet .cell.selected-bottom{
+  border-bottom-color: var(--resizer) !important;
+}
+
+.harvest-sheet-container .harvest-sheet .cell.selected-right{
+  border-right-color: var(--resizer) !important;
+}
+
+
+
+.harvest-sheet-container .harvest-sheet .cell.read-only {
+  background: var(--cell-read-only-background-color);
+  color: var(--read-color);
+  text-align: center;
+}
+
+.harvest-sheet-container .harvest-sheet .cell.sheet-control{
+  border-right: 1px solid transparent;
+  background: var(--cell-background-color) ;
+  // position: relative !important;
+}
+
+.harvest-sheet-container .harvest-sheet .cell-title.sheet-control{
+  border-right: 1px solid var(--cell-title-background-color);
+}
+
+.harvest-sheet-container .harvest-sheet .cell.cell-title{
+  background-color: var(--cell-title-background-color);
+  
+  &:hover{
+  background-color: var(--cell-title-background-color);
+
+  }
+}
+
+
+.harvest-sheet-container .harvest-sheet .cell:hover{
+  background-color: var(--cell-hover);
+}
+
+
+
+.harvest-sheet-container .harvest-sheet .cell > .text {
+  overflow: hidden;
+  padding: 2px 5px;
+  text-overflow: ellipsis;
+}
+
+
+.harvest-sheet-container .harvest-sheet .cell > input {
+  display: block;
+  width: calc(100% - 6px);
+  height: 11px;
+  border: 2px solid rgb(33, 133, 208);
+  background: none;
+  outline: none !important;
+  text-align:inherit;
+}
+
+.harvest-sheet-container .harvest-sheet .cell,
+.harvest-sheet-container .harvest-sheet.wrap .cell,
+.harvest-sheet-container .harvest-sheet .cell.wrap,
+.harvest-sheet-container .harvest-sheet.wrap .cell.wrap,
+.harvest-sheet-container .harvest-sheet.nowrap .cell.wrap,
+.harvest-sheet-container .harvest-sheet.clip .cell.wrap {
+  white-space: normal;
+}
+
+.harvest-sheet-container .harvest-sheet.nowrap .cell,
+.harvest-sheet-container .harvest-sheet .cell.nowrap,
+.harvest-sheet-container .harvest-sheet.nowrap .cell.nowrap,
+.harvest-sheet-container .harvest-sheet.wrap .cell.nowrap,
+.harvest-sheet-container .harvest-sheet.clip .cell.nowrap {
+  overflow-x: visible;
+  white-space: nowrap;
+}
+
+.harvest-sheet-container .harvest-sheet.clip .cell,
+.harvest-sheet-container .harvest-sheet .cell.clip,
+.harvest-sheet-container .harvest-sheet.clip .cell.clip,
+.harvest-sheet-container .harvest-sheet.wrap .cell.clip,
+.harvest-sheet-container .harvest-sheet.nowrap .cell.clip {
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.harvest-sheet-container .harvest-sheet .cell .value-viewer{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.harvest-sheet-container .harvest-sheet .cell .value-viewer, .harvest-sheet-container .harvest-sheet .cell .data-editor {
+  display: block;
+  font-size: var(--cell-font-size);
+  line-height:var(--cell-inner-height) ;
+  padding:0
+}
+
+.harvest-sheet-container .harvest-sheet .cell .data-editor {
+  border:none;
+  border-radius: none;
+  height:var(--cell-inner-height);
+}
+
+
+
+.harvest-sheet-container .harvest-menu{
+  background-color: white;
+  position: absolute;
+  z-index: 3;
+  box-shadow: 0 3px 12px 2px rgba(31, 35, 41, 10%);
+
+  .harvest-menu-item{
+    margin: 1px 3px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 22px;
+
+    &:hover{
+      background-color: rgba(31, 35, 41, 5%)
+    }
+  }
+
+}
+
+.harvest-sheet-container .harvest-sheet-control{
+  position: sticky;
+  z-index: 3;
+  height: 32px;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+}

@@ -1,0 +1,346 @@
+.tableWrapper {
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  overflow-y: auto;
+
+    .data-grid-container {
+      position: relative;
+      display: block;
+      overflow-y: auto;
+
+      .data-grid {
+        width: 100%;
+
+        .fixed {
+          position: sticky;
+          right: 0;
+          border-right: none;
+
+          &::after{
+            position: absolute;
+            top: 0;
+            bottom: -1px;
+            left: 0;
+            width: 30px;
+            border-right: 1px solid #EDF0F7;
+            content: "";
+            pointer-events: none;
+            transform: translate(-100%);
+            transition: box-shadow .3s;
+            // box-shadow: inset -10px 0 8px -8px #00000026;
+          }
+
+        }
+
+        .cell {
+          width: 100px;
+          height: 100%;
+          padding: 0 8px;
+          border-color: rgba(0, 0, 0, 0.06);
+          background-color: #fff;
+          color: #292C33;
+          font-size: 12px;
+          line-height: 38px;
+          text-align: initial;
+
+          .data-editor {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            border: none;
+          }
+
+          .value-viewer {
+            display: block;
+            overflow: hidden;
+            font-size: 12px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .number-value-viewer {
+            text-align: right;
+          }
+
+          input {
+            text-align: left;
+          }
+
+          .ant-picker-input > input {
+            font-size: 12px;
+          }
+
+          .ant-input-number-input-wrap {
+
+            &:focus-visible {
+              outline: none;
+            }
+
+            input {
+              text-align: right;
+            }
+          }
+
+          .react-datepicker__input-container input {
+            width: 100%;
+            padding: 0 2px;
+            border: none;
+            box-shadow: inset 0 -100px 0 rgba(33,133,208,15%);
+
+            &:focus-visible {
+              outline: none;
+            }
+          }
+
+          .react-datepicker__navigation {
+            top: 23px;
+          }
+
+          input[type='number'] {
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+            }
+
+            -moz-appearance: textfield;
+          }
+        }
+
+        .row {
+          // position: absolute;
+          height: 40px;
+
+          .cell.fixed {
+            position: sticky;
+            right: 0;
+            overflow: unset;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-right: none;
+            box-shadow: none;
+            cursor: default;
+            text-align: right;
+
+            &::after{
+              position: absolute;
+              top: 0;
+              bottom: -1px;
+              left: 0;
+              width: 30px;
+              border-right: 1px solid #EDF0F7;
+              content: "";
+              pointer-events: none;
+              transform: translate(-100%);
+              transition: box-shadow .3s;
+              // box-shadow: inset -10px 0 8px -8px #00000026;
+            }
+
+          }
+
+          // &:nth-last-of-type(1) .cell {
+          //   border-bottom: none;
+          // }
+        }
+
+        .cell.read-only {
+          background-color: #F7F9FC;
+          color: #292C33;
+          cursor: not-allowed;
+          text-align: initial;
+
+          &.fixed{
+            text-align: right;
+          }
+
+          .expand{
+            cursor: pointer;
+          }
+        }
+
+      }
+
+      .header {
+        position: sticky;
+        z-index: 9;
+        top: 0;
+        background: #f7f9fc;
+
+        .cell.read-only {
+          border-bottom-color: #F7F9FC;
+          cursor: not-allowed;
+          font-size: 12px;
+          font-weight: 500;
+
+          &.right {
+            text-align: right;
+          }
+        }
+      }
+
+      .body {
+
+        .cell {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+
+      // data picker style
+
+      .ant-picker, .ant-picker-focused {
+        border: none;
+        box-shadow: inset 0 -100px 0 rgba(33,133,208,15%);
+
+        .anticon-close-circle {
+          background-color: rgba(33,133,208,15%);
+        }
+      }
+
+      .ant-picker-focused {
+        padding: 4px 0;
+      }
+
+
+
+      // select style
+
+      .ant-select, .ant-select-focused {
+        width: 100%;
+
+        .ant-select-selector {
+          border: none;
+          box-shadow: inset 0 -100px 0 rgba(33,133,208,15%);
+          color: #292c33;
+        }
+
+        .ant-select-selection-item {
+          color: #292c33;
+          font-size: 12px;
+        }
+
+        .ant-select-arrow {
+          right: 0;
+        }
+
+        .ant-select-clear {
+          right: 0;
+          box-shadow: inset 0 -100px 0 rgba(33,133,208,15%);
+        }
+      }
+
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+        padding: 0;
+      }
+
+      .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        box-shadow: inset 0 -100px 0 rgba(33,133,208,15%);
+      }
+
+      // input number style
+
+      .ant-input-number-input {
+        height: 38px;
+        box-shadow: inset 0 -100px 0 rgba(33,133,208,15%);
+      }
+
+      .ant-input-number {
+        font-size: 12px;
+        border-radius: 0;
+        border:none;
+        input{
+          border-radius: 0;
+        }
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+
+      .ant-input-number-group-addon {
+        padding: 0;
+        border: none;
+        background-color: #FFF;
+        box-shadow: inset 0 -100px 0 rgba(33,133,208,15%);
+      }
+
+      .ant-input-number-focused {
+        box-shadow: none;
+      }
+    }
+
+  .tdClassName {
+    border-right-color: red;
+  }
+
+  &+ button {
+    // position: sticky;
+    // bottom: 64px;
+  }
+
+}
+
+.rightClickMenu {
+  position: fixed;
+  z-index: 1001;
+  top: -9999px;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(199,204,212, 0.5);
+
+  div {
+    padding: 0 8px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 28px;
+
+    &:hover {
+      background-color: rgba(33,133,208,15%);
+    }
+  }
+}
+
+.excelTablePopupClassName {
+
+
+    .ant-select-item {
+      font-size: 12px;
+    }
+
+    .ant-picker-panel {
+      font-size: 12px;
+    }
+
+    .ant-cascader-menu {
+      height: auto;
+      max-height: 328px;
+    }
+
+    .ant-select-item-option-content,.ant-cascader-menu-item-content {
+      font-size: 12px;
+    }
+}
+
+.focusControl {
+  position: absolute;
+  z-index: 99;
+  padding:  0 4px;
+  border: 1px solid #D8DFEB;
+  background-color: #FFF;
+  border-radius: 2px;
+  color: #292C33;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 28px;
+
+  .focusOperation {
+    position: absolute;
+    z-index: 100;
+    top:0;
+    right: 0;
+    width: 100%;
+    height: 28px;
+  }
+}
