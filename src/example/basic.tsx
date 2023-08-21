@@ -96,7 +96,7 @@ const App: React.FC = () => {
       changes.forEach(({ row, key, value }) => {
         newData[row] = {
           ...newData[row],
-          [key]: key === 'tags' ? (value as string).split(',') : value,
+          [key]: key === 'tags' ? String(value as string)?.split(',') : value,
         };
       });
       setData(newData);

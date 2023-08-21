@@ -25,6 +25,7 @@ const Table: React.FC<Table.TableProps> = ({
   const hasChildren = dataSource?.some(
     (item) => (item?.children as Array<Object>)?.length > 0,
   );
+  const hasControl = hasChildren || rowSelection;
 
   const [checkedRow, setCheckedRow] = useRowSelection(
     dataSource,
@@ -166,12 +167,13 @@ const Table: React.FC<Table.TableProps> = ({
           changes.map((item) => ({
             row: item.row,
             id: item.id,
-            key: columns[item.col].dataIndex as string,
+            key: columns[hasControl ? item.col - 1 : item.col]
+              .dataIndex as string,
             value: item.value,
           })),
         );
     },
-    [columns],
+    [columns, onChange, hasControl],
   );
   const handleRowSelect = useCallback(
     (value: unknown) => {
