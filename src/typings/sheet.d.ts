@@ -96,7 +96,7 @@ declare namespace Sheet {
     rowClassName?:
       | string
       | ((record: Record<string, unknown>, index: number) => string);
-    children?: React.ReactElement | React.ReactElement[] | null | null[];
+    children?: (React.Element | null)[];
   };
 
   type SheetShell = Pick<SheetProps, 'className' | 'data'> & {

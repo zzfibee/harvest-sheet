@@ -1,15 +1,40 @@
+import { isNil } from 'lodash';
 import { reducerAction } from '.';
+import { getNextVisibleRow, groupConfigToGroupMap } from '../util';
 
 export const keyboardReducer: Record<string, reducerAction> = {
   move(state, payload) {
     const { row, col } = payload as Sheet.CellPosition;
-    const currentPos = {
-      row: (state.start?.row || 0) + row,
+    const { groupConfig, data = [] } = state;
+    let newRow: number | null = (state.start?.row || 0) + row;
+    if (groupConfig) {
+      newRow = getNextVisibleRow(
+        newRow,
+        data.length,
+        groupConfigToGroupMap(groupConfig),
+      );
+    }
+    let currentPos = {
+      row: newRow as number,
       col: (state.start?.col || 0) + col,
     };
     let lastEditing = state.lastEditing;
     if (state.editing) {
       lastEditing = { ...state.editing, confirm: true };
+    }
+
+    if (isNil(currentPos.row)) {
+      return {
+        ...state,
+        start: undefined,
+        end: undefined,
+        lastSelected: {
+          start: state.start,
+          end: state.end,
+        },
+        editing: undefined,
+        lastEditing,
+      };
     }
 
     return {

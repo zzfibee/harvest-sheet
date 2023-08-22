@@ -346,3 +346,27 @@ export const getRowHeight = (container: HTMLSpanElement) => {
 
   return h;
 };
+
+export const getNextVisibleRow = (
+  row: number,
+  maxRow: number,
+  groupMap?: Map<
+    number,
+    Sheet.RowGroup & { isStart: boolean; isOpen: boolean }
+  >,
+): number | null => {
+  if (!groupMap?.size) {
+    return row;
+  }
+  if (row > maxRow) {
+    return null;
+  }
+  if (
+    groupMap.get(row) &&
+    !groupMap.get(row)?.isOpen &&
+    !groupMap.get(row)?.isStart
+  ) {
+    return getNextVisibleRow(row + 1, maxRow, groupMap);
+  }
+  return row;
+};
