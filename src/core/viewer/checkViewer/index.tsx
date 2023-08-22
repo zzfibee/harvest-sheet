@@ -4,14 +4,24 @@ import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useCallback } from 'react';
 
 export const CheckViewer: Sheet.CellViewer = (props) => {
-  const { value, row } = props;
+  const { value, row, record } = props;
   const eventBus = useSheetEvent();
   const handleChange = useCallback(
     (e: CheckboxChangeEvent) => {
       if (!eventBus) return;
-      eventBus.emit('row-select', row);
+      if (record?.isHeader) {
+        eventBus.emit('row-select-title', record?.indeterminate ? false : true);
+      } else {
+        eventBus.emit('row-select', row);
+      }
     },
-    [eventBus, row],
+    [eventBus, row, record, value],
   );
-  return <Checkbox checked={value as boolean} onChange={handleChange} />;
+  return (
+    <Checkbox
+      indeterminate={record?.indeterminate as boolean}
+      checked={value as boolean}
+      onChange={handleChange}
+    />
+  );
 };

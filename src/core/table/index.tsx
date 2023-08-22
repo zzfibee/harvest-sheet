@@ -72,6 +72,7 @@ const Table: React.FC<Table.TableProps> = ({
           row: currentIndex,
           col: -1,
           readonly: true,
+          editable: false,
           value:
             groupMap.get(currentIndex) && groupMap.get(currentIndex)?.isStart,
           record: {
@@ -83,11 +84,14 @@ const Table: React.FC<Table.TableProps> = ({
         } as any);
 
         columns.map((colInfo: Table.ColumnProps, col: number) => {
+          const value = item[colInfo.dataIndex || ''];
           dataRow.push({
             id: rowId,
             value: item[colInfo.dataIndex || ''],
             record: item,
-            readonly: colInfo.readonly,
+            readonly: !(colInfo.readonly instanceof Function)
+              ? colInfo.readonly
+              : colInfo.readonly(value, item, currentIndex),
             align: colInfo.align,
             fixed: colInfo.fixed,
             editable: colInfo.editable,
@@ -104,7 +108,7 @@ const Table: React.FC<Table.TableProps> = ({
     });
 
     setData(data);
-  }, [dataSource, columns, groups, hasChildren]);
+  }, [dataSource, columns, groups, hasChildren, rowGroupConfig]);
 
   useEffect(() => {
     if (hasChildren) return;
@@ -134,11 +138,14 @@ const Table: React.FC<Table.TableProps> = ({
         }
 
         columns.map((colInfo: Table.ColumnProps, col: number) => {
+          const value = item[colInfo.dataIndex || ''];
           rows.push({
             id: rowId,
-            value: item[colInfo.dataIndex || ''],
+            value,
             record: item,
-            readonly: colInfo.readonly,
+            readonly: !(colInfo.readonly instanceof Function)
+              ? colInfo.readonly
+              : colInfo.readonly(value, item, row),
             align: colInfo.align,
             fixed: colInfo.fixed,
             editable: colInfo.editable,
@@ -175,6 +182,29 @@ const Table: React.FC<Table.TableProps> = ({
     },
     [columns, onChange, hasControl],
   );
+
+  const handleReverse = useCallback(
+    (value: unknown) => {
+      const { type, changes, rowInfo, extraInfo } =
+        value as Sheet.OperateHistory;
+      if (type === 'Custom') {
+        const {
+          groupConfig,
+          extraType,
+          data: lastData,
+        } = extraInfo as {
+          extraType: string;
+          groupConfig: Sheet.RowGroupConfig;
+          data: Sheet.Cell[][];
+        };
+        if (extraType === 'group') {
+          setGroupConfig(groupConfig);
+          setData(lastData);
+        }
+      }
+    },
+    [data, groupConfig],
+  );
   const handleRowSelect = useCallback(
     (value: unknown) => {
       if (!sheetInstance.current) return;
@@ -187,14 +217,36 @@ const Table: React.FC<Table.TableProps> = ({
   );
   const WrappedTableShell = useMemo(() => {
     if (draggable) {
-      return DraggableShell({ columns, className: 'baseTable' });
+      return DraggableShell({
+        columns,
+        className: 'baseTable',
+        showGroup: hasChildren,
+        showSelect: !!rowSelection,
+        controlProps: {
+          group: {
+            open: !rowGroupConfig?.groupOpen?.some((value) => !value),
+          },
+          check: {
+            checked: false,
+          },
+        },
+      });
     }
     return TableShell({
       columns,
       className: 'baseTable',
-      hasControl: !!rowSelection || hasChildren,
+      showGroup: hasChildren,
+      showSelect: !!rowSelection,
+      controlProps: {
+        group: {
+          open: !rowGroupConfig?.groupOpen?.some((value) => !value),
+        },
+        check: {
+          checked: false,
+        },
+      },
     });
-  }, [columns, draggable, rowSelection, hasChildren]);
+  }, [columns, draggable, rowSelection, hasChildren, rowGroupConfig]);
 
   return (
     <Sheet
@@ -205,45 +257,83 @@ const Table: React.FC<Table.TableProps> = ({
       data={data}
       onCellsChanged={handleChanges}
     >
-      {!hasChildren && rowSelection ? (
-        <SheetEvent name="row-select" handler={handleRowSelect} />
-      ) : null}
-      {hasChildren ? (
-        <SheetEvent
-          name="group-open"
-          handler={(e: unknown) => {
-            const { row } = e as { row: number };
-            const index = groups.findIndex((item) => item.groupStart === row);
-            if (index >= 0) {
-              const groupOpen = [...rowGroupConfig.groupOpen];
-              groupOpen[index] = !rowGroupConfig.groupOpen[index];
+      {!hasChildren && rowSelection
+        ? [
+            <SheetEvent
+              key="row-select"
+              name="row-select"
+              handler={handleRowSelect}
+            />,
+            <SheetEvent
+              key="row-select-title"
+              name="row-select-title"
+              handler={handleRowSelect}
+            />,
+          ]
+        : null}
+      {hasChildren
+        ? [
+            <SheetEvent
+              key="group-open"
+              name="group-open"
+              handler={(e: unknown) => {
+                const { row } = e as { row: number };
+                const index = groups.findIndex(
+                  (item) => item.groupStart === row,
+                );
+                if (index >= 0) {
+                  const groupOpen = [...rowGroupConfig.groupOpen];
+                  groupOpen[index] = !rowGroupConfig.groupOpen[index];
 
-              setGroupConfig({
-                ...rowGroupConfig,
-                groupOpen: groupOpen,
-              });
-              const newGrid = [...data];
-              newGrid[row] = [...newGrid[row]];
-              newGrid[row][0] = {
-                ...(newGrid[row][0] as Sheet.Cell),
-                record: {
-                  open: !!groupOpen[index],
-                },
-              };
-              setData(newGrid);
-              sheetInstance.current?.pushToHistory({
-                type: 'Custom' as Sheet.OperateType,
-                changes: [],
-                extraInfo: {
-                  extraType: 'group',
-                  groupConfig,
-                  data,
-                },
-              });
-            }
-          }}
-        />
-      ) : null}
+                  setGroupConfig({
+                    ...rowGroupConfig,
+                    groupOpen: groupOpen,
+                  });
+                  const newGrid = [...data];
+                  newGrid[row] = [...newGrid[row]];
+                  newGrid[row][0] = {
+                    ...(newGrid[row][0] as Sheet.Cell),
+                    record: {
+                      open: !!groupOpen[index],
+                    },
+                  };
+                  setData(newGrid);
+                  sheetInstance.current?.pushToHistory({
+                    type: 'Custom' as Sheet.OperateType,
+                    changes: [],
+                    extraInfo: {
+                      extraType: 'group',
+                      groupConfig: rowGroupConfig,
+                      data,
+                    },
+                  });
+                }
+              }}
+            />,
+            <SheetEvent
+              key="group-open-title"
+              name="group-open-title"
+              handler={(value) => {
+                setGroupConfig({
+                  ...rowGroupConfig,
+                  groupOpen: Array(rowGroupConfig.groupOpen.length).fill(value),
+                });
+
+                sheetInstance.current?.pushToHistory({
+                  type: 'Custom' as Sheet.OperateType,
+                  changes: [],
+                  extraInfo: {
+                    extraType: 'group',
+                    groupConfig: rowGroupConfig,
+                    data,
+                  },
+                });
+              }}
+            />,
+          ]
+        : null}
+
+      <SheetEvent name="reverse" handler={handleReverse} />
     </Sheet>
   );
 };

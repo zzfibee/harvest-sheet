@@ -8,12 +8,17 @@ export const GroupViewer: Sheet.CellViewer = (props) => {
   const eventBus = useSheetEvent();
   const handleChange = useCallback(() => {
     if (!eventBus) return;
-    eventBus.emit('group-open', { row });
-  }, [eventBus, row]);
+
+    if (record?.isHeader) {
+      eventBus.emit('group-open-title', !record?.open);
+    } else {
+      eventBus.emit('group-open', { row, open: record?.open });
+    }
+  }, [eventBus, row, record?.open]);
   if (value) {
     return (
       <span onClick={handleChange}>
-        {!record.open ? <PlusSquareOutlined /> : <MinusSquareOutlined />}
+        {!record?.open ? <PlusSquareOutlined /> : <MinusSquareOutlined />}
       </span>
     );
   }

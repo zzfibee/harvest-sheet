@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useSetState } from '../../../hooks';
 import { classNames } from '../../util';
+import { CheckViewer } from '../../viewer/checkViewer';
+import { GroupViewer } from '../../viewer/groupViewer';
 import './index.less';
 
 export const DraggableShell = ({
   columns,
   className,
-}: {
-  columns: Table.ColumnProps[];
-  className: string;
-}) => {
+  showGroup,
+  showSelect,
+  controlProps,
+  controlWidth = 25,
+}: Sheet.SheetShell) => {
   const TableShell: React.FC<{
     children: React.ReactElement;
   }> = ({ children }) => {
@@ -27,62 +30,111 @@ export const DraggableShell = ({
       Record<number | string, string | number>
     >({});
 
-    const thItems = useMemo(() => {
-      return columns.map((item: Table.ColumnProps, index) => (
-        <th
-          className={classNames(
-            'cell',
-            'cell-title',
-            'read-only',
-            item.fixed && 'fixed',
-            item.fixed && `fixed-${item.fixed}`,
-          )}
-          key={item.dataIndex ?? index}
-          style={{
-            textAlign: (item.align as any) ?? 'unset',
-            left: item.fixed === 'left' ? 0 : 'unset',
-            right: item.fixed === 'right' ? 0 : 'unset',
-          }}
-          onMouseDown={(e) => {
-            const target = e.target as HTMLTableHeaderCellElement;
+    const hasControl = showGroup || showSelect;
 
-            downRef.current = target;
-            if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
-              downRef.current.mouseDown = true;
-              downRef.current.oldX = e.nativeEvent.x;
-              downRef.current.oldWidth = downRef.current.offsetWidth;
-            } else {
-              downRef.current = null;
-            }
-          }}
-          onMouseMove={(e) => {
-            const target = e.target as HTMLTableHeaderCellElement;
-            if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
-              target.style.cursor = 'col-resize';
-            } else {
-              target.style.cursor = 'default';
-            }
-            //取出暂存的Table Cell
-            if (downRef.current == undefined) downRef.current = target;
-            //调整宽度
-          }}
-        >
-          {item.title}
-        </th>
-      ));
+    const thItems = useMemo(() => {
+      const ths = [];
+
+      if (hasControl) {
+        ths.push(
+          <th className="cell cell-title read-only sheet-control" key="-1">
+            {showGroup && (
+              <GroupViewer
+                row={-1}
+                col={-1}
+                value={true}
+                record={{ open: controlProps?.group?.open, isHeader: true }}
+              />
+            )}
+            {showSelect && (
+              <CheckViewer
+                row={-1}
+                col={-1}
+                value={controlProps?.check?.checked}
+                record={{
+                  open: controlProps?.check?.checked,
+                  isHeader: true,
+                  indeterminate: controlProps?.check?.indeterminate,
+                }}
+              />
+            )}
+          </th>,
+        );
+      }
+      columns.forEach((item: Table.ColumnProps, index) => {
+        ths.push(
+          <th
+            className={classNames(
+              'cell',
+              'cell-title',
+              'read-only',
+              item.fixed && 'fixed',
+              item.fixed && `fixed-${item.fixed}`,
+            )}
+            key={item.dataIndex ?? index}
+            style={{
+              textAlign: (item.align as any) ?? 'unset',
+              left: item.fixed === 'left' ? 0 : 'unset',
+              right: item.fixed === 'right' ? 0 : 'unset',
+            }}
+            onMouseDown={(e) => {
+              const target = e.target as HTMLTableHeaderCellElement;
+
+              downRef.current = target;
+              if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
+                downRef.current.mouseDown = true;
+                downRef.current.oldX = e.nativeEvent.x;
+                downRef.current.oldWidth = downRef.current.offsetWidth;
+              } else {
+                downRef.current = null;
+              }
+            }}
+            onMouseMove={(e) => {
+              const target = e.target as HTMLTableHeaderCellElement;
+              if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
+                target.style.cursor = 'col-resize';
+              } else {
+                target.style.cursor = 'default';
+              }
+              //取出暂存的Table Cell
+              if (downRef.current == undefined) downRef.current = target;
+              //调整宽度
+            }}
+          >
+            {item.title}
+          </th>,
+        );
+      });
+
+      return ths;
     }, [columns]);
 
     const colItems = useMemo(() => {
-      return columns.map((item: Table.ColumnProps, index) => (
-        <col
-          className={classNames('cell')}
-          key={item.dataIndex ?? index}
-          style={{
-            width: widths[index] || item.width || 'unset',
-          }}
-        />
-      ));
-    }, [widths, columns]);
+      const cols = [];
+      if (hasControl) {
+        cols.push(
+          <col
+            className={classNames('sheet-control')}
+            key="sheet-control"
+            style={{
+              width: controlWidth,
+            }}
+          />,
+        );
+      }
+      columns.forEach((item: Table.ColumnProps, index) => {
+        cols.push(
+          <col
+            className={classNames('cell')}
+            key={item.dataIndex ?? index}
+            style={{
+              width: widths[index] || item.width || 'unset',
+            }}
+          />,
+        );
+      });
+      return cols;
+    }, [widths, hasControl, columns]);
 
     useEffect(() => {
       const handleMouseUp = (e: MouseEvent) => {

@@ -15,7 +15,13 @@ declare namespace Table {
     title: string;
     key?: string;
     editable?: boolean;
-    readonly?: boolean;
+    readonly?:
+      | boolean
+      | ((
+          value: unknown,
+          record: Record<string, unknown>,
+          index: number,
+        ) => boolean);
     render?: Sheet.CellViewer;
     editor?: Sheet.CellEditor;
   };
@@ -44,16 +50,20 @@ declare namespace Table {
     rowKey?:
       | string
       | ((record: Record<string, unknown>, index: number) => string);
-    scroll?: { x: number | string; y: number | string };
+    scroll?: { x?: number | string; y?: number | string };
     sticky?: boolean;
     draggable?: boolean;
     rowSelection?: {
+      rowSelected: string[];
       onChange: (
         selectedRowKeys: string[],
         selectedRows: Record<string, unknown>[],
       ) => void;
     };
-    groupConfig?: TableGroupConfig;
+    groupConfig?: {
+      rowGroup: TableGroupConfig;
+      onChange: (value: TableGroupConfig) => void;
+    };
 
     onChange: (changes: TableChange[]) => void;
   };

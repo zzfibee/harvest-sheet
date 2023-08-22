@@ -27,7 +27,7 @@ declare namespace Sheet {
 
   type CellViewerProps = {
     value: unknown;
-    record: Record<string, unknown>;
+    record?: Record<string, unknown>;
     row: number;
     col: number;
     cell?: Cell;
@@ -92,15 +92,27 @@ declare namespace Sheet {
     menuRenderer?: React.FC<MenuRenderProps>;
     onContextMenu?: (event: any) => void;
 
-    scroll?: { x: number | string; y: number | string };
+    scroll?: { x?: number | string; y?: number | string };
     rowClassName?:
       | string
       | ((record: Record<string, unknown>, index: number) => string);
     children?: (React.Element | null)[];
   };
 
-  type SheetShell = Pick<SheetProps, 'className' | 'data'> & {
-    children: React.ElementType;
+  type SheetShell = Pick<Table.TableProps, 'columns'> & {
+    className?: string;
+    showGroup?: boolean;
+    showSelect?: boolean;
+    controlWidth?: number;
+    controlProps?: {
+      check?: {
+        checked: boolean;
+        indeterminate?: boolean;
+      };
+      group?: {
+        open: boolean;
+      };
+    };
   };
 
   type SheetRow = {

@@ -1,18 +1,17 @@
 import { useMemo, useRef } from 'react';
 import { classNames } from '../util';
+import { CheckViewer } from '../viewer/checkViewer';
+import { GroupViewer } from '../viewer/groupViewer';
 import './draggableShell/index.less';
 
 export const TableShell = ({
   columns,
   className,
-  hasControl = false,
+  showGroup,
+  showSelect,
+  controlProps,
   controlWidth = 25,
-}: {
-  columns: Table.ColumnProps[];
-  className: string;
-  hasControl?: boolean;
-  controlWidth?: number;
-}) => {
+}: Sheet.SheetShell) => {
   const TableShell: React.FC<{
     children: React.ReactElement;
   }> = ({ children }) => {
@@ -28,8 +27,31 @@ export const TableShell = ({
 
     const thItems = useMemo(() => {
       const ths = [];
-      if (hasControl) {
-        ths.push(<th className="cell cell-title read-only sheet-control"></th>);
+      if (showGroup || showSelect) {
+        ths.push(
+          <th className="cell cell-title read-only sheet-control" key="-1">
+            {showGroup && (
+              <GroupViewer
+                row={-1}
+                col={-1}
+                value={true}
+                record={{ open: controlProps?.group?.open, isHeader: true }}
+              />
+            )}
+            {showSelect && (
+              <CheckViewer
+                row={-1}
+                col={-1}
+                value={controlProps?.check?.checked}
+                record={{
+                  open: controlProps?.check?.checked,
+                  isHeader: true,
+                  indeterminate: controlProps?.check?.indeterminate,
+                }}
+              />
+            )}
+          </th>,
+        );
       }
 
       columns.forEach((item: Table.ColumnProps, index) => {
@@ -54,11 +76,11 @@ export const TableShell = ({
         );
       });
       return ths;
-    }, [columns, hasControl]);
+    }, [columns, showGroup || showSelect, controlProps]);
 
     const colItems = useMemo(() => {
       const cols = [];
-      if (hasControl) {
+      if (showGroup || showSelect) {
         cols.push(
           <col
             className={classNames('sheet-control')}
@@ -81,7 +103,7 @@ export const TableShell = ({
         );
       });
       return cols;
-    }, [columns, hasControl, controlWidth]);
+    }, [columns, showGroup || showSelect, controlWidth]);
 
     return (
       <>

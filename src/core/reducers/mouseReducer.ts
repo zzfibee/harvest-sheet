@@ -10,7 +10,7 @@ export const mouseReducer: Record<string, reducerAction> = {
       shiftKey: boolean;
     };
     const { data } = state;
-    if (data?.[row][col].readonly) {
+    if (data?.[row][col].fixed) {
       return {
         ...state,
       };
@@ -68,7 +68,7 @@ export const mouseReducer: Record<string, reducerAction> = {
     };
 
     const { data } = state;
-    if (state.mouseDown === false || data?.[row][col].readonly) return state;
+    if (state.mouseDown === false || data?.[row][col].fixed) return state;
     return {
       ...state,
       mouseDown: false,

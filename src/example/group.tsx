@@ -3,7 +3,15 @@ import Table from '../core/table';
 const columns = [
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
-  { title: 'Address', dataIndex: 'address', key: 'address' },
+  {
+    title: 'Address',
+    readonly: (value: unknown, record: any, index: number) => {
+      console.log(index);
+      return index % 2 === 0;
+    },
+    dataIndex: 'address',
+    key: 'address',
+  },
   {
     title: 'Action',
     dataIndex: '',
@@ -45,7 +53,8 @@ const data = [
 
 const App: React.FC = () => (
   <Table
-    scroll={{ y: '300px', x: '100%' }}
+    draggable
+    scroll={{ x: '100%' }}
     columns={columns}
     // expandable={{
     //   expandedRowRender: (record) => (

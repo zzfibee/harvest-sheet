@@ -74,9 +74,10 @@ const App: React.FC = () => {
   return (
     <Table
       columns={columns}
+      rowKey="key"
       dataSource={dataSource}
       onChange={onChange}
-      rowSelection={{ onChange: handleRowChange }}
+      rowSelection={{ rowSelected: [], onChange: handleRowChange }}
     />
   );
 };
