@@ -78,14 +78,12 @@ export const useKeyBoard = (
       }
       const isCopy = ctrlKeyPressed && keyCode === C_KEY;
       if (isCopy && isIE) {
-        debugger;
         handler.copy(e);
         return;
       }
 
       const isCut = ctrlKeyPressed && keyCode === X_KEY;
       if (isCut && isIE) {
-        debugger;
         handler.copy(e);
         return;
       }

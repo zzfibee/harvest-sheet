@@ -11,28 +11,28 @@ export const useKeyBoardEvent = (
       move: (e, value: any) => {
         dispatch({ type: 'move', payload: value });
       },
-      escape: (e) => {
+      escape: () => {
         dispatch({ type: 'escape' });
       },
-      reverse: (e, value: any) => {
+      reverse: () => {
         dispatch(sideEffectReducer.reverse);
       },
-      delete: (e, value: any) => {
+      delete: () => {
         dispatch(sideEffectReducer.delete);
       },
-      enter: (e, value: any) => {
+      enter: () => {
         dispatch({ type: 'enter' });
       },
       otherInput: (e, value: string) => {
         dispatch({ type: 'otherInput', payload: value });
       },
-      copy: (e, value: any) => {
+      copy: () => {
         dispatch(sideEffectReducer.copy);
       },
-      paste: (e, value: any) => {
+      paste: () => {
         dispatch(sideEffectReducer.paste);
       },
-      cut: (e, value: any) => {
+      cut: () => {
         dispatch(sideEffectReducer.copy);
         dispatch(sideEffectReducer.delete);
       },

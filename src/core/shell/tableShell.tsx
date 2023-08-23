@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { classNames } from '../util';
 import { CheckViewer } from '../viewer/checkViewer';
 import { GroupViewer } from '../viewer/groupViewer';
@@ -15,16 +15,6 @@ export const TableShell = ({
   const TableShell: React.FC<{
     children: React.ReactElement;
   }> = ({ children }) => {
-    const downRef = useRef<
-      | (HTMLTableHeaderCellElement & {
-          mouseDown?: boolean;
-          oldX?: number;
-          oldWidth?: number;
-          width?: string;
-        })
-      | null
-    >(null);
-
     const thItems = useMemo(() => {
       const ths = [];
       if (showGroup || showSelect) {
@@ -54,7 +44,7 @@ export const TableShell = ({
         );
       }
 
-      columns.forEach((item: Table.ColumnProps, index) => {
+      columns.forEach((item: SheetTable.ColumnProps, index) => {
         ths.push(
           <th
             className={classNames(
@@ -91,7 +81,7 @@ export const TableShell = ({
           />,
         );
       }
-      columns.forEach((item: Table.ColumnProps, index) => {
+      columns.forEach((item: SheetTable.ColumnProps, index) => {
         cols.push(
           <col
             className={classNames('cell')}

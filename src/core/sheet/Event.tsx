@@ -1,8 +1,6 @@
 import { useSheetEvent } from '@harvest/sheet/hooks';
 import { FC, useEffect } from 'react';
 
-type SheetEventName = 'newRow' | 'deleteRow' | string;
-
 export const SheetEvent: FC<{
   handler: (value: unknown) => void;
   name: string;

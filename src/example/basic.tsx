@@ -3,15 +3,7 @@ import { Space, Tag } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useCallback, useState } from 'react';
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
-
-const columns: Table.ColumnProps[] = [
+const columns: SheetTable.ColumnProps[] = [
   {
     title: 'Name',
     dataIndex: 'name',
@@ -34,7 +26,7 @@ const columns: Table.ColumnProps[] = [
     title: 'Tags',
     key: 'tags',
     dataIndex: 'tags',
-    render: ({ record: { tags } }) => (
+    render: ({ record: { tags } }: any) => (
       <>
         {(tags as string[])?.map((tag) => {
           let color = tag.length > 5 ? 'geekblue' : 'green';
@@ -54,7 +46,7 @@ const columns: Table.ColumnProps[] = [
     title: 'Action',
     key: 'action',
     editable: false,
-    render: ({ record }) => (
+    render: ({ record }: any) => (
       <Space size="middle">
         <a>Invite {record.name as string}</a>
         <a>Delete</a>
@@ -91,7 +83,7 @@ const App: React.FC = () => {
   const [dataSource, setData] = useState(data);
 
   const onChange = useCallback(
-    (changes: Table.TableChange[]) => {
+    (changes: SheetTable.TableChange[]) => {
       const newData = [...dataSource];
       changes.forEach(({ row, key, value }) => {
         newData[row] = {

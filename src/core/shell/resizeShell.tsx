@@ -5,14 +5,14 @@ export const WrapperShell = ({
   columns,
   className,
 }: {
-  columns: Table.ColumnProps[];
+  columns: SheetTable.ColumnProps[];
   className: string;
 }) => {
   const TableShell: React.FC<{
     children: React.ReactElement;
   }> = ({ children }) => {
     const { thItems, colItems } = useMemo(() => {
-      const thItems = columns.map((item: Table.ColumnProps) => (
+      const thItems = columns.map((item: SheetTable.ColumnProps) => (
         <th
           className="cell read-only"
           key={item.dataIndex}
@@ -21,7 +21,7 @@ export const WrapperShell = ({
           {item.title}
         </th>
       ));
-      const colItems = columns.map((item: Table.ColumnProps) => (
+      const colItems = columns.map((item: SheetTable.ColumnProps) => (
         <col
           className="cell"
           key={item.dataIndex}

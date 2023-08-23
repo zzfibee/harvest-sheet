@@ -1,4 +1,5 @@
-declare namespace Table {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+declare namespace SheetTable {
   type refAssertion = {
     contains?: (target: EventTarget | null) => boolean;
     focus?: () => boolean;

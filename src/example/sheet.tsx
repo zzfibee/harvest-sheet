@@ -81,7 +81,7 @@ const BasicSheet: React.FC = () => {
     (index: number) => {
       const newGrid = cloneDeep(state);
       const newRow = cloneDeep(newGrid[0]);
-      newRow.forEach((item, i) => {
+      newRow.forEach((item) => {
         item.value = '';
         item.record = undefined;
       });
@@ -182,7 +182,7 @@ const BasicSheet: React.FC = () => {
 
   const onCellsChanged = (changes: any) => {
     const newGrid = [...state];
-    changes.forEach(({ cell, row, col, value }: any) => {
+    changes.forEach(({ row, col, value }: any) => {
       const newRow = [...newGrid[row]];
       newRow[col] = { ...newRow[col], value };
       newGrid[row] = newRow;
@@ -224,7 +224,7 @@ const BasicSheet: React.FC = () => {
         >
           <div
             className="harvest-menu-item"
-            onClick={(e) =>
+            onClick={() =>
               handleMenu &&
               handleMenu({
                 type: '1',
@@ -237,7 +237,7 @@ const BasicSheet: React.FC = () => {
           </div>
           <div
             className="harvest-menu-item"
-            onClick={(e) =>
+            onClick={() =>
               handleMenu &&
               handleMenu({
                 type: '2',
@@ -249,7 +249,7 @@ const BasicSheet: React.FC = () => {
           </div>
           <div
             className="harvest-menu-item"
-            onClick={(e) =>
+            onClick={() =>
               handleMenu &&
               handleMenu({
                 type: '3',

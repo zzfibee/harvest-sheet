@@ -15,7 +15,7 @@ export const dataSourceToRowConfig = (
     };
   let currentIndex = 0;
   dataSource.forEach((item, index) => {
-    const { children } = item as { children: Array<Object> };
+    const { children } = item as { children: Array<any> };
 
     if (children?.length > 0) {
       groups.push({

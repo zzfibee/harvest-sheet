@@ -2,15 +2,7 @@ import Table from '@harvest/sheet/core/table';
 import 'antd/dist/antd.css';
 import React, { useCallback, useState } from 'react';
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
-
-const columns: Table.ColumnProps[] = [
+const columns: SheetTable.ColumnProps[] = [
   {
     title: 'Name',
     dataIndex: 'name',
@@ -57,7 +49,7 @@ const App: React.FC = () => {
   const [dataSource, setData] = useState(data);
 
   const onChange = useCallback(
-    (changes: Table.TableChange[]) => {
+    (changes: SheetTable.TableChange[]) => {
       const newData = [...dataSource];
       changes.forEach(({ row, key, value }) => {
         newData[row] = {

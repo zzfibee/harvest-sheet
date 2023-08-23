@@ -99,7 +99,7 @@ declare namespace Sheet {
     children?: (React.Element | null)[];
   };
 
-  type SheetShell = Pick<Table.TableProps, 'columns'> & {
+  type SheetShell = Pick<SheetTable.TableProps, 'columns'> & {
     className?: string;
     showGroup?: boolean;
     showSelect?: boolean;
@@ -174,7 +174,12 @@ declare namespace Sheet {
   };
   type UpdateFocus = (start: CellPosition, end: CellPosition) => void;
 
-  type OptionsType = Common.Options<{
+  type Options<T> = {
+    value: string;
+    label: string;
+  } & T;
+
+  type OptionsType = Options<{
     disabled?: boolean;
     children?: Common.Option<{
       children?: Common.Options<Record<string, unknown>>;

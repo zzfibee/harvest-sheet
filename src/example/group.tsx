@@ -17,7 +17,7 @@ const columns = [
     dataIndex: '',
     key: 'x',
     editable: false,
-    render: (props: any) => <a>Delete</a>,
+    render: () => <a>Delete</a>,
   },
 ];
 

@@ -1,6 +1,6 @@
 import { Dispatch, useSetState } from '@harvest/sheet/hooks';
 import { useEffect } from 'react';
-import { extractDataRowAndCol, findParentTd, calcMenuPosition } from '../util';
+import { calcMenuPosition, extractDataRowAndCol, findParentTd } from '../util';
 
 export type MenuEvent = {
   showMenu: boolean;
@@ -29,12 +29,12 @@ export const useContextMenu = (
       type: 'mouseDown',
       payload: { pos: currentPos, shiftKey: e.shiftKey },
     });
-    const {top,left} = calcMenuPosition({
-      tableElement:elementRef.current,
-      menuElement:contextMenuRef.current?.firstElementChild,
-      x:e.clientX ,
-      y:e.clientY
-    })
+    const { top, left } = calcMenuPosition({
+      tableElement: elementRef.current,
+      menuElement: contextMenuRef.current?.firstElementChild,
+      x: e.clientX,
+      y: e.clientY,
+    });
     setMenuEvent({
       showMenu: true,
       position: { top, left },
@@ -45,8 +45,11 @@ export const useContextMenu = (
   useEffect(() => {
     if (!elementRef.current || !enableContextMenu) return;
     // 添加统一规范
-    contextMenuRef.current?.firstElementChild?.setAttribute("style", "z-index: 5;word-break: keep-all;")
-    const handleClose = (e: MouseEvent) => {
+    contextMenuRef.current?.firstElementChild?.setAttribute(
+      'style',
+      'z-index: 5;word-break: keep-all;',
+    );
+    const handleClose = () => {
       setMenuEvent({ showMenu: false });
     };
     elementRef.current.addEventListener('contextmenu', handleContextMenu);

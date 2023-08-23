@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { cloneDeep, isNil, range } from 'lodash';
 
 export function findParentTd(el: HTMLElement): HTMLElement | null {
@@ -79,10 +81,7 @@ export function classNames(...args: (string | null | undefined)[]) {
   return args.filter(Boolean).join(' ');
 }
 
-export function stringToClipboardData(
-  str: string,
-  clipboardData: DataTransfer | null = (window as any)?.clipboardData,
-) {
+export function stringToClipboardData(str: string) {
   // navigator.clipboard.writeText(str);
   navigator.clipboard.writeText(str).then(
     () => {
@@ -93,10 +92,11 @@ export function stringToClipboardData(
     },
   );
 }
-export function clipboardDataToString(
-  clipboardData: DataTransfer | null = (window as any)?.clipboardData,
-) {
-  return new Promise<string[][]>((resolve, reject) => {
+
+export const defaultParsePaste = (str: string) =>
+  str.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
+export function clipboardDataToString() {
+  return new Promise<string[][]>((resolve) => {
     navigator.clipboard.readText().then((res) => {
       resolve(defaultParsePaste(res) as string[][]);
     });
@@ -199,7 +199,10 @@ export function formatDataToCell({
       return { changes: [], extChanges: [] };
     }
 
-    return { changes, extChanges };
+    return {
+      changes,
+      extChanges: isExRow && freePaste ? extChanges : undefined,
+    };
   } else {
     // 选中多个单元格，粘贴多个数据
     if (
@@ -211,7 +214,7 @@ export function formatDataToCell({
       return;
     }
 
-    const { row: baseRow, col: baseCol } = cells[0];
+    const { col: baseCol } = cells[0];
     let pasteCount = 0;
     cells.forEach(({ row, col }) => {
       if (data[row][col].readonly) return;
@@ -232,12 +235,9 @@ export function formatDataToCell({
   }
 }
 
-export const defaultParsePaste = (str: string) =>
-  str.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
-
 export const defaultValueRenderer = (cell: Sheet.Cell) => cell.value;
 
-export function renderValue(cell: Sheet.Cell, row?: number, col?: number) {
+export function renderValue(cell: Sheet.Cell) {
   const value = defaultValueRenderer(cell);
   return value === null || typeof value === 'undefined' ? '' : value;
 }
@@ -371,35 +371,32 @@ export const getNextVisibleRow = (
   return row;
 };
 
-export const calcMenuPosition = (
-  {
-    tableElement,
-    menuElement,
-    x,
-    y
-  }:{
-    tableElement: Sheet.refAssertion | null,
-    menuElement?: Element | null,
-    x:number,
-    y:number
-  }
-) => {
+export const calcMenuPosition = ({
+  tableElement,
+  menuElement,
+  x,
+  y,
+}: {
+  tableElement: Sheet.refAssertion | null;
+  menuElement?: Element | null;
+  x: number;
+  y: number;
+}) => {
   let top = y;
   let left = x;
-  const { 
-    right: menuRight,
-    bottom: menuBottom 
-  } = menuElement?.getBoundingClientRect() ?? {} as Record<string,number>;
+  const { right: menuRight, bottom: menuBottom } =
+    menuElement?.getBoundingClientRect() ?? ({} as Record<string, number>);
   // 这里不考虑 左边和上边 因为 屏幕连一个 menu都发不下的情况应该特殊处理
-  const { bottom: tableBottom, right: tableRight } = tableElement?.getBoundingClientRect() ?? {} as Record<string,number>;
+  const { bottom: tableBottom, right: tableRight } =
+    tableElement?.getBoundingClientRect() ?? ({} as Record<string, number>);
   const { clientHeight, clientWidth } = document.body;
   const edgeRight = Math.min(tableRight, clientWidth);
   const edgeBottom = Math.min(tableBottom, clientHeight);
-  if( menuRight > edgeRight ) {
+  if (menuRight > edgeRight) {
     left = left - (menuRight - edgeRight);
   }
-  if(menuBottom > edgeBottom) {
+  if (menuBottom > edgeBottom) {
     top = top - (menuBottom - edgeBottom);
   }
-  return {top,left}
-}
+  return { top, left };
+};

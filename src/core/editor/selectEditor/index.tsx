@@ -3,9 +3,8 @@ import 'antd/es/select/style/index.css';
 import './index.less';
 
 export const GetSelectEditor = (options: any): Sheet.CellEditor => {
-  const renderOptions = [] || options;
   const SelectEditor: Sheet.CellEditor = (props) => {
-    const { value, onChange, onConfirm } = props;
+    const { value, onConfirm } = props;
 
     const handleChange = (opt: any) => {
       const updateValue = opt === undefined ? null : opt;

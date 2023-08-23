@@ -3,7 +3,7 @@ import { dataSourceToRowConfig } from './util';
 
 export const useGroupConfig = (
   dataSource: Record<string, unknown>[],
-  tableGroupConfig?: Table.TableGroupConfig,
+  tableGroupConfig?: SheetTable.TableGroupConfig,
   hasChildren?: boolean,
 ) => {
   const [groupConfig, setGroupConfig] = useState<Sheet.RowGroupConfig>();
@@ -18,7 +18,7 @@ export const useGroupConfig = (
     if (groupConfigRef.current) {
       groupConfigRef.current.groups.forEach(({ groupName }, index) => {
         const rowIndex = rowConfig.groups.findIndex(
-          (item) => item.groupName == groupName,
+          (item) => item.groupName === groupName,
         );
         rowConfig.groupOpen[rowIndex] =
           groupConfigRef.current?.groupOpen[index] ||

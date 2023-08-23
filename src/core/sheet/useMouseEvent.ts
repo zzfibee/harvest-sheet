@@ -10,7 +10,6 @@ export const useMouseEvent = (
   dispatch: Dispatch,
   elementRef: React.RefObject<Sheet.refAssertion>,
 ) => {
-  const intervalRef = useRef<NodeJS.Timer | null>();
   const animateRef = useRef<boolean>(false);
   // const animateScrollCalled = useRef<number>(0);
   const rowHeightRef = useRef<number>(40);
@@ -76,7 +75,7 @@ export const useMouseEvent = (
       }
 
       // 距离目标滚动距离
-      var distance = {
+      let distance = {
         x: position.x - destination.x,
         // x: 0,
         y: position.y - destination.y,
@@ -142,7 +141,7 @@ export const useMouseEvent = (
     dispatch({ type: 'mouseOver', payload: currentPos });
 
     dispatch((d: any, getState: () => Sheet.UpdateStateType) => {
-      const { mouseDown, start, end } = getState();
+      const { mouseDown } = getState();
       if (!mouseDown || !elementRef.current) return;
 
       const cellBounding = currentCell.getBoundingClientRect();
@@ -209,13 +208,11 @@ export const useMouseEvent = (
 
   const mouseLeave = useCallback((e: MouseEvent) => {
     dispatch((d: any, getState: () => Sheet.UpdateStateType) => {
-      const { mouseDown, data } = getState();
+      const { mouseDown } = getState();
       if (mouseDown && elementRef.current) {
         const parentBounding = elementRef.current?.getBoundingClientRect();
         const { left, top, right, bottom } = parentBounding;
         const { x, y } = e;
-        const maxRow = data.length;
-        const maxCol = data?.[0].length;
         resetInterval();
 
         if (animateRef.current === true) return;

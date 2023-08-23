@@ -9,7 +9,7 @@ import { GroupViewer } from '../viewer/groupViewer';
 import { useGroupConfig } from './useGroupConfig';
 import { useRowSelection } from './useRowSelection';
 
-const Table: React.FC<Table.TableProps> = ({
+const Table: React.FC<SheetTable.TableProps> = ({
   columns,
   dataSource,
   rowKey,
@@ -23,7 +23,7 @@ const Table: React.FC<Table.TableProps> = ({
   const sheetInstance = useRef<Sheet.SheetInstance | null>(null);
 
   const hasChildren = dataSource?.some(
-    (item) => (item?.children as Array<Object>)?.length > 0,
+    (item) => (item?.children as Array<any>)?.length > 0,
   );
   const hasControl = hasChildren || rowSelection;
 
@@ -56,7 +56,7 @@ const Table: React.FC<Table.TableProps> = ({
       if (item.children) {
         groupList = [item, ...item.children];
       }
-      groupList.forEach((itemRow: any, subIndex) => {
+      groupList.forEach((itemRow: any) => {
         const dataRow: Sheet.Cell[] = [];
         let rowId: string = item.key || item.id || String(currentIndex);
         if (rowKey) {
@@ -83,15 +83,15 @@ const Table: React.FC<Table.TableProps> = ({
           className: 'sheet-control',
         } as any);
 
-        columns.map((colInfo: Table.ColumnProps, col: number) => {
-          const value = item[colInfo.dataIndex || ''];
+        columns.forEach((colInfo: SheetTable.ColumnProps, col: number) => {
+          const value = itemRow[colInfo.dataIndex || ''];
           dataRow.push({
             id: rowId,
-            value: item[colInfo.dataIndex || ''],
-            record: item,
+            value,
+            record: itemRow,
             readonly: !(colInfo.readonly instanceof Function)
               ? colInfo.readonly
-              : colInfo.readonly(value, item, currentIndex),
+              : colInfo.readonly(value, itemRow, currentIndex),
             align: colInfo.align,
             fixed: colInfo.fixed,
             editable: colInfo.editable,
@@ -137,7 +137,7 @@ const Table: React.FC<Table.TableProps> = ({
           });
         }
 
-        columns.map((colInfo: Table.ColumnProps, col: number) => {
+        columns.forEach((colInfo: SheetTable.ColumnProps, col: number) => {
           const value = item[colInfo.dataIndex || ''];
           rows.push({
             id: rowId,
@@ -168,7 +168,6 @@ const Table: React.FC<Table.TableProps> = ({
 
   const handleChanges = useCallback(
     (changes: Sheet.CellData[]) => {
-      const newData = [...data];
       onChange &&
         onChange(
           changes.map((item) => ({
@@ -185,8 +184,7 @@ const Table: React.FC<Table.TableProps> = ({
 
   const handleReverse = useCallback(
     (value: unknown) => {
-      const { type, changes, rowInfo, extraInfo } =
-        value as Sheet.OperateHistory;
+      const { type, extraInfo } = value as Sheet.OperateHistory;
       if (type === 'Custom') {
         const {
           groupConfig,

@@ -40,7 +40,7 @@ const options = [
 ];
 
 export const CascaderEditor: Sheet.CellEditor = (props) => {
-  const { value, onChange, onConfirm } = props;
+  const { value, onConfirm } = props;
 
   const val = useMemo(
     () => optionsTransferToValue(options, value as string),

@@ -61,7 +61,7 @@ export const DraggableShell = ({
           </th>,
         );
       }
-      columns.forEach((item: Table.ColumnProps, index) => {
+      columns.forEach((item: SheetTable.ColumnProps, index) => {
         ths.push(
           <th
             className={classNames(
@@ -97,7 +97,7 @@ export const DraggableShell = ({
                 target.style.cursor = 'default';
               }
               //取出暂存的Table Cell
-              if (downRef.current == undefined) downRef.current = target;
+              if (downRef.current === undefined) downRef.current = target;
               //调整宽度
             }}
           >
@@ -122,7 +122,7 @@ export const DraggableShell = ({
           />,
         );
       }
-      columns.forEach((item: Table.ColumnProps, index) => {
+      columns.forEach((item: SheetTable.ColumnProps, index) => {
         cols.push(
           <col
             className={classNames('cell')}
@@ -137,7 +137,7 @@ export const DraggableShell = ({
     }, [widths, hasControl, columns]);
 
     useEffect(() => {
-      const handleMouseUp = (e: MouseEvent) => {
+      const handleMouseUp = () => {
         //结束宽度调整
         if (downRef.current) {
           downRef.current.mouseDown = false;
@@ -170,7 +170,7 @@ export const DraggableShell = ({
             //调整该列中的每个Cell
             const widths = {
               length: columns.length,
-              [changeIndex]: `${newWidth}px`,
+              [hasControl ? changeIndex - 1 : changeIndex]: `${newWidth}px`,
             };
 
             setWidth(widths);
@@ -184,7 +184,7 @@ export const DraggableShell = ({
         document.removeEventListener('mouseup', handleMouseUp);
         document.removeEventListener('mousemove', handleMouseMove);
       };
-    }, []);
+    }, [hasControl]);
     return (
       <>
         <table

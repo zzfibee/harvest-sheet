@@ -49,17 +49,17 @@ export const keyboardReducer: Record<string, reducerAction> = {
       lastEditing,
     };
   },
-  escape(state, payload) {
+  escape(state) {
     return {
       ...state,
       editing: undefined,
       lastEditing: state.editing,
     };
   },
-  reverse(state, payload) {
+  reverse(state) {
     return state;
   },
-  delete(state, payload) {
+  delete(state) {
     return state;
   },
   enter(state, payload) {

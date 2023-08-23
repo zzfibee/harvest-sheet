@@ -41,10 +41,7 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 .harvest-sheet-container .harvest-sheet .cell {
   height: 17px;
   font-size: var(--cell-font-size);
-  padding-top: var(--cell-padding-vertical);
-  padding-right: var(--cell-padding-horizontal);
-  padding-bottom: var(--cell-padding-vertical);
-  padding-left: var(--cell-padding-horizontal);
+  padding:var(--cell-padding-vertical);
   border: 1px solid var(--cell-border-color);
   background-color: var(--cell-background-color);
   cursor: cell;
@@ -111,10 +108,7 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 
 .harvest-sheet-container .harvest-sheet .cell.selected {
   border:1px double;
-  border-left-color: var(--cell-border-color);
-  border-right-color: var(--cell-border-color);
-  border-top-color: var(--cell-border-color);
-  border-bottom-color: var(--cell-border-color);
+  border-color:var(--cell-border-color);
   box-shadow: var(--cell-box-shadow);
 }
 
