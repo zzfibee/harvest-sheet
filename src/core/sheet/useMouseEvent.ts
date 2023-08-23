@@ -1,5 +1,6 @@
-import { useMouse } from '@harvest/sheet/hooks';
-import { Dispatch } from '@harvest/sheet/hooks/useMiddlewareReducer';
+import { useMouse } from '@zhenliang/sheet/hooks';
+import { Dispatch } from '@zhenliang/sheet/hooks/useMiddlewareReducer';
+import type { SheetType } from '@zhenliang/sheet/type';
 import { useCallback, useRef } from 'react';
 import { extractDataRowAndCol, findParentTd } from '../util';
 
@@ -8,7 +9,7 @@ const colCount = 5; //每秒3列
 
 export const useMouseEvent = (
   dispatch: Dispatch,
-  elementRef: React.RefObject<Sheet.refAssertion>,
+  elementRef: React.RefObject<SheetType.refAssertion>,
 ) => {
   const animateRef = useRef<boolean>(false);
   // const animateScrollCalled = useRef<number>(0);
@@ -140,7 +141,7 @@ export const useMouseEvent = (
     const currentPos = extractDataRowAndCol(currentCell);
     dispatch({ type: 'mouseOver', payload: currentPos });
 
-    dispatch((d: any, getState: () => Sheet.UpdateStateType) => {
+    dispatch((d: any, getState: () => SheetType.UpdateStateType) => {
       const { mouseDown } = getState();
       if (!mouseDown || !elementRef.current) return;
 
@@ -207,7 +208,7 @@ export const useMouseEvent = (
   }, []);
 
   const mouseLeave = useCallback((e: MouseEvent) => {
-    dispatch((d: any, getState: () => Sheet.UpdateStateType) => {
+    dispatch((d: any, getState: () => SheetType.UpdateStateType) => {
       const { mouseDown } = getState();
       if (mouseDown && elementRef.current) {
         const parentBounding = elementRef.current?.getBoundingClientRect();

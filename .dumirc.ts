@@ -5,6 +5,6 @@ export default defineConfig({
   base: '/harvest-sheet/',
   publicPath: '/harvest-sheet/',
   themeConfig: {
-    // name: '@harvest/sheet',
+    // name: '@zhenliang/sheet',
   },
 });

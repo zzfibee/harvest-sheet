@@ -8,8 +8,8 @@
     "baseUrl": "./",
     "paths": {
       "@@/*": [".dumi/tmp/*"],
-      "@harvest/sheet": ["src"],
-      "@harvest/sheet/*": ["src/*", "*"]
+      "@zhenliang/sheet": ["src"],
+      "@zhenliang/sheet/*": ["src/*", "*"]
     }
   },
   "include": [".dumi/**/*", ".dumirc.ts", "src/**/*"]

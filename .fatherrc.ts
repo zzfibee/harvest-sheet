@@ -5,9 +5,4 @@ export default defineConfig({
   esm: {
     output: 'dist',
   },
-
-  prebundle: {
-    deps: [],
-    extraDtsDeps: ['src/typings/*'],
-  },
 });

@@ -1,8 +1,9 @@
-import Table from '@harvest/sheet/core/table';
+import Table from '@zhenliang/sheet/core/table';
+import type { SheetTableType } from '@zhenliang/sheet/type';
 import 'antd/dist/antd.css';
 import React, { useCallback, useState } from 'react';
 
-const columns: SheetTable.ColumnProps[] = [
+const columns: SheetTableType.ColumnProps[] = [
   {
     title: 'Name',
     dataIndex: 'name',
@@ -49,7 +50,7 @@ const App: React.FC = () => {
   const [dataSource, setData] = useState(data);
 
   const onChange = useCallback(
-    (changes: SheetTable.TableChange[]) => {
+    (changes: SheetTableType.TableChange[]) => {
       const newData = [...dataSource];
       changes.forEach(({ row, key, value }) => {
         newData[row] = {

@@ -1,3 +1,4 @@
+import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { useEffect, useMemo, useRef } from 'react';
 import { useSetState } from '../../../hooks';
 import { classNames } from '../../util';
@@ -12,7 +13,7 @@ export const DraggableShell = ({
   showSelect,
   controlProps,
   controlWidth = 25,
-}: Sheet.SheetShell) => {
+}: SheetType.SheetShell) => {
   const TableShell: React.FC<{
     children: React.ReactElement;
   }> = ({ children }) => {
@@ -61,7 +62,7 @@ export const DraggableShell = ({
           </th>,
         );
       }
-      columns.forEach((item: SheetTable.ColumnProps, index) => {
+      columns.forEach((item: SheetTableType.ColumnProps, index: number) => {
         ths.push(
           <th
             className={classNames(
@@ -122,7 +123,7 @@ export const DraggableShell = ({
           />,
         );
       }
-      columns.forEach((item: SheetTable.ColumnProps, index) => {
+      columns.forEach((item: SheetTableType.ColumnProps, index: number) => {
         cols.push(
           <col
             className={classNames('cell')}

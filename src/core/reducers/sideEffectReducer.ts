@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { head, isNil, last, pick } from 'lodash';
 import { FunctionAction, NormalAction } from '../../hooks';
 import {
@@ -13,7 +14,7 @@ import {
 
 export type asyncActionType = (
   dispatch: (action: NormalAction | FunctionAction) => void,
-  getState: () => Sheet.UpdateStateType,
+  getState: () => SheetType.UpdateStateType,
 ) => void;
 
 export const sideEffectReducer: Record<string, asyncActionType> = {
@@ -21,7 +22,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
     const { eventBus } = getState();
     eventBus.on(
       'cell-change',
-      (cell: Sheet.CellData & { confirm?: boolean }) => {
+      (cell: SheetType.CellData & { confirm?: boolean }) => {
         dispatch(() => {
           const { cellChangeHandler } = getState();
           cellChangeHandler && cellChangeHandler([cell]);
@@ -240,7 +241,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
     console.log(history.length);
 
     const changeHistory = [...history];
-    const change = changeHistory.pop() as Sheet.OperateHistory;
+    const change = changeHistory.pop() as SheetType.OperateHistory;
     const { type } = change;
     if (!['Edit', 'Paste', 'Delete'].includes(type)) {
       eventBus.emit('reverse', change);
@@ -260,7 +261,8 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       });
       return;
     }
-    cellChangeHandler && cellChangeHandler(change.changes as Sheet.CellData[]);
+    cellChangeHandler &&
+      cellChangeHandler(change.changes as SheetType.CellData[]);
 
     dispatch({
       type: 'changes',

@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { isEqual, throttle } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { getRowHeight } from '../util';
@@ -13,8 +14,8 @@ type VirtualConfig = {
 
 // 虚拟列表
 export const useVirtualList = (
-  elementRef: React.RefObject<Sheet.refAssertion>,
-  data: Sheet.Cell[][] = [],
+  elementRef: React.RefObject<SheetType.refAssertion>,
+  data: SheetType.Cell[][] = [],
   virtualized?: boolean,
 ) => {
   const [state, setState] = useState({

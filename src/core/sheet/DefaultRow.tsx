@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { useMemo } from 'react';
 import { groupConfigToGroupMap } from '../util';
 
@@ -6,7 +7,7 @@ const DefaultRow: React.FC<{
 
   row: number;
   groupConfig?: {
-    groups: Sheet.RowGroup[];
+    groups: SheetType.RowGroup[];
     groupOpen: boolean[];
   };
 }> = ({ children, row, groupConfig }) => {

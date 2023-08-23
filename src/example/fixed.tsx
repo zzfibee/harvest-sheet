@@ -39,7 +39,7 @@ const columns: any = [
   },
 ];
 
-const data: DataType[] = [
+const data = [
   {
     key: '1',
     name: 'John Brown',

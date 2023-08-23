@@ -1,11 +1,12 @@
 import { DatePicker } from 'antd';
 import 'antd/es/date-picker/style/index.css';
 
+import type { SheetType } from '@zhenliang/sheet/type';
 import moment from 'moment';
 import { useEffect, useMemo, useRef } from 'react';
 import './index.less';
 
-export const DateEditor: Sheet.CellEditor = (props) => {
+export const DateEditor: SheetType.CellEditor = (props) => {
   const { value, onChange, onConfirm } = props;
   const dateRef = useRef<any>(null);
 

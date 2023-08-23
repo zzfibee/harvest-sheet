@@ -1,6 +1,7 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { ChangeEvent, useEffect, useRef } from 'react';
 
-const DataEditor: Sheet.CellEditor = ({ value, onChange }) => {
+const DataEditor: SheetType.CellEditor = ({ value, onChange }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

@@ -1,10 +1,11 @@
-import { useKeyBoard } from '@harvest/sheet/hooks';
-import { Dispatch } from '@harvest/sheet/hooks/useMiddlewareReducer';
+import { useKeyBoard } from '@zhenliang/sheet/hooks';
+import { Dispatch } from '@zhenliang/sheet/hooks/useMiddlewareReducer';
+import type { SheetType } from '@zhenliang/sheet/type';
 import { sideEffectReducer } from '../reducers/sideEffectReducer';
 
 export const useKeyBoardEvent = (
   dispatch: Dispatch,
-  elementRef: React.RefObject<Sheet.refAssertion>,
+  elementRef: React.RefObject<SheetType.refAssertion>,
 ) => {
   useKeyBoard(
     {

@@ -1,5 +1,6 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Sheet } from '@harvest/sheet';
+import { Sheet } from '@zhenliang/sheet';
+import type { SheetType } from '@zhenliang/sheet/type';
 import { Tooltip } from 'antd';
 import { cloneDeep, isNil, random, range } from 'lodash';
 import React, {
@@ -48,7 +49,7 @@ const ExcelIndexCell: React.FC<{ value: string; row: number; record: any }> = ({
   );
 };
 
-const grid: Sheet.Cell[][] = range(1, 120).map((row, rowIndex) =>
+const grid: SheetType.Cell[][] = range(1, 120).map((row, rowIndex) =>
   range(0, 26).map((i) => ({
     id: String(random(0, 1)),
     readonly: i === 0 ? true : false,
@@ -67,8 +68,8 @@ const grid: Sheet.Cell[][] = range(1, 120).map((row, rowIndex) =>
 ) as any;
 
 const BasicSheet: React.FC = () => {
-  const [state, setState] = useState<Sheet.Cell[][]>(grid);
-  const sheetInstance = useRef<Sheet.SheetInstance | null>(null);
+  const [state, setState] = useState<SheetType.Cell[][]>(grid);
+  const sheetInstance = useRef<SheetType.SheetInstance | null>(null);
   const [groupConfig, setGroupConfig] = useState({
     groups: [
       { groupStart: 1, groupEnd: 5, groupName: 'group1' },
@@ -90,7 +91,7 @@ const BasicSheet: React.FC = () => {
         row[0].value = index + 1;
       });
       sheetInstance.current?.pushToHistory({
-        type: 'NewRow' as Sheet.OperateType,
+        type: 'NewRow' as SheetType.OperateType,
         changes: [],
         rowInfo: {
           newRow: index + 1,
@@ -115,7 +116,7 @@ const BasicSheet: React.FC = () => {
       const newGroupConfig = changeGroupConfig(groupConfig, { remove: index });
 
       sheetInstance.current?.pushToHistory({
-        type: 'DeleteRow' as Sheet.OperateType,
+        type: 'DeleteRow' as SheetType.OperateType,
         changes: deleteRow[0].map(
           (item, col) =>
             ({
@@ -138,7 +139,7 @@ const BasicSheet: React.FC = () => {
   const handleReverse = useCallback(
     (value: unknown) => {
       const { type, changes, rowInfo, extraInfo } =
-        value as Sheet.OperateHistory;
+        value as SheetType.OperateHistory;
       let newGrid = [...state];
       if (type === 'NewRow') {
         if (!rowInfo?.newRow && rowInfo?.newRow !== 0) return;
@@ -147,20 +148,20 @@ const BasicSheet: React.FC = () => {
           row[0].value = index + 1;
         });
         setState(newGrid);
-        setGroupConfig(extraInfo as Sheet.RowGroupConfig);
+        setGroupConfig(extraInfo as SheetType.RowGroupConfig);
         sheetInstance.current?.selectRow();
       } else if (type === 'DeleteRow') {
         if (!rowInfo?.deleteRow && rowInfo?.deleteRow !== 0) return;
         newGrid.splice(
           rowInfo.deleteRow - 1,
           0,
-          changes.map((item) => item.cell) as Sheet.Cell[],
+          changes.map((item) => item.cell) as SheetType.Cell[],
         );
         newGrid.forEach((row, index) => {
           row[0].value = index + 1;
         });
         setState(newGrid);
-        setGroupConfig(extraInfo as Sheet.RowGroupConfig);
+        setGroupConfig(extraInfo as SheetType.RowGroupConfig);
       } else if (type === 'Custom') {
         const {
           groupConfig,
@@ -168,8 +169,8 @@ const BasicSheet: React.FC = () => {
           state: lastState,
         } = extraInfo as {
           extraType: string;
-          groupConfig: Sheet.RowGroupConfig;
-          state: Sheet.Cell[][];
+          groupConfig: SheetType.RowGroupConfig;
+          state: SheetType.Cell[][];
         };
         if (extraType === 'group') {
           setGroupConfig(groupConfig);
@@ -213,7 +214,7 @@ const BasicSheet: React.FC = () => {
   }, []);
 
   const MenuRender = useCallback(
-    (props: Sheet.MenuRenderProps) => {
+    (props: SheetType.MenuRenderProps) => {
       const { position, onContextMenu: handleMenu, cell } = props;
       const { top, left } = position || {};
       if (!cell) return null;
@@ -314,7 +315,7 @@ const BasicSheet: React.FC = () => {
             const newGrid = [...state];
             newGrid[row] = [...newGrid[row]];
             newGrid[row][0] = {
-              ...(newGrid[row][0] as Sheet.Cell),
+              ...(newGrid[row][0] as SheetType.Cell),
               record: {
                 open: !!groupOpen[index],
                 color: groupOpen[index] ? 'inherit' : 'green',
@@ -326,7 +327,7 @@ const BasicSheet: React.FC = () => {
             });
             setState(newGrid);
             sheetInstance.current?.pushToHistory({
-              type: 'Custom' as Sheet.OperateType,
+              type: 'Custom' as SheetType.OperateType,
               changes: [],
               extraInfo: {
                 extraType: 'group',

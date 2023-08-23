@@ -1,15 +1,16 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { isNil } from 'lodash';
 import { reducerAction } from '.';
 import { getNextVisibleRow, groupConfigToGroupMap } from '../util';
 
 export const keyboardReducer: Record<string, reducerAction> = {
   move(state, payload) {
-    const { row, col } = payload as Sheet.CellPosition;
+    const { row, col } = payload as SheetType.CellPosition;
     const { groupConfig, data = [] } = state;
     let newRow: number | null = (state.start?.row || 0) + row;
     if (groupConfig) {
       newRow = getNextVisibleRow(
-        newRow,
+        newRow as number,
         data.length,
         groupConfigToGroupMap(groupConfig),
       );

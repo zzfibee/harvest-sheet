@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { isNil } from 'lodash';
 import React, {
   memo,
@@ -18,11 +19,11 @@ type EventInfo = {
   value?: string;
   editing: boolean;
 };
-function initialData({ cell, row, col }: Sheet.CellProps) {
-  return renderValue(cell, row, col);
+function initialData({ cell }: SheetType.CellProps) {
+  return renderValue(cell);
 }
 
-function widthStyle(cell: Sheet.Cell) {
+function widthStyle(cell: SheetType.Cell) {
   const width =
     typeof cell?.width === 'number' ? `${cell.width}px` : cell.width;
   const align = cell.align || 'left';
@@ -32,7 +33,7 @@ function widthStyle(cell: Sheet.Cell) {
   return { width, textAlign: align, position, left, right };
 }
 
-const Cell = (props: Sheet.CellProps) => {
+const Cell = (props: SheetType.CellProps) => {
   const {
     row,
     col,
@@ -62,7 +63,7 @@ const Cell = (props: Sheet.CellProps) => {
   const valueRef = useRef<any>(value);
 
   useEffect(() => {
-    const newValue = renderValue(cell, row, col);
+    const newValue = renderValue(cell);
     setValue(newValue);
     valueRef.current = newValue;
   }, [cell, row, col]);
@@ -111,7 +112,7 @@ const Cell = (props: Sheet.CellProps) => {
   );
 
   const renderEditor = (
-    cel: Sheet.Cell,
+    cel: SheetType.Cell,
     r: number,
     col: number,
     editor: any,
@@ -134,13 +135,13 @@ const Cell = (props: Sheet.CellProps) => {
   };
 
   const renderViewer = (
-    cel: Sheet.Cell,
+    cel: SheetType.Cell,
     r: number,
     col: number,
     valViewer?: React.ElementType,
   ) => {
     const Viewer = cell.valueViewer || valViewer || ValueViewer;
-    const val = renderValue(cell, row, col);
+    const val = renderValue(cell);
 
     return (
       <Viewer

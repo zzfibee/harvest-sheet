@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export const useRowSelection = (
   dataSource: Record<string, unknown>[],
-  rowSelection?: SheetTable.TableRowSelection,
+  rowSelection?: SheetTableType.TableRowSelection,
   hasChildren?: boolean,
 ) => {
   const [checkedRow, setCheckedRow] = useState<boolean[]>(

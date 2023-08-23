@@ -1,16 +1,17 @@
-import { Dispatch, useSetState } from '@harvest/sheet/hooks';
+import { Dispatch, useSetState } from '@zhenliang/sheet/hooks';
+import type { SheetType } from '@zhenliang/sheet/type';
 import { useEffect } from 'react';
 import { calcMenuPosition, extractDataRowAndCol, findParentTd } from '../util';
 
 export type MenuEvent = {
   showMenu: boolean;
   position: { top: number; left: number };
-  cellPosition: Sheet.CellPosition;
+  cellPosition: SheetType.CellPosition;
 };
 
 export const useContextMenu = (
   dispatch: Dispatch,
-  elementRef: React.RefObject<Sheet.refAssertion>,
+  elementRef: React.RefObject<SheetType.refAssertion>,
   enableContextMenu: boolean = false,
   contextMenuRef: React.RefObject<HTMLDivElement>,
 ) => {

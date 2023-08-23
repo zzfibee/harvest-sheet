@@ -1,10 +1,11 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { classNames } from '../util';
 
 const DefaultCell = (props: {
-  cell: Sheet.Cell;
+  cell: SheetType.Cell;
   row: number;
   col: number;
-  attributesRenderer?: Sheet.AttributesRenderer;
+  attributesRenderer?: SheetType.AttributesRenderer;
   className: string;
   style: Record<string, string>;
   children: React.ReactElement;

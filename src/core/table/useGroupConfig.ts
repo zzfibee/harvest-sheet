@@ -1,13 +1,14 @@
+import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { useEffect, useRef, useState } from 'react';
 import { dataSourceToRowConfig } from './util';
 
 export const useGroupConfig = (
   dataSource: Record<string, unknown>[],
-  tableGroupConfig?: SheetTable.TableGroupConfig,
+  tableGroupConfig?: SheetTableType.TableGroupConfig,
   hasChildren?: boolean,
 ) => {
-  const [groupConfig, setGroupConfig] = useState<Sheet.RowGroupConfig>();
-  const groupConfigRef = useRef<Sheet.RowGroupConfig>();
+  const [groupConfig, setGroupConfig] = useState<SheetType.RowGroupConfig>();
+  const groupConfigRef = useRef<SheetType.RowGroupConfig>();
   useEffect(() => {
     if (!hasChildren) return;
 
@@ -31,7 +32,7 @@ export const useGroupConfig = (
   }, [dataSource, hasChildren]);
 
   return [groupConfig, setGroupConfig] as [
-    Sheet.RowGroupConfig,
-    (value: Sheet.RowGroupConfig) => void,
+    SheetType.RowGroupConfig,
+    (value: SheetType.RowGroupConfig) => void,
   ];
 };

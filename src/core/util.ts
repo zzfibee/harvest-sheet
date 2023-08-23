@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import type { SheetType } from '@zhenliang/sheet/type';
 import { cloneDeep, isNil, range } from 'lodash';
 
 export function findParentTd(el: HTMLElement): HTMLElement | null {
@@ -16,8 +17,8 @@ export function extractDataRowAndCol(el: HTMLElement) {
   };
 }
 export function getRowColConfig(
-  start?: Sheet.CellPosition,
-  end?: Sheet.CellPosition,
+  start?: SheetType.CellPosition,
+  end?: SheetType.CellPosition,
 ) {
   const startRow = Math.min(start?.row ?? -1, end?.row ?? -1);
   const endRow = Math.max(start?.row ?? -1, end?.row ?? -1);
@@ -32,14 +33,14 @@ export function getRowColConfig(
 }
 
 export function flatRowColIndex(
-  start?: Sheet.CellPosition,
-  end?: Sheet.CellPosition,
+  start?: SheetType.CellPosition,
+  end?: SheetType.CellPosition,
 ) {
   const { startRow, endRow, startCol, endCol } = getRowColConfig(start, end);
   if ([startRow, endRow, startCol, endCol].some((a) => a === -1)) {
     return [];
   }
-  const cellList: Sheet.CellPosition[] = [];
+  const cellList: SheetType.CellPosition[] = [];
 
   for (let i = startRow; i <= endRow; i++) {
     for (let j = startCol; j <= endCol; j++) {
@@ -50,8 +51,8 @@ export function flatRowColIndex(
 }
 
 export function flatRowCol(
-  start?: Sheet.CellPosition,
-  end?: Sheet.CellPosition,
+  start?: SheetType.CellPosition,
+  end?: SheetType.CellPosition,
 ) {
   const rowColIndex = flatRowColIndex(start, end);
   return rowColIndex.map(({ row, col }) => `${row}-${col}`);
@@ -111,7 +112,7 @@ export function formatDataToCell({
   pasteData,
   groupConfig,
   freePaste = false,
-}: Partial<Sheet.UpdateStateType> & {
+}: Partial<SheetType.UpdateStateType> & {
   pasteData: string[][];
   freePaste: boolean;
 }) {
@@ -141,7 +142,7 @@ export function formatDataToCell({
     0,
   );
 
-  const changes: Sheet.CellData[] = [];
+  const changes: SheetType.CellData[] = [];
   if (isMultiCells && isSinglePaste) {
     // 选中多个单元格，粘贴单个数据
     cells.forEach(({ row, col }) => {
@@ -166,7 +167,7 @@ export function formatDataToCell({
   if (!isMultiCells) {
     // 选中单个单元格
     const { row, col } = cells[0];
-    const extChanges: Sheet.CellData[] = [];
+    const extChanges: SheetType.CellData[] = [];
     let hasStartAndNotOpen = false;
     pasteData.forEach((rowData, i) => {
       rowData.forEach((cell, j) => {
@@ -235,15 +236,15 @@ export function formatDataToCell({
   }
 }
 
-export const defaultValueRenderer = (cell: Sheet.Cell) => cell.value;
+export const defaultValueRenderer = (cell: SheetType.Cell) => cell.value;
 
-export function renderValue(cell: Sheet.Cell) {
+export function renderValue(cell: SheetType.Cell) {
   const value = defaultValueRenderer(cell);
   return value === null || typeof value === 'undefined' ? '' : value;
 }
 
 export const optionsTransferToValue = (
-  options: Sheet.OptionsType[],
+  options: SheetType.OptionsType[],
   val: string,
 ) => {
   let values: string[] = [];
@@ -267,11 +268,11 @@ export const optionsTransferToValue = (
 };
 
 export const groupConfigToGroupMap = (
-  rowGroupConfig?: Sheet.RowGroupConfig,
+  rowGroupConfig?: SheetType.RowGroupConfig,
 ) => {
   const groupMap = new Map<
     number,
-    Sheet.RowGroup & { isStart: boolean; isOpen: boolean }
+    SheetType.RowGroup & { isStart: boolean; isOpen: boolean }
   >();
   if (!rowGroupConfig || !rowGroupConfig.groups?.length) return groupMap;
   const { groups } = rowGroupConfig;
@@ -289,7 +290,7 @@ export const groupConfigToGroupMap = (
 };
 
 export const changeGroupConfig = (
-  rowGroupConfig: Sheet.RowGroupConfig,
+  rowGroupConfig: SheetType.RowGroupConfig,
   changeInfo: { add?: number; remove?: number },
 ) => {
   const groupMap = groupConfigToGroupMap(rowGroupConfig);
@@ -327,7 +328,7 @@ export const changeGroupConfig = (
 
 export const rowToActualRow = (
   row: number,
-  groupConfig?: Sheet.RowGroupConfig,
+  groupConfig?: SheetType.RowGroupConfig,
 ) => {
   const groupMap = groupConfigToGroupMap(groupConfig);
   if (!groupMap.size) return row;
@@ -352,7 +353,7 @@ export const getNextVisibleRow = (
   maxRow: number,
   groupMap?: Map<
     number,
-    Sheet.RowGroup & { isStart: boolean; isOpen: boolean }
+    SheetType.RowGroup & { isStart: boolean; isOpen: boolean }
   >,
 ): number | null => {
   if (!groupMap?.size) {
@@ -377,7 +378,7 @@ export const calcMenuPosition = ({
   x,
   y,
 }: {
-  tableElement: Sheet.refAssertion | null;
+  tableElement: SheetType.refAssertion | null;
   menuElement?: Element | null;
   x: number;
   y: number;

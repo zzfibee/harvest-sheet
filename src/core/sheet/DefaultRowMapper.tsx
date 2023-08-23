@@ -1,8 +1,9 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { memo } from 'react';
 import Cell from './Cell';
 
 interface DefaultRowMapperProps {
-  rowData: Sheet.Cell[];
+  rowData: SheetType.Cell[];
   row: number;
 }
 

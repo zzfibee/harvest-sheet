@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { useEffect, useMemo, useRef } from 'react';
 import ReduxThunk from 'redux-thunk';
 
@@ -20,7 +21,7 @@ import { useKeyBoardEvent } from './useKeyBoardEvent';
 import { useMouseEvent } from './useMouseEvent';
 import { useVirtualList } from './useVirtualList';
 
-const Sheet: React.FC<Sheet.SheetProps> = (props) => {
+const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   const {
     sheetInstance = { current: null },
     sheetRenderer: SheetShell = DefaultShell,
@@ -37,8 +38,8 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
     scroll,
     children,
   } = props;
-  const sheetWrapperRef = useRef<Sheet.refAssertion>(null);
-  const contextMenuRef = useRef<HTMLDivElement>(null)
+  const sheetWrapperRef = useRef<SheetType.refAssertion>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
   const eventBus = useEventBus();
   const [state, dispatch] = useMiddlewareReducer(
     sheetReducer,
@@ -55,9 +56,9 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
 
   useEffect(() => {
     sheetInstance.current = {
-      zoomTo: (row) => {
+      zoomTo: (row: number) => {
         // 默认回到编辑行
-        dispatch((d: unknown, getState: () => Sheet.UpdateStateType) => {
+        dispatch((d: unknown, getState: () => SheetType.UpdateStateType) => {
           const { start, groupConfig } = getState();
           if (!start && isNil(row)) return;
           const actual = rowToActualRow(
@@ -71,10 +72,10 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
           sheetWrapperRef.current?.scrollTo(0, rowHeight * actual);
         });
       },
-      pushToHistory: (config: Sheet.OperateHistory) => {
+      pushToHistory: (config: SheetType.OperateHistory) => {
         dispatch({ type: 'pushHistory', payload: config });
       },
-      selectRow: (row) => {
+      selectRow: (row: number) => {
         if (isNil(row)) {
           dispatch({ type: 'clearSelect' });
         } else {
@@ -82,7 +83,7 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
         }
       },
       popHistory: () => {
-        return {} as Sheet.OperateHistory;
+        return {} as SheetType.OperateHistory;
       },
     };
   }, [sheetWrapperRef.current]);
@@ -104,7 +105,12 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
   useMouseEvent(dispatch, sheetWrapperRef);
   useKeyBoardEvent(dispatch, sheetWrapperRef);
 
-  const menu = useContextMenu(dispatch, sheetWrapperRef, !!ContextMenu, contextMenuRef);
+  const menu = useContextMenu(
+    dispatch,
+    sheetWrapperRef,
+    !!ContextMenu,
+    contextMenuRef,
+  );
 
   // timeout 的副作用不适合放reducer里面
   useEffect(() => {
@@ -129,7 +135,7 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
   }, [groupConfig]);
 
   const rowElements = useMemo(() => {
-    return state?.data?.map((rowData: Sheet.Cell[], row: number) => {
+    return state?.data?.map((rowData: SheetType.Cell[], row: number) => {
       return (
         <Row
           key={row}
@@ -177,7 +183,10 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
           />
         </SheetShell>
         {ContextMenu ? (
-          <div ref={contextMenuRef} style={{display: menu.showMenu ? '' : 'none'}}>
+          <div
+            ref={contextMenuRef}
+            style={{ display: menu.showMenu ? '' : 'none' }}
+          >
             <ContextMenu
               position={menu.position}
               cell={menu.cellPosition}

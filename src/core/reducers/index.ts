@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { keyboardReducer } from './keyboardReducer';
 import { mouseReducer } from './mouseReducer';
 import { stateReducer } from './stateReducer';
@@ -28,12 +29,12 @@ export type SheetAction =
   | 'none';
 
 export type reducerAction = (
-  type: Partial<Sheet.UpdateStateType>,
+  type: Partial<SheetType.UpdateStateType>,
   payload?: unknown,
-) => Partial<Sheet.UpdateStateType>;
+) => Partial<SheetType.UpdateStateType>;
 
 const sheetReducer = (
-  state: Partial<Sheet.UpdateStateType>,
+  state: Partial<SheetType.UpdateStateType>,
   action: { type: SheetAction; payload?: unknown },
 ) => {
   switch (action.type) {

@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { reducerAction } from '.';
 
 export const mouseReducer: Record<string, reducerAction> = {
@@ -119,7 +120,7 @@ export const mouseReducer: Record<string, reducerAction> = {
     };
   },
   mouseLeaveInterval(state, payload) {
-    const { end } = payload as { end: Sheet.CellPosition };
+    const { end } = payload as { end: SheetType.CellPosition };
     const { data } = state;
     // fixed 列不选中
     if (data?.[0]?.[end.col]?.fixed) {

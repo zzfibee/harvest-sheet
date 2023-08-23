@@ -1,9 +1,10 @@
 import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
-import { useSheetEvent } from '@harvest/sheet/hooks';
+import { useSheetEvent } from '@zhenliang/sheet/hooks';
+import type { SheetType } from '@zhenliang/sheet/type';
 
 import { useCallback } from 'react';
 
-export const GroupViewer: Sheet.CellViewer = (props) => {
+export const GroupViewer: SheetType.CellViewer = (props) => {
   const { value, row, record } = props;
   const eventBus = useSheetEvent();
   const handleChange = useCallback(() => {

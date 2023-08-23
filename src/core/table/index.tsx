@@ -1,5 +1,6 @@
+import { Sheet } from '@zhenliang/sheet';
+import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Sheet from '../sheet';
 import { SheetEvent } from '../sheet/Event';
 import { DraggableShell } from '../shell/draggableShell';
 import { TableShell } from '../shell/tableShell';
@@ -9,7 +10,7 @@ import { GroupViewer } from '../viewer/groupViewer';
 import { useGroupConfig } from './useGroupConfig';
 import { useRowSelection } from './useRowSelection';
 
-const Table: React.FC<SheetTable.TableProps> = ({
+const Table: React.FC<SheetTableType.TableProps> = ({
   columns,
   dataSource,
   rowKey,
@@ -19,8 +20,8 @@ const Table: React.FC<SheetTable.TableProps> = ({
   draggable,
   ...args
 }) => {
-  const [data, setData] = useState<Sheet.Cell[][]>([[]]);
-  const sheetInstance = useRef<Sheet.SheetInstance | null>(null);
+  const [data, setData] = useState<SheetType.Cell[][]>([[]]);
+  const sheetInstance = useRef<SheetType.SheetInstance | null>(null);
 
   const hasChildren = dataSource?.some(
     (item) => (item?.children as Array<any>)?.length > 0,
@@ -43,7 +44,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
     if (!hasChildren) return;
     if (!dataSource || !columns) return;
 
-    const data: Sheet.Cell[][] = [];
+    const data: SheetType.Cell[][] = [];
 
     const groupMap = groupConfigToGroupMap({
       groups,
@@ -57,7 +58,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
         groupList = [item, ...item.children];
       }
       groupList.forEach((itemRow: any) => {
-        const dataRow: Sheet.Cell[] = [];
+        const dataRow: SheetType.Cell[] = [];
         let rowId: string = item.key || item.id || String(currentIndex);
         if (rowKey) {
           if (rowKey instanceof Function) {
@@ -83,7 +84,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
           className: 'sheet-control',
         } as any);
 
-        columns.forEach((colInfo: SheetTable.ColumnProps, col: number) => {
+        columns.forEach((colInfo: SheetTableType.ColumnProps, col: number) => {
           const value = itemRow[colInfo.dataIndex || ''];
           dataRow.push({
             id: rowId,
@@ -137,7 +138,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
           });
         }
 
-        columns.forEach((colInfo: SheetTable.ColumnProps, col: number) => {
+        columns.forEach((colInfo: SheetTableType.ColumnProps, col: number) => {
           const value = item[colInfo.dataIndex || ''];
           rows.push({
             id: rowId,
@@ -167,7 +168,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
   }, [dataSource, columns]);
 
   const handleChanges = useCallback(
-    (changes: Sheet.CellData[]) => {
+    (changes: SheetType.CellData[]) => {
       onChange &&
         onChange(
           changes.map((item) => ({
@@ -184,7 +185,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
 
   const handleReverse = useCallback(
     (value: unknown) => {
-      const { type, extraInfo } = value as Sheet.OperateHistory;
+      const { type, extraInfo } = value as SheetType.OperateHistory;
       if (type === 'Custom') {
         const {
           groupConfig,
@@ -192,8 +193,8 @@ const Table: React.FC<SheetTable.TableProps> = ({
           data: lastData,
         } = extraInfo as {
           extraType: string;
-          groupConfig: Sheet.RowGroupConfig;
-          data: Sheet.Cell[][];
+          groupConfig: SheetType.RowGroupConfig;
+          data: SheetType.Cell[][];
         };
         if (extraType === 'group') {
           setGroupConfig(groupConfig);
@@ -222,7 +223,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
         showSelect: !!rowSelection,
         controlProps: {
           group: {
-            open: !rowGroupConfig?.groupOpen?.some((value) => !value),
+            open: !rowGroupConfig?.groupOpen?.some((value: boolean) => !value),
           },
           check: {
             checked: false,
@@ -237,7 +238,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
       showSelect: !!rowSelection,
       controlProps: {
         group: {
-          open: !rowGroupConfig?.groupOpen?.some((value) => !value),
+          open: !rowGroupConfig?.groupOpen?.some((value: boolean) => !value),
         },
         check: {
           checked: false,
@@ -290,14 +291,14 @@ const Table: React.FC<SheetTable.TableProps> = ({
                   const newGrid = [...data];
                   newGrid[row] = [...newGrid[row]];
                   newGrid[row][0] = {
-                    ...(newGrid[row][0] as Sheet.Cell),
+                    ...(newGrid[row][0] as SheetType.Cell),
                     record: {
                       open: !!groupOpen[index],
                     },
                   };
                   setData(newGrid);
                   sheetInstance.current?.pushToHistory({
-                    type: 'Custom' as Sheet.OperateType,
+                    type: 'Custom' as SheetType.OperateType,
                     changes: [],
                     extraInfo: {
                       extraType: 'group',
@@ -318,7 +319,7 @@ const Table: React.FC<SheetTable.TableProps> = ({
                 });
 
                 sheetInstance.current?.pushToHistory({
-                  type: 'Custom' as Sheet.OperateType,
+                  type: 'Custom' as SheetType.OperateType,
                   changes: [],
                   extraInfo: {
                     extraType: 'group',

@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+
+import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { classNames } from '../util';
 import { CheckViewer } from '../viewer/checkViewer';
 import { GroupViewer } from '../viewer/groupViewer';
@@ -11,7 +13,7 @@ export const TableShell = ({
   showSelect,
   controlProps,
   controlWidth = 25,
-}: Sheet.SheetShell) => {
+}: SheetType.SheetShell) => {
   const TableShell: React.FC<{
     children: React.ReactElement;
   }> = ({ children }) => {
@@ -44,7 +46,7 @@ export const TableShell = ({
         );
       }
 
-      columns.forEach((item: SheetTable.ColumnProps, index) => {
+      columns.forEach((item: SheetTableType.ColumnProps, index: number) => {
         ths.push(
           <th
             className={classNames(
@@ -81,7 +83,7 @@ export const TableShell = ({
           />,
         );
       }
-      columns.forEach((item: SheetTable.ColumnProps, index) => {
+      columns.forEach((item: SheetTableType.ColumnProps, index: number) => {
         cols.push(
           <col
             className={classNames('cell')}

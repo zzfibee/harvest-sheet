@@ -1,3 +1,4 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { reducerAction } from '.';
 
 export const stateReducer: Record<string, reducerAction> = {
@@ -6,7 +7,7 @@ export const stateReducer: Record<string, reducerAction> = {
     return { ...state, [key]: value };
   },
   changes(state, payload) {
-    return { ...state, ...(payload as Partial<Sheet.UpdateStateType>) };
+    return { ...state, ...(payload as Partial<SheetType.UpdateStateType>) };
   },
   rowMove(state, payload) {
     const maxRow = (state.data?.length || 0) - 1;
@@ -38,14 +39,14 @@ export const stateReducer: Record<string, reducerAction> = {
     const {
       cell: { row, col, confirm },
     } = payload as {
-      cell: Sheet.CellData & { confirm: boolean };
+      cell: SheetType.CellData & { confirm: boolean };
     };
     let history = [...(state.history || [])];
     const current = data?.[row]?.[col].value;
     console.log(history.length, current);
     history.push({
       changes: [{ row, col, value: current as string }],
-      type: 'Edit' as Sheet.OperateType,
+      type: 'Edit' as SheetType.OperateType,
     });
     if (confirm) {
       return {
@@ -63,7 +64,7 @@ export const stateReducer: Record<string, reducerAction> = {
   pushHistory(state, payload) {
     return {
       ...state,
-      history: [...(state.history || []), payload as Sheet.OperateHistory],
+      history: [...(state.history || []), payload as SheetType.OperateHistory],
     };
   },
   selectRow(state, payload) {

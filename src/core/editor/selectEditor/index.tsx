@@ -1,9 +1,10 @@
+import type { SheetType } from '@zhenliang/sheet/type';
 import { Select } from 'antd';
 import 'antd/es/select/style/index.css';
 import './index.less';
 
-export const GetSelectEditor = (options: any): Sheet.CellEditor => {
-  const SelectEditor: Sheet.CellEditor = (props) => {
+export const getSelectEditor = (options: any): SheetType.CellEditor => {
+  const SelectEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;
 
     const handleChange = (opt: any) => {
@@ -47,4 +48,4 @@ export const GetSelectEditor = (options: any): Sheet.CellEditor => {
   return SelectEditor;
 };
 
-export default GetSelectEditor;
+export default getSelectEditor;
