@@ -35,7 +35,6 @@ export const useContextMenu = (
       x:e.clientX ,
       y:e.clientY
     })
-    // todo 优化边缘情况  transform
     setMenuEvent({
       showMenu: true,
       position: { top, left },
@@ -45,6 +44,8 @@ export const useContextMenu = (
 
   useEffect(() => {
     if (!elementRef.current || !enableContextMenu) return;
+    // 添加统一规范
+    contextMenuRef.current?.firstElementChild?.setAttribute("style", "z-index: 5;word-break: keep-all;")
     const handleClose = (e: MouseEvent) => {
       setMenuEvent({ showMenu: false });
     };
