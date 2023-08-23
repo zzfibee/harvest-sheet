@@ -370,3 +370,36 @@ export const getNextVisibleRow = (
   }
   return row;
 };
+
+export const calcMenuPosition = (
+  {
+    tableElement,
+    menuElement,
+    x,
+    y
+  }:{
+    tableElement: Sheet.refAssertion | null,
+    menuElement?: Element | null,
+    x:number,
+    y:number
+  }
+) => {
+  let top = y;
+  let left = x;
+  const { 
+    right: menuRight,
+    bottom: menuBottom 
+  } = menuElement?.getBoundingClientRect() ?? {} as Record<string,number>;
+  // 这里不考虑 左边和上边 因为 屏幕连一个 menu都发不下的情况应该特殊处理
+  const { bottom: tableBottom, right: tableRight } = tableElement?.getBoundingClientRect() ?? {} as Record<string,number>;
+  const { clientHeight, clientWidth } = document.body;
+  const edgeRight = Math.min(tableRight, clientWidth);
+  const edgeBottom = Math.min(tableBottom, clientHeight);
+  if( menuRight > edgeRight ) {
+    left = left - (menuRight - edgeRight);
+  }
+  if(menuBottom > edgeBottom) {
+    top = top - (menuBottom - edgeBottom);
+  }
+  return {top,left}
+}

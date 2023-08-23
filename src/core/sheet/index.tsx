@@ -38,6 +38,7 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
     children,
   } = props;
   const sheetWrapperRef = useRef<Sheet.refAssertion>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null)
   const eventBus = useEventBus();
   const [state, dispatch] = useMiddlewareReducer(
     sheetReducer,
@@ -103,7 +104,7 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
   useMouseEvent(dispatch, sheetWrapperRef);
   useKeyBoardEvent(dispatch, sheetWrapperRef);
 
-  const menu = useContextMenu(dispatch, sheetWrapperRef, !!ContextMenu);
+  const menu = useContextMenu(dispatch, sheetWrapperRef, !!ContextMenu, contextMenuRef);
 
   // timeout 的副作用不适合放reducer里面
   useEffect(() => {
@@ -175,12 +176,14 @@ const Sheet: React.FC<Sheet.SheetProps> = (props) => {
             }}
           />
         </SheetShell>
-        {ContextMenu && menu.showMenu ? (
-          <ContextMenu
-            position={menu.position}
-            cell={menu.cellPosition}
-            onContextMenu={onContextMenu}
-          />
+        {ContextMenu ? (
+          <div ref={contextMenuRef} style={{display: menu.showMenu ? '' : 'none'}}>
+            <ContextMenu
+              position={menu.position}
+              cell={menu.cellPosition}
+              onContextMenu={onContextMenu}
+            />
+          </div>
         ) : null}
         <div className="harvest-sheet-control">{children}</div>
       </span>

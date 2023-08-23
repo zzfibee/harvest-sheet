@@ -1,6 +1,6 @@
 import { Dispatch, useSetState } from '@harvest/sheet/hooks';
 import { useEffect } from 'react';
-import { extractDataRowAndCol, findParentTd } from '../util';
+import { extractDataRowAndCol, findParentTd, calcMenuPosition } from '../util';
 
 export type MenuEvent = {
   showMenu: boolean;
@@ -12,6 +12,7 @@ export const useContextMenu = (
   dispatch: Dispatch,
   elementRef: React.RefObject<Sheet.refAssertion>,
   enableContextMenu: boolean = false,
+  contextMenuRef: React.RefObject<HTMLDivElement>,
 ) => {
   const [menuEvent, setMenuEvent] = useSetState({
     showMenu: false,
@@ -28,11 +29,16 @@ export const useContextMenu = (
       type: 'mouseDown',
       payload: { pos: currentPos, shiftKey: e.shiftKey },
     });
-
+    const {top,left} = calcMenuPosition({
+      tableElement:elementRef.current,
+      menuElement:contextMenuRef.current?.firstElementChild,
+      x:e.clientX ,
+      y:e.clientY
+    })
     // todo 优化边缘情况  transform
     setMenuEvent({
       showMenu: true,
-      position: { top: e.clientY, left: e.clientX },
+      position: { top, left },
       cellPosition: currentPos,
     });
   };
