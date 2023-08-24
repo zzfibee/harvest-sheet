@@ -6,7 +6,6 @@ import {
   getNumberEditor,
   getSelectEditor,
 } from '../core/editor';
-import {} from '../core/editor/numberEditor';
 import Table from '../core/table';
 import { BtnViewer } from '../core/viewer/btnViewer';
 import { EditViewer } from '../core/viewer/editViewer';
