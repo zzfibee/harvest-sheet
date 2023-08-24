@@ -42,5 +42,6 @@ const getCascaderEditor = (options: SheetType.OptionsType[]) => {
     const res = optionsTransferToValue(options, value as string);
     return res && res.length > 0;
   };
+  return CascaderEditor;
 };
 export default getCascaderEditor;

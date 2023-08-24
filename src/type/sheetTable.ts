@@ -42,6 +42,7 @@ export type TableGroupConfig = {
   defaultOpen: boolean;
 };
 export type TableProps = {
+  className?: string;
   columns: ColumnProps[];
   virtualized?: boolean;
   dataSource: Record<string, unknown>[];
@@ -67,4 +68,8 @@ export type TableProps = {
   };
 
   onChange: (changes: TableChange[]) => void;
+  eventHandler?: Record<
+    'btn-click' | 'cell-edit' | 'cell-switch' | string,
+    undefined | ((value: unknown) => void)
+  >;
 };

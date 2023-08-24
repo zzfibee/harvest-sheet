@@ -1,5 +1,5 @@
 import { Sheet } from '@zhenliang/sheet';
-import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
+import { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SheetEvent } from '../sheet/Event';
 import { DraggableShell } from '../shell/draggableShell';
@@ -18,6 +18,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   groupConfig,
   onChange,
   draggable,
+  eventHandler,
   ...args
 }) => {
   const [data, setData] = useState<SheetType.Cell[][]>([[]]);
@@ -72,8 +73,8 @@ const Table: React.FC<SheetTableType.TableProps> = ({
           id: rowId,
           row: currentIndex,
           col: -1,
-          readonly: true,
           editable: false,
+          align: 'center',
           value:
             groupMap.get(currentIndex) && groupMap.get(currentIndex)?.isStart,
           record: {
@@ -132,6 +133,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
             row,
             col: -1,
             readonly: true,
+            align: 'center' as SheetType.CellAlign,
             value: checkedRow[row] as unknown as string,
             valueViewer: CheckViewer,
             className: 'sheet-control',
@@ -333,6 +335,9 @@ const Table: React.FC<SheetTableType.TableProps> = ({
         : null}
 
       <SheetEvent name="reverse" handler={handleReverse} />
+      {Object.keys(eventHandler || {}).map((key) => (
+        <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
+      ))}
     </Sheet>
   );
 };

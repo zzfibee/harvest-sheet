@@ -18,6 +18,10 @@
 
 <code src="../src/example/ellipsis.tsx"  description="省略号">超长显示省略号</code>
 
+## 使用 antd 的一些组件
+
+<code src="../src/example/antComponent.tsx"  description="antd">编辑功能</code>
+
 <!-- ### 调整列宽
 
 <!-- <code src="../src/Demo/TableUsage/index.tsx"></code> --> -->

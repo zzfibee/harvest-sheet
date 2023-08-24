@@ -3,7 +3,9 @@ import { Select } from 'antd';
 import 'antd/es/select/style/index.css';
 import './index.less';
 
-export const getSelectEditor = (options: any): SheetType.CellEditor => {
+export const getSelectEditor = (
+  options: SheetType.Options[],
+): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;
 

@@ -1,6 +1,12 @@
 import type { EventEmitter } from 'events';
 import { SheetTableType } from '.';
 
+export enum CellAlign {
+  left = 'left',
+  center = 'center',
+  right = 'right',
+}
+
 export type Cell = {
   id: string;
   key?: string;
@@ -15,9 +21,17 @@ export type Cell = {
   dataEditor?: CellEditor;
   valueViewer?: CellViewer;
   className?: string;
-  align?: 'left' | 'center' | 'right';
-  fixed?: 'left' | 'right';
+  align?: CellAlign;
+  fixed?: Omit<CellAlign, 'center'>;
   value?: string | number | null;
+};
+
+export type CellViewerProps = {
+  value: unknown;
+  record?: Record<string, unknown>;
+  row?: number;
+  col?: number;
+  cell?: Cell;
 };
 
 export type CellEditorProps = {
@@ -25,15 +39,7 @@ export type CellEditorProps = {
   cell?: Cell;
   onChange: (value: unknown) => void;
   onConfirm: (value: unknown) => void;
-};
-
-export type CellViewerProps = {
-  value: unknown;
-  record?: Record<string, unknown>;
-  row: number;
-  col: number;
-  cell?: Cell;
-};
+} & CellViewerProps;
 
 export type CellEditor = React.FC<CellEditorProps> & {
   checker?: (value: unknown) => boolean;
@@ -186,16 +192,14 @@ export type UpdateStateType = {
 };
 export type UpdateFocus = (start: CellPosition, end: CellPosition) => void;
 
-export type Options<T> = {
+export type Options<T = any> = {
   value: string;
   label: string;
 } & T;
 
 export type OptionsType = Options<{
   disabled?: boolean;
-  children?: Options<{
-    children?: Options<Record<string, unknown>>;
-  }>;
+  children?: OptionsType[];
 }>;
 
 export type OperateHistory = {

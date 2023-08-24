@@ -41,7 +41,10 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 .harvest-sheet-container .harvest-sheet .cell {
   height: 17px;
   font-size: var(--cell-font-size);
-  padding:var(--cell-padding-vertical);
+  padding-left:var(--cell-padding-horizontal);
+  padding-right:var(--cell-padding-horizontal);
+  padding-top:var(--cell-padding-vertical);
+  padding-bottom:var(--cell-padding-vertical);
   border: 1px solid var(--cell-border-color);
   background-color: var(--cell-background-color);
   cursor: cell;
@@ -143,6 +146,7 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 .harvest-sheet-container .harvest-sheet .cell.sheet-control{
   border-right: 1px solid transparent;
   background: var(--cell-background-color) ;
+  color:var(--read-color);
   // position: relative !important;
 }
 
@@ -176,6 +180,7 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 .harvest-sheet-container .harvest-sheet .cell > input {
   display: block;
   width: calc(100% - 6px);
+  font-size: var(--cell-font-size);
   height: 11px;
   border: 2px solid rgb(33, 133, 208);
   background: none;

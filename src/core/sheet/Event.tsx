@@ -2,13 +2,13 @@ import { useSheetEvent } from '@zhenliang/sheet/hooks';
 import { FC, useEffect } from 'react';
 
 export const SheetEvent: FC<{
-  handler: (value: unknown) => void;
+  handler?: (value: unknown) => void;
   name: string;
 }> = ({ handler, name }) => {
   const eventBus = useSheetEvent();
 
   useEffect(() => {
-    if (!eventBus) {
+    if (!eventBus || !handler) {
       return;
     }
     eventBus.on(name, handler);

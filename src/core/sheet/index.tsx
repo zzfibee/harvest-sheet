@@ -56,7 +56,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
 
   useEffect(() => {
     sheetInstance.current = {
-      zoomTo: (row: number) => {
+      zoomTo: (row?: number) => {
         // 默认回到编辑行
         dispatch((d: unknown, getState: () => SheetType.UpdateStateType) => {
           const { start, groupConfig } = getState();
@@ -75,7 +75,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
       pushToHistory: (config: SheetType.OperateHistory) => {
         dispatch({ type: 'pushHistory', payload: config });
       },
-      selectRow: (row: number) => {
+      selectRow: (row?: number) => {
         if (isNil(row)) {
           dispatch({ type: 'clearSelect' });
         } else {
