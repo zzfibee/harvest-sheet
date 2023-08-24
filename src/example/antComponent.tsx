@@ -1,5 +1,6 @@
 import { Modal } from 'antd';
-import React, { useState } from 'react';
+import { cloneDeep, random } from 'lodash';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   DateEditor,
   getCascaderEditor,
@@ -10,7 +11,7 @@ import Table from '../core/table';
 import { BtnViewer } from '../core/viewer/btnViewer';
 import { EditViewer } from '../core/viewer/editViewer';
 import { SwitchViewer } from '../core/viewer/switchViewer';
-import { SheetTableType } from '../type';
+import { SheetTableType, SheetType } from '../type';
 
 const Precision2MoneyEditor = getNumberEditor({
   max: 1000,
@@ -171,13 +172,60 @@ const data = [
 
 const App: React.FC = () => {
   const [state, setState] = useState(data);
+
+  const sheetInstance = useRef<SheetType.SheetInstance | null>(null);
+  const handleChange = useCallback(
+    (changes: SheetTableType.TableChange[]) => {
+      const newState: any = cloneDeep(state);
+      changes.forEach((change) => {
+        const { row, key, value } = change;
+        newState[row][key] = value;
+      });
+      setState(newState);
+    },
+    [state],
+  );
+  const handleAdd = useCallback(() => {
+    const newState: any = cloneDeep(state);
+    sheetInstance.current?.pushToHistory({
+      type: 'NewRow',
+      changes: [],
+      rowInfo: { newRow: newState.length },
+    });
+    setState([
+      ...newState,
+      {
+        key: String(random()),
+        name: 'new',
+        open: false,
+        date: '1990-01-01',
+        address2: `打开对话框2${newState.length + 2}`,
+        age: 40 + newState.length,
+        select: '111111',
+        address: 'London Park',
+      },
+    ]);
+  }, [state]);
   return (
     <Table
+      sheetInstance={sheetInstance}
       columns={columns}
       dataSource={state}
       scroll={{ x: '100%' }}
-      onChange={() => {}}
+      onChange={handleChange}
+      handleAdd={handleAdd}
       eventHandler={{
+        reverse: (value: unknown) => {
+          // 处理 行列删除自定义事件
+          const { type, rowInfo } = value as SheetType.OperateHistory;
+          if (type === 'Custom') {
+            console.log('操作');
+          } else if (type === 'NewRow') {
+            const newState = [...state];
+            newState.splice(rowInfo?.newRow as number, 1);
+            setState(newState);
+          }
+        },
         'cell-edit': (value: unknown) => {
           const { row, value: cellValue } = value as {
             row: number;

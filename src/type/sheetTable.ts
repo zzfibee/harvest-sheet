@@ -43,6 +43,7 @@ export type TableGroupConfig = {
 };
 export type TableProps = {
   className?: string;
+  sheetInstance?: React.MutableRefObject<SheetType.SheetInstance | null>;
   columns: ColumnProps[];
   virtualized?: boolean;
   dataSource: Record<string, unknown>[];
@@ -68,6 +69,7 @@ export type TableProps = {
   };
 
   onChange: (changes: TableChange[]) => void;
+  handleAdd?: () => void;
   eventHandler?: Record<
     'btn-click' | 'cell-edit' | 'cell-switch' | string,
     undefined | ((value: unknown) => void)

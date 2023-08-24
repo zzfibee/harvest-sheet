@@ -1,5 +1,6 @@
 import { Sheet } from '@zhenliang/sheet';
 import { SheetTableType, SheetType } from '@zhenliang/sheet/type';
+import { Button } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SheetEvent } from '../sheet/Event';
 import { DraggableShell } from '../shell/draggableShell';
@@ -11,18 +12,21 @@ import { useGroupConfig } from './useGroupConfig';
 import { useRowSelection } from './useRowSelection';
 
 const Table: React.FC<SheetTableType.TableProps> = ({
+  sheetInstance: sheetRef,
   columns,
   dataSource,
   rowKey,
   rowSelection,
   groupConfig,
   onChange,
+  handleAdd,
   draggable,
   eventHandler,
   ...args
 }) => {
   const [data, setData] = useState<SheetType.Cell[][]>([[]]);
-  const sheetInstance = useRef<SheetType.SheetInstance | null>(null);
+  const _sheetInstance = useRef<SheetType.SheetInstance | null>(null);
+  const sheetInstance = sheetRef || _sheetInstance;
 
   const hasChildren = dataSource?.some(
     (item) => (item?.children as Array<any>)?.length > 0,
@@ -334,10 +338,19 @@ const Table: React.FC<SheetTableType.TableProps> = ({
           ]
         : null}
 
-      <SheetEvent name="reverse" handler={handleReverse} />
+      <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
       {Object.keys(eventHandler || {}).map((key) => (
         <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
       ))}
+      {handleAdd ? (
+        <Button
+          type="dashed"
+          style={{ width: '100%', height: 32 }}
+          onClick={handleAdd}
+        >
+          + 添加
+        </Button>
+      ) : null}
     </Sheet>
   );
 };
