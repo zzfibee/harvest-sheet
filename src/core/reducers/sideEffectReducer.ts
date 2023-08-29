@@ -201,8 +201,17 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
     });
   },
   delete(dispatch, getState) {
-    const { cellChangeHandler, start, end, data, history, groupConfig } =
-      getState();
+    const {
+      cellChangeHandler,
+      start,
+      end,
+      data,
+      history,
+      groupConfig,
+      editing,
+    } = getState();
+
+    if (editing) return;
 
     const groupMap = groupConfigToGroupMap(groupConfig);
     const cellIndex = flatRowColIndex(start, end);
@@ -246,11 +255,11 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
     if (!['Edit', 'Paste', 'Delete'].includes(type)) {
       eventBus.emit('reverse', change);
       if (type === 'DeleteRow') {
-        console.log(change.rowInfo?.deleteRow);
-        dispatch({
-          type: 'selectRow',
-          payload: (change.rowInfo?.deleteRow as number) - 1,
-        });
+        // console.log(change.rowInfo?.deleteRow);
+        // dispatch({
+        //   type: 'selectRow',
+        //   payload: change.rowInfo?.deleteRow as number,
+        // });
       }
 
       dispatch({

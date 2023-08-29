@@ -8,7 +8,7 @@ export const SwitchViewer: SheetType.CellViewer = (props) => {
   const eventBus = useSheetEvent();
   const handleChange = useCallback(() => {
     if (!eventBus) return;
-    eventBus.emit('cell-switch', { row, record, value });
+    eventBus.emit('cell-switch', { row, record, value: !value });
   }, [eventBus, row, record, value]);
   return <Switch checked={value as boolean} onChange={handleChange} />;
 };

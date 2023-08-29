@@ -64,8 +64,8 @@ export const keyboardReducer: Record<string, reducerAction> = {
     return state;
   },
   enter(state, payload) {
-    const { start, end, editing } = state;
-    if (!start || !end) {
+    const { start, end, editing, data } = state;
+    if (!start || !end || data?.[start.row]?.[start.col].readonly) {
       return state;
     }
 

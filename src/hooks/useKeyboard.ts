@@ -112,7 +112,7 @@ export const useKeyBoard = (
       const isValueInput = isInputKey(keyCode);
       if (isValueInput) {
         handler.otherInput(e, e.key);
-        return;
+        return false;
       }
       const moveInfo = move(keyCode, shiftKey);
       moveInfo && handler.move(e, moveInfo);

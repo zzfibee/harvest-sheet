@@ -10,10 +10,16 @@ export const mouseReducer: Record<string, reducerAction> = {
       pos: { row: number; col: number };
       shiftKey: boolean;
     };
-    const { data } = state;
+    const { data, start, end } = state;
     if (data?.[row][col].fixed) {
       return {
         ...state,
+        start: undefined,
+        end: undefined,
+        lastSelected: {
+          start,
+          end,
+        },
       };
     }
 
@@ -22,12 +28,15 @@ export const mouseReducer: Record<string, reducerAction> = {
         ...state,
         mouseDown: true,
         editing: undefined,
-        lastEditing: state.editing,
-        start: state.start ? state.start : { row, col },
+        lastEditing: {
+          ...state.editing,
+          confirm: true,
+        },
+        start: start ? start : { row, col },
         end: { row, col },
         lastSelected: {
-          start: state.start,
-          end: state.end,
+          start: start,
+          end: end,
         },
       };
     }
@@ -35,12 +44,15 @@ export const mouseReducer: Record<string, reducerAction> = {
       ...state,
       mouseDown: true,
       editing: undefined,
-      lastEditing: state.editing,
+      lastEditing: {
+        ...state.editing,
+        confirm: true,
+      },
       start: { row, col },
       end: { row, col },
       lastSelected: {
-        start: state.start,
-        end: state.end,
+        start: start,
+        end: end,
       },
     };
   },
@@ -52,7 +64,7 @@ export const mouseReducer: Record<string, reducerAction> = {
 
     const { data } = state;
 
-    if (state.mouseDown === false || data?.[row][col].readonly) return state;
+    if (state.mouseDown === false || data?.[row][col].fixed) return state;
     return {
       ...state,
       end: { row, col },

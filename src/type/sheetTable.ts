@@ -5,12 +5,11 @@ export type refAssertion = {
   focus?: () => boolean;
 } & HTMLTableSectionElement;
 
-export type CellAlign = 'left' | 'right' | 'center';
-export type CellFixed = 'left' | 'right';
+export type CellFixed = SheetType.CellAlign;
 
 export type ColumnProps = {
-  align?: CellAlign;
-  fixed?: CellFixed;
+  align?: SheetType.CellAlign;
+  fixed?: Omit<CellFixed, 'center'>;
   width?: string | number;
   dataIndex?: string;
   title: string;

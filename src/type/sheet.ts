@@ -5,6 +5,7 @@ export enum CellAlign {
   left = 'left',
   center = 'center',
   right = 'right',
+  unset = 'unset',
 }
 
 export type Cell = {

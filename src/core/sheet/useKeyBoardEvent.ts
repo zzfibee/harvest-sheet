@@ -25,7 +25,15 @@ export const useKeyBoardEvent = (
         dispatch({ type: 'enter' });
       },
       otherInput: (e, value: string) => {
-        dispatch({ type: 'otherInput', payload: value });
+        dispatch((d: any, getState: () => SheetType.UpdateStateType) => {
+          const { editing } = getState();
+          if (editing) {
+            return;
+          } else {
+            e.preventDefault();
+            dispatch({ type: 'otherInput', payload: value });
+          }
+        });
       },
       copy: () => {
         dispatch(sideEffectReducer.copy);
