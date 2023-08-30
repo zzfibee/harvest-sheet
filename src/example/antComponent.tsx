@@ -2,8 +2,8 @@ import { Modal } from 'antd';
 import { cloneDeep, random } from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
 import {
-  DateEditor,
   getCascaderEditor,
+  GetDateEditor,
   getNumberEditor,
   getSelectEditor,
 } from '../core/editor';
@@ -107,7 +107,7 @@ const columns: SheetTableType.ColumnProps[] = [
     width: 150,
     dataIndex: 'date',
     key: 'date',
-    editor: DateEditor,
+    editor: GetDateEditor(),
     // fixed: 'left',
   },
   {

@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import type { SheetType } from '@zhenliang/sheet/type';
 import { Select } from 'antd';
 import 'antd/es/select/style/index.css';
@@ -5,6 +6,7 @@ import './index.less';
 
 export const getSelectEditor = (
   options: SheetType.Options[],
+  valueKey: string = 'label',
 ): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;
@@ -31,7 +33,7 @@ export const getSelectEditor = (
         onMouseDown={(e) => {
           e.stopPropagation();
         }}
-        value={value}
+        value={SelectEditor.formatter ? SelectEditor.formatter(value) : value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         options={options}
@@ -42,14 +44,14 @@ export const getSelectEditor = (
 
   SelectEditor.checker = (value) => {
     return (
-      options.some((item: any) => item.value === value) ||
+      options.some((item: any) => item.value == value) ||
       options.some((item: any) => item.label === value)
     );
   };
   SelectEditor.formatter = (value) => {
     return (
-      options.find((item: any) => item.value === value)?.label ||
-      options.find((item: any) => item.label === value)?.label
+      options.find((item: any) => item.value == value)?.[valueKey] ||
+      options.find((item: any) => item.label === value)?.[valueKey]
     );
   };
 

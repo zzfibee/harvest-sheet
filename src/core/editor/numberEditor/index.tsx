@@ -27,7 +27,7 @@ export const NumberEditor: SheetType.CellEditor = (props) => {
 };
 
 export const getNumberEditor = (
-  extraProps: Pick<
+  extraProps?: Pick<
     InputNumberProps,
     'max' | 'min' | 'addonBefore' | 'addonAfter' | 'precision'
   >,

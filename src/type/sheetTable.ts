@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { SheetType } from '.';
 
 export type refAssertion = {
@@ -12,7 +13,7 @@ export type ColumnProps = {
   fixed?: Omit<CellFixed, 'center'>;
   width?: string | number;
   dataIndex?: string;
-  title: string;
+  title: string | ReactNode | ReactNode[];
   key?: string;
   editable?: boolean;
   readonly?:

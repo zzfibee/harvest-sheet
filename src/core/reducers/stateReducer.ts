@@ -1,4 +1,4 @@
-import type { SheetType } from '@zhenliang/sheet/type';
+import { SheetType } from '@zhenliang/sheet/type';
 import { reducerAction } from '.';
 
 export const stateReducer: Record<string, reducerAction> = {
@@ -69,7 +69,11 @@ export const stateReducer: Record<string, reducerAction> = {
   },
   selectRow(state, payload) {
     const startCol = state.data?.[0]?.findIndex((item) => !item.fixed) || 0;
-    const endCol = (state.data?.[0].length || 0) - 1;
+    const endCol =
+      (state.data?.[0]?.findIndex(
+        (item) => item.fixed === SheetType.CellAlign.right,
+      ) || 0) - 1;
+    // const endCol = (state.data?.[0].length || 0) - 1;
     if (startCol >= 0 && endCol >= 0) {
       return {
         ...state,

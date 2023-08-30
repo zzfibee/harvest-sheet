@@ -66,7 +66,6 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             (row as number) ?? start?.row,
             groupConfig,
           );
-          console.log(actual);
           const rowHeight = getRowHeight(
             sheetWrapperRef.current as HTMLSpanElement,
           );
@@ -136,20 +135,23 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   }, [groupConfig]);
 
   const rowElements = useMemo(() => {
-    return state?.data?.map((rowData: SheetType.Cell[], row: number) => {
-      return (
-        <Row
-          key={row}
-          row={row}
-          cells={rowData}
-          groupConfig={groupConfig}
-          rowClassName={rowClassName}
-        >
-          <DefaultRowMapper rowData={rowData} row={row} />
-        </Row>
-      );
-    });
-  }, [state.data, groupConfig]);
+    return state?.data
+      ?.slice(virtualStart, virtualEnd)
+      ?.map((rowData: SheetType.Cell[]) => {
+        const row = state?.data?.indexOf(rowData) || 0;
+        return (
+          <Row
+            key={row}
+            row={row}
+            cells={rowData}
+            groupConfig={groupConfig}
+            rowClassName={rowClassName}
+          >
+            <DefaultRowMapper rowData={rowData} row={row} />
+          </Row>
+        );
+      });
+  }, [state.data, groupConfig, virtualStart, virtualEnd]);
 
   const memoHeight = Math.min((state?.data?.length ?? 0) + 1, 10) * 42 + 43;
 
@@ -173,8 +175,8 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
               style={{ height: 0, paddingBottom: paddingTop, display: 'block' }}
             />
           )}
-          {rowElements?.slice(virtualStart, virtualEnd)}
-          {/* {rowElements} */}
+          {/* {rowElements?.slice(virtualStart, virtualEnd)} */}
+          {rowElements}
           <tr
             style={{
               height: 0,

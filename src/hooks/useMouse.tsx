@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 type MouseHandler = {
   mouseUp: (value: MouseEvent) => void;
@@ -24,6 +24,7 @@ export const useMouse = (
     doubleClick,
     loseFocus,
   } = handler;
+  const handlerRef = useRef<MouseHandler | null>();
 
   // todo
   const wrapper = useCallback(
@@ -38,45 +39,53 @@ export const useMouse = (
     [listenElement],
   );
 
-  // useEffect(() => {
-  //   if (!listenElement) return;
-  // }, [mouseUp]);
+  useEffect(
+    () => () => {
+      if (!handlerRef.current) return;
+      const {
+        mouseUp: listenerMouseUp,
+        mouseDown: listenerMouseDown,
+        mouseOver: listenerMouseOver,
+        mouseLeave: listenerMouseLeave,
+        mouseEnter: listenerMouseEnter,
+        doubleClick: listenerDoubleClick,
+      } = handlerRef.current;
+      document.removeEventListener('mouseup', listenerMouseUp);
+      document.removeEventListener('mousedown', listenerMouseDown);
+      document.removeEventListener('dblclick', listenerDoubleClick);
+      listenElement?.removeEventListener('mouseover', listenerMouseOver);
+      listenElement?.removeEventListener('mouseleave', listenerMouseLeave);
+      listenElement?.removeEventListener('mouseenter', listenerMouseEnter);
+    },
+    [],
+  );
   useEffect(() => {
     if (!listenElement) return;
-
     const debounceOver = debounce(mouseOver, 10);
     const wrappedMouseUp = mouseUp;
     const wrappedMouseDown = (e: MouseEvent) => {
-      if (!listenElement.contains(e.target as HTMLElement)) {
+      if (!listenElement?.contains(e.target as HTMLElement)) {
         loseFocus(e);
         return;
       }
       mouseDown(e);
     };
     const wrappedMouseDoubleClick = wrapper(doubleClick);
+    handlerRef.current = {
+      mouseUp: wrappedMouseUp,
+      mouseDown: wrappedMouseDown,
+      doubleClick: wrappedMouseDoubleClick,
+      mouseOver: debounceOver,
+      mouseLeave: mouseLeave,
+      mouseEnter: mouseEnter,
+      loseFocus,
+    };
 
     document.addEventListener('mouseup', wrappedMouseUp);
     document.addEventListener('mousedown', wrappedMouseDown);
     document.addEventListener('dblclick', wrappedMouseDoubleClick);
-    listenElement.addEventListener('mouseover', debounceOver);
-    listenElement.addEventListener('mouseleave', mouseLeave);
-    listenElement.addEventListener('mouseenter', mouseEnter);
-    return () => {
-      listenElement.removeEventListener('mouseover', debounceOver);
-      listenElement.removeEventListener('mouseleave', mouseLeave);
-      listenElement.removeEventListener('mouseenter', mouseEnter);
-
-      document.removeEventListener('mousedown', wrappedMouseUp);
-      document.removeEventListener('mouseup', wrappedMouseDown);
-      document.removeEventListener('dblclick', wrappedMouseDoubleClick);
-    };
-  }, [
-    listenElement,
-    mouseUp,
-    mouseDown,
-    mouseOver,
-    mouseLeave,
-    doubleClick,
-    loseFocus,
-  ]);
+    listenElement?.addEventListener('mouseover', debounceOver);
+    listenElement?.addEventListener('mouseleave', mouseLeave);
+    listenElement?.addEventListener('mouseenter', mouseEnter);
+  }, [listenElement]);
 };

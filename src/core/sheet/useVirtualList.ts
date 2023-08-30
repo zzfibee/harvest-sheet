@@ -58,6 +58,15 @@ export const useVirtualList = (
     };
   }, [elementRef.current]);
 
+  useEffect(() => {
+    setState({
+      virtualStart: 0,
+      virtualEnd: Math.min(data.length - 1, 2 * extra),
+      paddingTop: 0,
+      paddingBottom: 0,
+    });
+  }, [data]);
+
   if (!virtualized) {
     return {
       virtualStart: 0,
