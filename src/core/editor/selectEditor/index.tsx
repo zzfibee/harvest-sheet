@@ -46,6 +46,12 @@ export const getSelectEditor = (
       options.some((item: any) => item.label === value)
     );
   };
+  SelectEditor.formatter = (value) => {
+    return (
+      options.find((item: any) => item.value === value)?.label ||
+      options.find((item: any) => item.label === value)?.label
+    );
+  };
 
   return SelectEditor;
 };

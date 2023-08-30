@@ -34,7 +34,8 @@ export const DateEditor: SheetType.CellEditor = (props) => {
 };
 
 DateEditor.checker = (value) => {
-  const reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+  const reg =
+    /^[1-9]\d{3}(-|\/)(0[1-9]|1[0-2])(-|\/)(0[1-9]|[1-2][0-9]|3[0-1])$/;
   return reg.test(value as string);
 };
 

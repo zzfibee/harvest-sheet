@@ -1,6 +1,7 @@
 import type { SheetType } from '@zhenliang/sheet/type';
 import { InputNumber as AntInputNumber, InputNumberProps } from 'antd';
 import 'antd/es/input-number/style/index.css';
+import { isNil } from 'lodash';
 import { useEffect, useRef } from 'react';
 import './index.less';
 
@@ -50,6 +51,9 @@ export const getNumberEditor = (
         onChange={onChange}
       />
     );
+  };
+  NumberEditor.formatter = (value: unknown) => {
+    return isNil(value) ? null : Number(value);
   };
 
   return NumberEditor;

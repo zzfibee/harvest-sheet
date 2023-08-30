@@ -94,10 +94,16 @@ const Cell = (props: SheetType.CellProps) => {
       setEventState({ confirm: false });
       if (value !== valueRef.current) {
         console.log('confirm omit');
-        eventBus.emit('cell-change', { row, col: col, value });
+        eventBus.emit('cell-change', {
+          row,
+          col,
+          value: cell.dataEditor?.formatter
+            ? cell.dataEditor.formatter?.(value)
+            : value,
+        });
       }
     }
-  }, [confirm, eventBus, value]);
+  }, [confirm, eventBus, value, cell]);
 
   const handleCommit = useCallback(
     (value: string) => {

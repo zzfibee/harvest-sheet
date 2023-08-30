@@ -161,13 +161,22 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
     if (!changeInfo) return;
     const { changes, extChanges } = changeInfo;
 
-    const legalChanges = changes.filter(({ row, col, value }) => {
-      const editor = data[row][col].dataEditor;
-      if (editor && editor.checker) {
-        return editor.checker(value);
-      }
-      return true;
-    });
+    const legalChanges = changes
+      .filter(({ row, col, value }) => {
+        const editor = data[row][col].dataEditor;
+        if (editor && editor.checker) {
+          return editor.checker(value);
+        }
+        return true;
+      })
+      .map(({ row, col, value }) => {
+        const editor = data[row][col].dataEditor;
+        return {
+          row,
+          col,
+          value: editor?.formatter ? editor?.formatter?.(value) : value,
+        };
+      });
     const legalExtChanges = extChanges?.filter(({ value, col }) => {
       const editor = data[0][col].dataEditor;
       if (editor && editor.checker) {
