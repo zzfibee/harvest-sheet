@@ -22,6 +22,10 @@
 
 <code src="../src/example/antComponent.tsx"  description="antd">编辑功能</code>
 
+## 自定义表格
+
+<code src="../src/example/valuationAnalyze.tsx"  description="评估">全功能展示</code>
+
 <!-- ### 调整列宽
 
 <!-- <code src="../src/Demo/TableUsage/index.tsx"></code> --> -->

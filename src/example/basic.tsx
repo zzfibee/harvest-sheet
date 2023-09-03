@@ -1,4 +1,4 @@
-import Table from '@zhenliang/sheet/core/table';
+import { Table } from '@zhenliang/sheet';
 import type { SheetTableType } from '@zhenliang/sheet/type';
 import { Space, Tag } from 'antd';
 import 'antd/dist/antd.css';

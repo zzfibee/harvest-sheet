@@ -14,6 +14,13 @@ export type ColumnProps = {
   width?: string | number;
   dataIndex?: string;
   title: string | ReactNode | ReactNode[];
+  titleConfig?: {
+    colSpan?: number;
+    className?: string;
+  };
+  cellConfig?: {
+    className?: string;
+  };
   key?: string;
   editable?: boolean;
   readonly?:

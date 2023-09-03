@@ -63,48 +63,51 @@ export const DraggableShell = ({
         );
       }
       columns.forEach((item: SheetTableType.ColumnProps, index: number) => {
-        ths.push(
-          <th
-            className={classNames(
-              'cell',
-              'cell-title',
-              'read-only',
-              item.fixed && 'fixed',
-              item.fixed && `fixed-${item.fixed}`,
-            )}
-            key={item.dataIndex ?? index}
-            style={{
-              textAlign: (item.align as any) ?? 'unset',
-              left: item.fixed === 'left' ? 0 : 'unset',
-              right: item.fixed === 'right' ? 0 : 'unset',
-            }}
-            onMouseDown={(e) => {
-              const target = e.target as HTMLTableHeaderCellElement;
+        item.titleConfig?.colSpan !== 0 &&
+          ths.push(
+            <th
+              className={classNames(
+                'cell',
+                'cell-title',
+                'read-only',
+                item.fixed && 'fixed',
+                item.fixed && `fixed-${item.fixed}`,
+                item.titleConfig?.className,
+              )}
+              colSpan={item.titleConfig?.colSpan}
+              key={item.dataIndex ?? index}
+              style={{
+                textAlign: (item.align as any) ?? 'unset',
+                left: item.fixed === 'left' ? 0 : 'unset',
+                right: item.fixed === 'right' ? 0 : 'unset',
+              }}
+              onMouseDown={(e) => {
+                const target = e.target as HTMLTableHeaderCellElement;
 
-              downRef.current = target;
-              if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
-                downRef.current.mouseDown = true;
-                downRef.current.oldX = e.nativeEvent.x;
-                downRef.current.oldWidth = downRef.current.offsetWidth;
-              } else {
-                downRef.current = null;
-              }
-            }}
-            onMouseMove={(e) => {
-              const target = e.target as HTMLTableHeaderCellElement;
-              if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
-                target.style.cursor = 'col-resize';
-              } else {
-                target.style.cursor = 'default';
-              }
-              //取出暂存的Table Cell
-              if (downRef.current === undefined) downRef.current = target;
-              //调整宽度
-            }}
-          >
-            {item.title}
-          </th>,
-        );
+                downRef.current = target;
+                if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
+                  downRef.current.mouseDown = true;
+                  downRef.current.oldX = e.nativeEvent.x;
+                  downRef.current.oldWidth = downRef.current.offsetWidth;
+                } else {
+                  downRef.current = null;
+                }
+              }}
+              onMouseMove={(e) => {
+                const target = e.target as HTMLTableHeaderCellElement;
+                if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
+                  target.style.cursor = 'col-resize';
+                } else {
+                  target.style.cursor = 'default';
+                }
+                //取出暂存的Table Cell
+                if (downRef.current === undefined) downRef.current = target;
+                //调整宽度
+              }}
+            >
+              {item.title}
+            </th>,
+          );
       });
 
       return ths;

@@ -2,7 +2,7 @@ import type { SheetType } from '@zhenliang/sheet/type';
 import { Cascader } from 'antd';
 import 'antd/es/cascader/style/index.css';
 import { useMemo } from 'react';
-import { optionsTransferToValue } from '../../util';
+import { optionsTransferToValue, valuesTransferToLabel } from '../../util';
 import './index.less';
 
 const getCascaderEditor = (options: SheetType.OptionsType[]) => {
@@ -16,7 +16,9 @@ const getCascaderEditor = (options: SheetType.OptionsType[]) => {
 
     const handleChange = (opt: any) => {
       console.log(opt);
-      onConfirm(opt ? opt[opt.length - 1] : null);
+      onConfirm(
+        opt ? valuesTransferToLabel(options, opt[opt.length - 1]) : null,
+      );
     };
 
     return (

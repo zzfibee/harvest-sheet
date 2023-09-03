@@ -20,7 +20,9 @@ export const useVirtualList = (
 ) => {
   const [state, setState] = useState({
     virtualStart: 0,
-    virtualEnd: data.length - 1,
+    virtualEnd: virtualized
+      ? Math.min(data.length - 1, 2 * extra)
+      : data.length - 1,
     paddingTop: 0,
     paddingBottom: 0,
   });

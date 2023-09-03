@@ -9,7 +9,9 @@
     "paths": {
       "@@/*": [".dumi/tmp/*"],
       "@zhenliang/sheet": ["src"],
-      "@zhenliang/sheet/*": ["src/*", "*"]
+      "@zhenliang/sheet/*": ["src/*", "*"],
+      "@zhenliang/sheet/hooks": ["src/hooks"],
+      "@zhenliang/sheet/type": ["src/type"]
     }
   },
   "include": [".dumi/**/*", ".dumirc.ts", "src/**/*"]

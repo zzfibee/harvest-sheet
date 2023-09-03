@@ -47,25 +47,27 @@ export const TableShell = ({
       }
 
       columns.forEach((item: SheetTableType.ColumnProps, index: number) => {
-        ths.push(
-          <th
-            className={classNames(
-              'cell',
-              'cell-title',
-              'read-only',
-              item.fixed && 'fixed',
-              item.fixed && `fixed-${item.fixed}`,
-            )}
-            key={item.dataIndex || index}
-            style={{
-              textAlign: (item.align as any) ?? 'unset',
-              left: item.fixed === 'left' ? 0 : 'unset',
-              right: item.fixed === 'right' ? 0 : 'unset',
-            }}
-          >
-            {item.title}
-          </th>,
-        );
+        item.titleConfig?.colSpan !== 0 &&
+          ths.push(
+            <th
+              className={classNames(
+                'cell',
+                'cell-title',
+                'read-only',
+                item.fixed && 'fixed',
+                item.fixed && `fixed-${item.fixed}`,
+              )}
+              key={item.dataIndex || index}
+              colSpan={item.titleConfig?.colSpan}
+              style={{
+                textAlign: (item.align as any) ?? 'unset',
+                left: item.fixed === 'left' ? 0 : 'unset',
+                right: item.fixed === 'right' ? 0 : 'unset',
+              }}
+            >
+              {item.title}
+            </th>,
+          );
       });
       return ths;
     }, [columns, showGroup || showSelect, controlProps]);

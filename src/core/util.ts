@@ -266,6 +266,58 @@ export const optionsTransferToValue = (
   }
   return values;
 };
+export const optionsTransferToValue2 = (
+  options?: SheetType.OptionsType[],
+  value?: string,
+  path: string[] = [],
+) => {
+  if (!options?.length || !value) return [...path];
+  const leaveNode = options?.find(
+    (item) => !item.children?.length && value === item.value,
+  );
+  if (leaveNode) {
+    return [leaveNode.value];
+  }
+  const childrenNodes = options?.filter((item) => item.children?.length);
+  if (childrenNodes) {
+    for (const childrenNode of childrenNodes) {
+      const allPath: string[] = optionsTransferToValue(
+        childrenNode.children,
+        value,
+        [...path, childrenNode.value],
+      );
+      if (allPath?.length) {
+        return allPath;
+      }
+    }
+  }
+  return [];
+};
+
+export const valuesTransferToLabel = (
+  options?: SheetType.OptionsType[],
+  value?: string,
+): string | null => {
+  if (!options?.length || !value) return null;
+  const leaveNode = options?.find(
+    (item) => !item.children?.length && value === item.value,
+  );
+  const childrenNode = options
+    ?.filter((item) => item.children?.length)
+    .map((item) => item.children) as SheetType.OptionsType[][];
+  if (leaveNode) {
+    return leaveNode.label;
+  }
+  if (childrenNode) {
+    for (const children of childrenNode) {
+      const label = valuesTransferToLabel(children, value);
+      if (label) {
+        return label;
+      }
+    }
+  }
+  return null;
+};
 
 export const groupConfigToGroupMap = (
   rowGroupConfig?: SheetType.RowGroupConfig,

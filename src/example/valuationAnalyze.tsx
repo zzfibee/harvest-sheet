@@ -1,4 +1,6 @@
 import { getNumberEditor, getSelectEditor, Table } from '@zhenliang/sheet';
+import { Button } from 'antd';
+import { isNil } from 'lodash';
 import { useCallback, useState } from 'react';
 import { SwitchViewer } from '../core/viewer';
 import { SheetTableType, SheetType } from '../type';
@@ -86,7 +88,7 @@ export default () => {
       dataIndex: 'termDiscountRate',
       width: 134,
       editor: RateValueInput,
-      viewer: RateViewer,
+      render: RateViewer,
       readonly: (value, record, row) => !row || isNil(record.valuationType),
       // calcReadOnly: (record, rowIndex) => !rowIndex || isNil(record.valuationType),
     },
@@ -94,7 +96,7 @@ export default () => {
       title: '租期外折现率',
       dataIndex: 'reversionDiscountRate',
       width: 134,
-      viewer: RateViewer,
+      render: RateViewer,
       editor: RateValueInput,
       readonly: (value, record, row) => !row || isNil(record.valuationType),
     },
@@ -102,7 +104,7 @@ export default () => {
       title: '空置面积折现率',
       dataIndex: 'vacancyDiscountRate',
       width: 134,
-      viewer: RateViewer,
+      render: RateViewer,
       editor: RateValueInput,
       readonly: (value, record, row) => !row || isNil(record.valuationType),
     },
@@ -110,7 +112,7 @@ export default () => {
       title: '折现率',
       dataIndex: 'discountRate',
       width: 134,
-      viewer: RateViewer,
+      render: RateViewer,
       editor: RateValueInput,
       readonly: (value, record, row) => !row || isNil(record.valuationType),
     },
@@ -118,7 +120,7 @@ export default () => {
       title: '退出资本化率',
       dataIndex: 'exitCapRate',
       width: 134,
-      viewer: RateViewer,
+      render: RateViewer,
       editor: RateValueInput,
       readonly: (value, record, row) => !row || isNil(record.valuationType),
     },
@@ -147,7 +149,7 @@ export default () => {
       title: '操作',
       width: 62,
       dataIndex: 'id',
-      cellType: 'operate',
+      fixed: SheetType.CellAlign.right,
       editable: false,
       render: ((props) => {
         const { row, record } = props;
@@ -157,7 +159,7 @@ export default () => {
               <Button
                 type="link"
                 onClick={() => {
-                  handleDelete((record as { id: number }).id);
+                  // handleDelete((record as { id: number }).id);
                   // const infos = [{ id: record.id, row, extra: record }];
                   // operateCb && operateCb(4, { row, infos });
                 }}

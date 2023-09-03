@@ -6,7 +6,7 @@ import moment from 'moment';
 import { useEffect, useMemo, useRef } from 'react';
 import './index.less';
 
-export const GetDateEditor = (
+export const getDateEditor = (
   dateProps?: Pick<
     DatePickerProps,
     'disabledDate' | 'disabled' | 'allowClear' | 'placeholder'

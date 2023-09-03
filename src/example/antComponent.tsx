@@ -3,12 +3,13 @@ import { cloneDeep, random } from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
 import {
   getCascaderEditor,
-  GetDateEditor,
+  getDateEditor,
   getNumberEditor,
   getSelectEditor,
 } from '../core/editor';
 import Table from '../core/table';
 import { BtnViewer } from '../core/viewer/btnViewer';
+import { GetCascaderViewer } from '../core/viewer/cascaderViewer';
 import { EditViewer } from '../core/viewer/editViewer';
 import { SwitchViewer } from '../core/viewer/switchViewer';
 import { SheetTableType, SheetType } from '../type';
@@ -25,7 +26,7 @@ const Precision2Number = getNumberEditor({
   precision: 2,
 });
 
-const TypeSelector = getSelectEditor([
+const SelectorOptions = [
   {
     value: '1',
     label: '111111',
@@ -38,9 +39,20 @@ const TypeSelector = getSelectEditor([
     value: '3',
     label: '333333',
   },
-]);
+];
 
-const CascaderSelector = getCascaderEditor([
+const getTypeViewer = (options: SheetType.Options[]) => {
+  const TypeViewer: SheetType.CellViewer = (props) => {
+    return options.find(
+      (item) => item.label === props.value || item.value == props.value,
+    ).label;
+  };
+  return TypeViewer;
+};
+
+const TypeSelector = getSelectEditor(SelectorOptions, 'label');
+
+const cascaderOptions = [
   {
     value: 'zhejiang',
     label: 'Zhejiang',
@@ -73,7 +85,11 @@ const CascaderSelector = getCascaderEditor([
       },
     ],
   },
-]);
+];
+
+const CascaderViewer = GetCascaderViewer(cascaderOptions);
+
+const CascaderSelector = getCascaderEditor(cascaderOptions);
 
 const columns: SheetTableType.ColumnProps[] = [
   {
@@ -107,25 +123,34 @@ const columns: SheetTableType.ColumnProps[] = [
     width: 150,
     dataIndex: 'date',
     key: 'date',
-    editor: GetDateEditor(),
+    editor: getDateEditor(),
     // fixed: 'left',
   },
   {
     title: 'select',
     width: 200,
     dataIndex: 'select',
+    render: getTypeViewer(SelectorOptions),
     editor: TypeSelector,
   },
   {
     title: 'Column 2',
     width: 200,
+    titleConfig: {
+      colSpan: 2,
+    },
     dataIndex: 'address1',
+    align: SheetType.CellAlign.center,
     key: '2',
+    render: CascaderViewer,
     editor: CascaderSelector,
   },
   {
     title: 'Column 3',
     width: 200,
+    titleConfig: {
+      colSpan: 0,
+    },
     dataIndex: 'address2',
     key: '3',
     editable: false,
@@ -138,7 +163,7 @@ const columns: SheetTableType.ColumnProps[] = [
   { title: 'Column 8', width: 200, dataIndex: 'address7', key: '8' },
   {
     title: 'Action',
-    align: 'center',
+    align: SheetType.CellAlign.center,
     key: 'operation',
     fixed: 'right',
     width: 150,

@@ -104,6 +104,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
             valueViewer: colInfo.render ? colInfo.render : undefined,
             dataEditor: colInfo.editor ? colInfo.editor : undefined,
             row: currentIndex,
+            className: colInfo.cellConfig?.className,
             col,
           } as any);
         });
@@ -158,6 +159,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
             editable: colInfo.editable,
             valueViewer: colInfo.render ? colInfo.render : undefined,
             dataEditor: colInfo.editor ? colInfo.editor : undefined,
+            className: colInfo.cellConfig?.className,
             row,
             col,
           });
