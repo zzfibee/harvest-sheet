@@ -1,11 +1,11 @@
-import { useMouse } from '@zhenliang/sheet/hooks';
+import { useMouse } from '@zhenliang/sheet';
 import { Dispatch } from '@zhenliang/sheet/hooks/useMiddlewareReducer';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { useCallback, useRef } from 'react';
 import { extractDataRowAndCol, findParentTd } from '../util';
 
 const rowCount = 10; //每秒10行
-const colCount = 5; //每秒3列
+const colCount = 5; //每秒5列
 
 export const useMouseEvent = (
   dispatch: Dispatch,

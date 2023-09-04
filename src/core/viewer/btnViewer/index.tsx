@@ -1,4 +1,4 @@
-import { useSheetEvent } from '@zhenliang/sheet/hooks';
+import { useSheetEvent } from '@zhenliang/sheet';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { Button, Divider } from 'antd';
 import { useCallback } from 'react';

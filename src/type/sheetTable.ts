@@ -9,8 +9,20 @@ export type refAssertion = {
 export type CellFixed = SheetType.CellAlign;
 
 export type ColumnProps = {
+  /**
+   * @description 对齐
+   * @default "left"
+   */
   align?: SheetType.CellAlign;
+  /**
+   * @description 固定
+   * @default "undefined"
+   */
   fixed?: Omit<CellFixed, 'center'>;
+  /**
+   * @description 列宽
+   * @default "undefined"
+   */
   width?: string | number;
   dataIndex?: string;
   title: string | ReactNode | ReactNode[];
@@ -49,7 +61,15 @@ export type TableGroupConfig = {
   defaultOpen: boolean;
 };
 export type TableProps = {
+  /**
+   * @description 表格类名
+   * @default "undefined"
+   */
   className?: string;
+  /**
+   * @description sheet的一些定义方法可执行
+   * @default "object"
+   */
   sheetInstance?: React.MutableRefObject<SheetType.SheetInstance | null>;
   columns: ColumnProps[];
   virtualized?: boolean;

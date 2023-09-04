@@ -1,4 +1,4 @@
-import { useSheetEvent } from '@zhenliang/sheet/hooks';
+import { useSheetEvent } from '@zhenliang/sheet';
 import { FC, useEffect } from 'react';
 
 export const SheetEvent: FC<{

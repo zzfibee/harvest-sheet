@@ -41,12 +41,14 @@ const data = [
     isEnabled: false,
   },
 ];
+const evaluateMethods = [
+  { label: 'DCF', value: 2 },
+  { label: 'T&R', value: 5 },
+];
+
+const EvaSelect = getSelectEditor(evaluateMethods);
 
 export default () => {
-  const evaluateMethods = [
-    { label: 'DCF', value: 2 },
-    { label: 'T&R', value: 5 },
-  ];
   const [state] = useState(data);
   const columns: SheetTableType.ColumnProps[] = [
     {
@@ -113,7 +115,8 @@ export default () => {
       dataIndex: 'discountRate',
       width: 134,
       render: RateViewer,
-      editor: RateValueInput,
+      editor: EvaSelect,
+
       readonly: (value, record, row) => !row || isNil(record.valuationType),
     },
     {

@@ -1,4 +1,4 @@
-import { useKeyBoard } from '@zhenliang/sheet/hooks';
+import { useKeyBoard } from '@zhenliang/sheet';
 import { Dispatch } from '@zhenliang/sheet/hooks/useMiddlewareReducer';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { sideEffectReducer } from '../reducers/sideEffectReducer';

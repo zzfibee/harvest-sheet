@@ -1,5 +1,5 @@
 import { EditFilled } from '@ant-design/icons';
-import { useSheetEvent } from '@zhenliang/sheet/hooks';
+import { useSheetEvent } from '@zhenliang/sheet';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { useCallback } from 'react';
 

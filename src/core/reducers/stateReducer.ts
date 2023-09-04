@@ -1,4 +1,4 @@
-import { SheetType } from '@zhenliang/sheet/type';
+import { SheetType } from '@zhenliang/sheet';
 import { reducerAction } from '.';
 
 export const stateReducer: Record<string, reducerAction> = {

@@ -1,4 +1,4 @@
-import { Dispatch, useSetState } from '@zhenliang/sheet/hooks';
+import { Dispatch, useSetState } from '@zhenliang/sheet';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { useEffect } from 'react';
 import { calcMenuPosition, extractDataRowAndCol, findParentTd } from '../util';
