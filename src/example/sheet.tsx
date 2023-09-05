@@ -51,7 +51,7 @@ const ExcelIndexCell: React.FC<{ value: string; row: number; record: any }> = ({
 
 const grid: SheetType.Cell[][] = range(1, 120).map((row, rowIndex) =>
   range(0, 26).map((i) => ({
-    id: String(random(0, 1)),
+    id: String(random(0, 1, true)),
     readonly: i === 0 ? true : false,
     fixed: i === 0 ? 'left' : undefined,
     value: i === 0 ? row : row > 15 || i > 10 ? '' : `${row}-${i}`,
@@ -181,12 +181,47 @@ const BasicSheet: React.FC = () => {
     [state, groupConfig],
   );
 
-  const onCellsChanged = (changes: any) => {
-    const newGrid = [...state];
+  const onCellsChanged = (changes: any, extChanges?: any[]) => {
+    const newGrid = cloneDeep(grid);
     changes.forEach(({ row, col, value }: any) => {
       const newRow = [...newGrid[row]];
       newRow[col] = { ...newRow[col], value };
       newGrid[row] = newRow;
+    });
+
+    extChanges?.forEach((item) => {
+      const { row, col, value } = item as SheetType.CellData;
+      if (!newGrid[row]) {
+        const newRow = cloneDeep(newGrid[0]);
+        newRow.forEach((item) => {
+          item.value = '';
+          item.record = undefined;
+          item.id = String(random(0, 1, true));
+        });
+        newGrid.push(newRow);
+        newGrid.forEach((row, index) => {
+          row[0].value = index + 1;
+        });
+        // sheetInstance.current?.pushToHistory({
+        //   type: 'NewRow' as SheetType.OperateType,
+        //   changes: [],
+        //   rowInfo: {
+        //     newRow: index + 1,
+        //   },
+        //   extraInfo: groupConfig,
+        // });
+        // const newRow = Array(newGrid[0].length).map((item, index) => ({
+        //   id: String(random(0, 1)),
+        //   row,
+        //   col: index,
+        //   value: '',
+        // }));
+        // newGrid.push(newRow);
+      }
+      newGrid[row][col] = {
+        ...newGrid[row][col],
+        value,
+      };
     });
     setState(newGrid);
   };
@@ -292,6 +327,7 @@ const BasicSheet: React.FC = () => {
       sheetInstance={sheetInstance}
       className="excel-sheet"
       virtualized
+      freePaste
       data={state as any}
       groupConfig={groupConfig}
       scroll={{ x: '100%', y: '100vh' }}

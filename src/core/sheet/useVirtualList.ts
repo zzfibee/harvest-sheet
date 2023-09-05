@@ -36,9 +36,18 @@ export const useVirtualList = (
 
     const rowHeight = getRowHeight(elementRef.current as HTMLSpanElement);
 
+    const itemHeight = rowHeight || 30;
+
+    setState({
+      virtualStart: 0,
+      virtualEnd: Math.min(data.length - 1, 2 * extra),
+      paddingTop: 0,
+      paddingBottom:
+        (data.length - Math.min(data.length - 1, 2 * extra)) * itemHeight,
+    });
+
     const handleScroll = throttle(() => {
       const { scrollTop, clientHeight } = elementRef.current as HTMLSpanElement;
-      const itemHeight = rowHeight || 30;
       const start = Math.floor(scrollTop / itemHeight) - extra;
       const end = Math.ceil((scrollTop + clientHeight) / itemHeight) + extra;
       const updateVirtualConfig = {
@@ -58,16 +67,7 @@ export const useVirtualList = (
     return () => {
       elementRef.current?.removeEventListener('scroll', handleScroll);
     };
-  }, [elementRef.current]);
-
-  useEffect(() => {
-    setState({
-      virtualStart: 0,
-      virtualEnd: Math.min(data.length - 1, 2 * extra),
-      paddingTop: 0,
-      paddingBottom: 0,
-    });
-  }, [data]);
+  }, [elementRef.current, data.length]);
 
   if (!virtualized) {
     return {
@@ -78,6 +78,7 @@ export const useVirtualList = (
     };
   }
 
+  console.log('useVirtualList', data.length - 1 <= virtualEnd, paddingBottom);
   return {
     virtualStart: Math.max(0, virtualStart),
     virtualEnd: Math.min(data.length, virtualEnd),

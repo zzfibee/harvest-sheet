@@ -79,6 +79,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
           col: -1,
           editable: false,
           align: 'center',
+          fixed: 'unset',
           value:
             groupMap.get(currentIndex) && groupMap.get(currentIndex)?.isStart,
           record: {

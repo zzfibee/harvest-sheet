@@ -132,6 +132,7 @@ const Cell = (props: SheetType.CellProps) => {
           row={r}
           col={col}
           value={value}
+          record={cel.record}
           onConfirm={handleCommit}
           onChange={setValue}
         />

@@ -125,7 +125,7 @@ export function formatDataToCell({
   const isSinglePaste = pasteData.length === 1 && pasteData[0].length === 1;
 
   // todo 超出行的处理
-  const isExRow = (cells[cells.length - 1].row as number) > (data?.length || 0);
+  // const isExRow = (cells[cells.length - 1].row as number) > (data?.length || 0);
 
   const groupMap = groupConfigToGroupMap(groupConfig);
   const actualRowCount = range(start?.row ?? 0, (end?.row ?? 0) + 1).reduce(
@@ -202,7 +202,7 @@ export function formatDataToCell({
 
     return {
       changes,
-      extChanges: isExRow && freePaste ? extChanges : undefined,
+      extChanges: freePaste ? extChanges : undefined,
     };
   } else {
     // 选中多个单元格，粘贴多个数据

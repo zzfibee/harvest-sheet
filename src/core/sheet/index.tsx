@@ -62,6 +62,13 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
         dispatch((d: unknown, getState: () => SheetType.UpdateStateType) => {
           const { start, groupConfig } = getState();
           if (!start && isNil(row)) return;
+          if (row === -1) {
+            sheetWrapperRef.current?.scrollTo(
+              0,
+              sheetWrapperRef.current?.scrollHeight as number,
+            );
+            return;
+          }
           const actual = rowToActualRow(
             (row as number) ?? start?.row,
             groupConfig,
@@ -69,6 +76,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           const rowHeight = getRowHeight(
             sheetWrapperRef.current as HTMLSpanElement,
           );
+          console.log('zoomTo', rowHeight, actual, rowHeight * actual);
           sheetWrapperRef.current?.scrollTo(0, rowHeight * actual);
         });
       },

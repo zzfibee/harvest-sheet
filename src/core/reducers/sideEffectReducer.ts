@@ -185,7 +185,10 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       return true;
     });
     cellChangeHandler &&
-      cellChangeHandler(legalChanges as any, legalExtChanges as any);
+      cellChangeHandler(
+        legalChanges as any,
+        freePaste ? legalExtChanges : ([] as any),
+      );
 
     let newHistory = [...(history || [])];
     newHistory.push({
