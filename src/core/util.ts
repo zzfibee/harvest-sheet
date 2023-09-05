@@ -158,7 +158,7 @@ export function formatDataToCell({
       changes.push({
         row,
         col,
-        value: pasteData[0][0],
+        value: pasteData[0][0].trimStart().trimEnd(),
       } as any);
     });
     return { changes };
@@ -175,7 +175,7 @@ export function formatDataToCell({
           extChanges.push({
             row: row + i,
             col: col + j,
-            value: pasteData[i][j],
+            value: pasteData[i][j]?.trimStart().trimEnd(),
           } as any);
         } else {
           if (data?.[row + i]?.[col + j]?.readonly) return;
@@ -190,7 +190,7 @@ export function formatDataToCell({
           changes.push({
             row: row + i,
             col: col + j,
-            value: pasteData[i][j],
+            value: pasteData[i][j]?.trimStart().trimEnd(),
           } as any);
         }
       });
@@ -229,7 +229,7 @@ export function formatDataToCell({
       changes.push({
         row: row,
         col: col,
-        value: pasteData[pasteCount++][col - baseCol],
+        value: pasteData[pasteCount++][col - baseCol]?.trimStart().trimEnd(),
       } as any);
     });
     return { changes };

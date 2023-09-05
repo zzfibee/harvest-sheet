@@ -83,6 +83,7 @@ export type TableProps = {
   scroll?: { x?: number | string; y?: number | string };
   sticky?: boolean;
   draggable?: boolean;
+  freePaste?: boolean;
   rowSelection?: {
     rowSelected: string[];
     onChange: (
@@ -95,7 +96,7 @@ export type TableProps = {
     onChange: (value: TableGroupConfig) => void;
   };
 
-  onChange: (changes: TableChange[]) => void;
+  onChange: (changes: TableChange[], extChanges?: TableChange[]) => void;
   handleAdd?: () => void;
   eventHandler?: Record<
     'btn-click' | 'cell-edit' | 'cell-switch' | string,

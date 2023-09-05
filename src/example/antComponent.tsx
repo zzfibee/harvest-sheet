@@ -200,7 +200,11 @@ const App: React.FC = () => {
 
   const sheetInstance = useRef<SheetType.SheetInstance | null>(null);
   const handleChange = useCallback(
-    (changes: SheetTableType.TableChange[]) => {
+    (
+      changes: SheetTableType.TableChange[],
+      extChange?: SheetTableType.TableChange[],
+    ) => {
+      console.log(extChange);
       const newState: any = cloneDeep(state);
       changes.forEach((change) => {
         const { row, key, value } = change;
@@ -233,6 +237,7 @@ const App: React.FC = () => {
   }, [state]);
   return (
     <Table
+      freePaste
       sheetInstance={sheetInstance}
       columns={columns}
       dataSource={state}

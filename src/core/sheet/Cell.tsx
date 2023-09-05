@@ -93,10 +93,10 @@ const Cell = (props: SheetType.CellProps) => {
     if (confirm) {
       setEventState({ confirm: false });
       if (value !== valueRef.current) {
-        console.log('confirm omit');
         eventBus.emit('cell-change', {
           row,
           col,
+          id: cell.id,
           value: cell.dataEditor?.formatter
             ? cell.dataEditor.formatter?.(value)
             : value,
@@ -111,10 +111,15 @@ const Cell = (props: SheetType.CellProps) => {
         return;
       }
       setValue(value);
-      console.log('handle omit');
-      eventBus.emit('cell-change', { row, col: col, value, confirm: true });
+      eventBus.emit('cell-change', {
+        row,
+        col: col,
+        id: cell.id,
+        value,
+        confirm: true,
+      });
     },
-    [eventBus, valueRef],
+    [eventBus, valueRef, cell],
   );
 
   const renderEditor = (

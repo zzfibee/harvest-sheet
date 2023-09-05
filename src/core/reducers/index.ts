@@ -10,6 +10,7 @@ export type SheetAction =
   | 'colMove'
   | 'editFinish'
   | 'pushHistory'
+  | 'popHistory'
   | 'selectRow'
   | 'clearSelect'
   | 'clearSelectIfNotSingleRow'
@@ -44,6 +45,7 @@ const sheetReducer = (
     case 'colMove':
     case 'editFinish':
     case 'pushHistory':
+    case 'popHistory':
     case 'selectRow':
     case 'clearSelect':
     case 'clearSelectIfNotSingleRow':

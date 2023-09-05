@@ -15,7 +15,6 @@ const getCascaderEditor = (options: SheetType.OptionsType[]) => {
     );
 
     const handleChange = (opt: any) => {
-      console.log(opt);
       onConfirm(
         opt ? valuesTransferToLabel(options, opt[opt.length - 1]) : null,
       );

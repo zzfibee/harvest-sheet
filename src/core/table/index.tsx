@@ -64,12 +64,12 @@ const Table: React.FC<SheetTableType.TableProps> = ({
       }
       groupList.forEach((itemRow: any) => {
         const dataRow: SheetType.Cell[] = [];
-        let rowId: string = item.key || item.id || String(currentIndex);
+        let rowId: string = itemRow.id || itemRow.key || String(currentIndex);
         if (rowKey) {
           if (rowKey instanceof Function) {
-            rowId = rowKey(item, row);
+            rowId = rowKey(itemRow, row);
           } else {
-            rowId = item[rowKey];
+            rowId = itemRow[rowKey];
           }
         }
 
@@ -177,10 +177,17 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   }, [dataSource, columns]);
 
   const handleChanges = useCallback(
-    (changes: SheetType.CellData[]) => {
+    (changes: SheetType.CellData[], extChange?: SheetType.CellData[]) => {
       onChange &&
         onChange(
           changes.map((item) => ({
+            row: item.row,
+            id: item.id,
+            key: columns[hasControl ? item.col - 1 : item.col]
+              .dataIndex as string,
+            value: item.value,
+          })),
+          extChange?.map((item) => ({
             row: item.row,
             id: item.id,
             key: columns[hasControl ? item.col - 1 : item.col]

@@ -33,18 +33,8 @@ export const useVirtualList = (
     if (!elementRef.current) return;
 
     //  当前位定高的表格，所以可以直接获取第一行的高度
-
     const rowHeight = getRowHeight(elementRef.current as HTMLSpanElement);
-
     const itemHeight = rowHeight || 30;
-
-    setState({
-      virtualStart: 0,
-      virtualEnd: Math.min(data.length - 1, 2 * extra),
-      paddingTop: 0,
-      paddingBottom:
-        (data.length - Math.min(data.length - 1, 2 * extra)) * itemHeight,
-    });
 
     const handleScroll = throttle(() => {
       const { scrollTop, clientHeight } = elementRef.current as HTMLSpanElement;
@@ -62,6 +52,8 @@ export const useVirtualList = (
       setState(updateVirtualConfig);
       virtualRef.current = updateVirtualConfig;
     }, 50);
+    // data.length change 的时候用 handleScroll 重设 virtual params
+    handleScroll();
 
     elementRef.current.addEventListener('scroll', handleScroll);
     return () => {
@@ -78,7 +70,6 @@ export const useVirtualList = (
     };
   }
 
-  console.log('useVirtualList', data.length - 1 <= virtualEnd, paddingBottom);
   return {
     virtualStart: Math.max(0, virtualStart),
     virtualEnd: Math.min(data.length, virtualEnd),

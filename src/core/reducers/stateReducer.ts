@@ -37,15 +37,14 @@ export const stateReducer: Record<string, reducerAction> = {
   editFinish(state, payload) {
     const { data } = state;
     const {
-      cell: { row, col, confirm },
+      cell: { row, col, confirm, id },
     } = payload as {
       cell: SheetType.CellData & { confirm: boolean };
     };
     let history = [...(state.history || [])];
     const current = data?.[row]?.[col].value;
-    console.log(history.length, current);
     history.push({
-      changes: [{ row, col, value: current as string }],
+      changes: [{ row, col, value: current as string, id }],
       type: 'Edit' as SheetType.OperateType,
     });
     if (confirm) {
@@ -59,6 +58,15 @@ export const stateReducer: Record<string, reducerAction> = {
     return {
       ...state,
       history,
+    };
+  },
+  popHistory(state) {
+    const { history = [] } = state;
+    const newHistory = [...history];
+    newHistory.pop();
+    return {
+      ...state,
+      history: newHistory,
     };
   },
   pushHistory(state, payload) {

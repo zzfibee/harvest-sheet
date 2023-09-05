@@ -174,16 +174,24 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         return {
           row,
           col,
+          id: data[row][col]?.id,
           value: editor?.formatter ? editor?.formatter?.(value) : value,
         };
       });
-    const legalExtChanges = extChanges?.filter(({ value, col }) => {
-      const editor = data[0][col].dataEditor;
-      if (editor && editor.checker) {
-        return editor.checker(value);
-      }
-      return true;
-    });
+    const legalExtChanges = extChanges
+      ?.filter(({ value, col }) => {
+        const editor = data[0][col].dataEditor;
+        if (editor && editor.checker) {
+          return editor.checker(value);
+        }
+        return true;
+      })
+      .map(({ row, col, value }, index) => ({
+        row,
+        col,
+        value,
+        id: -(index + 1),
+      }));
     cellChangeHandler &&
       cellChangeHandler(
         legalChanges as any,
@@ -243,6 +251,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         row: item.row,
         col: item.col,
         value: '',
+        id: data?.[item.row]?.[item.col].id,
       }));
 
     let newHistory = [...(history || [])];
@@ -259,20 +268,12 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
   reverse(dispatch, getState) {
     const { start, end, history, cellChangeHandler, eventBus } = getState();
     if (!history?.length) return;
-    console.log(history.length);
 
     const changeHistory = [...history];
     const change = changeHistory.pop() as SheetType.OperateHistory;
     const { type } = change;
     if (!['Edit', 'Paste', 'Delete'].includes(type)) {
       eventBus.emit('reverse', change);
-      if (type === 'DeleteRow') {
-        // console.log(change.rowInfo?.deleteRow);
-        // dispatch({
-        //   type: 'selectRow',
-        //   payload: change.rowInfo?.deleteRow as number,
-        // });
-      }
 
       dispatch({
         type: 'changes',

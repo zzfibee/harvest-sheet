@@ -181,50 +181,53 @@ const BasicSheet: React.FC = () => {
     [state, groupConfig],
   );
 
-  const onCellsChanged = (changes: any, extChanges?: any[]) => {
-    const newGrid = cloneDeep(grid);
-    changes.forEach(({ row, col, value }: any) => {
-      const newRow = [...newGrid[row]];
-      newRow[col] = { ...newRow[col], value };
-      newGrid[row] = newRow;
-    });
+  const onCellsChanged = useCallback(
+    (changes: any, extChanges?: any[]) => {
+      const newGrid = cloneDeep(state);
+      changes.forEach(({ row, col, value }: any) => {
+        const newRow = [...newGrid[row]];
+        newRow[col] = { ...newRow[col], value };
+        newGrid[row] = newRow;
+      });
 
-    extChanges?.forEach((item) => {
-      const { row, col, value } = item as SheetType.CellData;
-      if (!newGrid[row]) {
-        const newRow = cloneDeep(newGrid[0]);
-        newRow.forEach((item) => {
-          item.value = '';
-          item.record = undefined;
-          item.id = String(random(0, 1, true));
-        });
-        newGrid.push(newRow);
-        newGrid.forEach((row, index) => {
-          row[0].value = index + 1;
-        });
-        // sheetInstance.current?.pushToHistory({
-        //   type: 'NewRow' as SheetType.OperateType,
-        //   changes: [],
-        //   rowInfo: {
-        //     newRow: index + 1,
-        //   },
-        //   extraInfo: groupConfig,
-        // });
-        // const newRow = Array(newGrid[0].length).map((item, index) => ({
-        //   id: String(random(0, 1)),
-        //   row,
-        //   col: index,
-        //   value: '',
-        // }));
-        // newGrid.push(newRow);
-      }
-      newGrid[row][col] = {
-        ...newGrid[row][col],
-        value,
-      };
-    });
-    setState(newGrid);
-  };
+      extChanges?.forEach((item) => {
+        const { row, col, value } = item as SheetType.CellData;
+        if (!newGrid[row]) {
+          const newRow = cloneDeep(newGrid[0]);
+          newRow.forEach((item) => {
+            item.value = '';
+            item.record = undefined;
+            item.id = String(random(0, 1, true));
+          });
+          newGrid.push(newRow);
+          newGrid.forEach((row, index) => {
+            row[0].value = index + 1;
+          });
+          // sheetInstance.current?.pushToHistory({
+          //   type: 'NewRow' as SheetType.OperateType,
+          //   changes: [],
+          //   rowInfo: {
+          //     newRow: index + 1,
+          //   },
+          //   extraInfo: groupConfig,
+          // });
+          // const newRow = Array(newGrid[0].length).map((item, index) => ({
+          //   id: String(random(0, 1)),
+          //   row,
+          //   col: index,
+          //   value: '',
+          // }));
+          // newGrid.push(newRow);
+        }
+        newGrid[row][col] = {
+          ...newGrid[row][col],
+          value,
+        };
+      });
+      setState(newGrid);
+    },
+    [state],
+  );
 
   const WrappedTableShell = useMemo(() => {
     return DraggableShell({

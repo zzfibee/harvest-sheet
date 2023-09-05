@@ -6,7 +6,7 @@ import './index.less';
 
 export const getSelectEditor = (
   options: SheetType.Options[],
-  valueKey: string = 'label',
+  valueKey: string = 'value',
 ): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;

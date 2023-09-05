@@ -6,7 +6,7 @@ import ReduxThunk from 'redux-thunk';
 import DefaultRow from './DefaultRow';
 import DefaultShell from './DefaultShell';
 
-import { isNil } from 'lodash';
+import { isNil, isNumber } from 'lodash';
 import {
   SheetEventContext,
   useEventBus,
@@ -58,26 +58,28 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   useEffect(() => {
     sheetInstance.current = {
       zoomTo: (row?: number) => {
-        // 默认回到编辑行
+        // 给定 row 回到行
+        // 不给定 row 默认回到编辑行和列
         dispatch((d: unknown, getState: () => SheetType.UpdateStateType) => {
           const { start, groupConfig } = getState();
+          const container = sheetWrapperRef.current as HTMLSpanElement;
           if (!start && isNil(row)) return;
-          if (row === -1) {
-            sheetWrapperRef.current?.scrollTo(
-              0,
-              sheetWrapperRef.current?.scrollHeight as number,
-            );
-            return;
-          }
           const actual = rowToActualRow(
             (row as number) ?? start?.row,
             groupConfig,
           );
-          const rowHeight = getRowHeight(
-            sheetWrapperRef.current as HTMLSpanElement,
+          const rowHeight = getRowHeight(container);
+          const firstRowCell = container.querySelector(
+            `td.cell[data-col='${start.col}']`,
+          ) as HTMLElement;
+          const colPosition = firstRowCell
+            ? firstRowCell.offsetLeft - firstRowCell.clientWidth
+            : 0;
+
+          sheetWrapperRef.current?.scrollTo(
+            isNumber(row) ? 0 : colPosition,
+            rowHeight * actual,
           );
-          console.log('zoomTo', rowHeight, actual, rowHeight * actual);
-          sheetWrapperRef.current?.scrollTo(0, rowHeight * actual);
         });
       },
       pushToHistory: (config: SheetType.OperateHistory) => {
@@ -91,10 +93,14 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
         }
       },
       popHistory: () => {
-        return {} as SheetType.OperateHistory;
+        const { history } = state;
+        dispatch({ type: 'popHistory' });
+        return history?.length
+          ? history?.[history.length - 1]
+          : ({} as SheetType.OperateHistory);
       },
     };
-  }, [sheetWrapperRef.current]);
+  }, [sheetWrapperRef.current, state.history]);
 
   useEffect(() => {
     // 同步必要的状态
