@@ -25,8 +25,8 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       (cell: SheetType.CellData & { confirm?: boolean }) => {
         dispatch(() => {
           const { cellChangeHandler } = getState();
-          cellChangeHandler && cellChangeHandler([cell]);
           dispatch({ type: 'editFinish', payload: { cell } });
+          cellChangeHandler && cellChangeHandler([cell]);
         });
       },
     );
@@ -165,7 +165,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       .filter(({ row, col, value }) => {
         const editor = data[row][col].dataEditor;
         if (editor && editor.checker) {
-          return editor.checker(value);
+          return editor.checker(value, data[row][col].record);
         }
         return true;
       })
@@ -178,6 +178,8 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
           value: editor?.formatter ? editor?.formatter?.(value) : value,
         };
       });
+    let lastRow = extChanges?.[0]?.row;
+    let lastIndex = 1;
     const legalExtChanges = extChanges
       ?.filter(({ value, col }) => {
         const editor = data[0][col].dataEditor;
@@ -186,17 +188,19 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         }
         return true;
       })
-      .map(({ row, col, value }, index) => ({
-        row,
-        col,
-        value,
-        id: -(index + 1),
-      }));
-    cellChangeHandler &&
-      cellChangeHandler(
-        legalChanges as any,
-        freePaste ? legalExtChanges : ([] as any),
-      );
+      .map(({ row, col, value }) => {
+        const editor = data[0][col].dataEditor;
+        if (lastRow !== row) {
+          lastRow = row;
+          lastIndex++;
+        }
+        return {
+          row,
+          col,
+          value: editor?.formatter ? editor?.formatter?.(value) : value,
+          id: -lastIndex,
+        };
+      });
 
     let newHistory = [...(history || [])];
     newHistory.push({
@@ -219,6 +223,12 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         },
       },
     });
+
+    cellChangeHandler &&
+      cellChangeHandler(
+        legalChanges as any,
+        freePaste ? legalExtChanges : ([] as any),
+      );
   },
   delete(dispatch, getState) {
     const {
@@ -262,8 +272,8 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       })),
       type: 'Delete',
     });
-    cellChangeHandler && cellChangeHandler(changes as any);
     dispatch({ type: 'changes', payload: { history: newHistory } });
+    cellChangeHandler && cellChangeHandler(changes as any);
   },
   reverse(dispatch, getState) {
     const { start, end, history, cellChangeHandler, eventBus } = getState();

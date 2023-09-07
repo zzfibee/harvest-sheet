@@ -60,6 +60,7 @@ export type TableRowSelection = {
 export type TableGroupConfig = {
   defaultOpen: boolean;
 };
+export type EventHandler = (value: any) => void;
 export type TableProps = {
   /**
    * @description 表格类名
@@ -92,6 +93,7 @@ export type TableProps = {
     ) => void;
   };
   groupConfig?: {
+    defaultOpen?: boolean;
     rowGroup: TableGroupConfig;
     onChange: (value: TableGroupConfig) => void;
   };
@@ -99,7 +101,7 @@ export type TableProps = {
   onChange: (changes: TableChange[], extChanges?: TableChange[]) => void;
   handleAdd?: () => void;
   eventHandler?: Record<
-    'btn-click' | 'cell-edit' | 'cell-switch' | string,
-    undefined | ((value: unknown) => void)
+    'reverse' | 'btn-click' | 'cell-edit' | 'cell-switch' | string,
+    undefined | EventHandler
   >;
 };

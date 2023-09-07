@@ -216,9 +216,10 @@ export function formatDataToCell({
     }
 
     const { col: baseCol } = cells[0];
+    let lastRow = cells[0].row;
     let pasteCount = 0;
     cells.forEach(({ row, col }) => {
-      if (data[row][col].readonly) return;
+      if (data[row][col]?.readonly) return;
       if (
         groupMap.get(row) &&
         !groupMap.get(row)?.isStart &&
@@ -226,10 +227,14 @@ export function formatDataToCell({
       ) {
         return;
       }
+      if (row !== lastRow) {
+        pasteCount++;
+        lastRow = row;
+      }
       changes.push({
         row: row,
         col: col,
-        value: pasteData[pasteCount++][col - baseCol]?.trimStart().trimEnd(),
+        value: pasteData?.[pasteCount]?.[col - baseCol]?.trimStart().trimEnd(),
       } as any);
     });
     return { changes };

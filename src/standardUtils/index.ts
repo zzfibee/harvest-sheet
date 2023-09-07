@@ -18,7 +18,7 @@ export const formatPrecision = (value: ValueParams, precision = 2) => {
  */
 export const thousandsSeparator = (value: string | number) => {
   const [integer, decimal] = String(value).split('.');
-  let formattedData = integer.replace(/(\d{1,3})(?=(\d{3})+$)/g, '$1,');
+  let formattedData = integer?.replace(/(\d{1,3})(?=(\d{3})+$)/g, '$1,');
   if (decimal && decimal.length) {
     formattedData += `.${decimal}`;
   }

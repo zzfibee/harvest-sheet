@@ -140,6 +140,16 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 }
 
 
+.harvest-sheet-container .harvest-sheet .cell.sheet-control{
+  border-right: 1px solid transparent;
+  background: var(--cell-background-color) ;
+  color:var(--read-color);
+
+  &.read-only{
+  border-right: 1px solid var(--cell-title-background-color);
+  }
+  // position: relative !important;
+}
 
 .harvest-sheet-container .harvest-sheet .cell.read-only {
   background: var(--cell-read-only-background-color);
@@ -147,12 +157,6 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
   text-align: center;
 }
 
-.harvest-sheet-container .harvest-sheet .cell.sheet-control{
-  border-right: 1px solid transparent;
-  background: var(--cell-background-color) ;
-  color:var(--read-color);
-  // position: relative !important;
-}
 
 .harvest-sheet-container .harvest-sheet .cell-title.sheet-control{
   border-right: 1px solid var(--cell-title-background-color);

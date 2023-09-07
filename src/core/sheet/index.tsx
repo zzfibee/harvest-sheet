@@ -92,6 +92,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           dispatch({ type: 'selectRow', payload: row });
         }
       },
+      select: (props) => {
+        dispatch({ type: 'select', payload: props });
+      },
       popHistory: () => {
         const { history } = state;
         dispatch({ type: 'popHistory' });
@@ -137,7 +140,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   }, [state.editing, state.start]);
 
   const { virtualStart, virtualEnd, paddingTop, paddingBottom } =
-    useVirtualList(sheetWrapperRef, state.data, virtualized);
+    useVirtualList(sheetWrapperRef, state.data, groupConfig, virtualized);
 
   useEffect(() => {
     dispatch({
@@ -153,19 +156,23 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
       ?.slice(virtualStart, virtualEnd)
       ?.map((rowData: SheetType.Cell[]) => {
         const row = state?.data?.indexOf(rowData) || 0;
+        const rowCN =
+          typeof rowClassName === 'string' || !rowData.length
+            ? rowClassName
+            : rowClassName?.(rowData?.[rowData.length - 1].record as any, row);
         return (
           <Row
             key={row}
             row={row}
             cells={rowData}
             groupConfig={groupConfig}
-            rowClassName={rowClassName}
+            rowClassName={rowCN}
           >
             <DefaultRowMapper rowData={rowData} row={row} />
           </Row>
         );
       });
-  }, [state.data, groupConfig, virtualStart, virtualEnd]);
+  }, [state.data, groupConfig, virtualStart, virtualEnd, rowClassName]);
 
   const memoHeight = Math.min((state?.data?.length ?? 0) + 1, 10) * 42 + 43;
 

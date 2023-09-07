@@ -1,5 +1,5 @@
 import type { EventEmitter } from 'events';
-import { SheetTableType } from '.';
+import { SheetTableType, SheetType } from '.';
 
 export enum CellAlign {
   left = 'left',
@@ -43,8 +43,8 @@ export type CellEditorProps = {
 } & CellViewerProps;
 
 export type CellEditor = React.FC<CellEditorProps> & {
-  checker?: (value: unknown) => boolean;
-  formatter?: (value: unknown) => unknown;
+  checker?: (value: unknown, record?: Record<string, unknown>) => boolean;
+  formatter?: (value: unknown, record?: Record<string, unknown>) => unknown;
 };
 export type CellViewer = React.FC<CellViewerProps>;
 
@@ -90,6 +90,10 @@ export type SheetInstance = {
   zoomTo: (row?: number) => void;
   pushToHistory: (value: OperateHistory) => void;
   selectRow: (row?: number) => void;
+  select: (props: {
+    start: SheetType.CellPosition[];
+    end: SheetType.CellPosition[];
+  }) => void;
   popHistory: () => OperateHistory;
 };
 

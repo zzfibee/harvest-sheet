@@ -1,7 +1,7 @@
 import type { SheetType } from '@zhenliang/sheet/type';
 import { isEqual, throttle } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { getRowHeight } from '../util';
+import { getRowHeight, rowToActualRow } from '../util';
 
 const extra = 20;
 
@@ -16,6 +16,7 @@ type VirtualConfig = {
 export const useVirtualList = (
   elementRef: React.RefObject<SheetType.refAssertion>,
   data: SheetType.Cell[][] = [],
+  groupConfig: SheetType.RowGroupConfig,
   virtualized?: boolean,
 ) => {
   const [state, setState] = useState({
@@ -28,6 +29,10 @@ export const useVirtualList = (
   });
   const { virtualStart, virtualEnd, paddingTop, paddingBottom } = state;
   const virtualRef = useRef<VirtualConfig | null>();
+  const groupConfigRef = useRef<SheetType.RowGroupConfig>(groupConfig);
+  useEffect(() => {
+    groupConfigRef.current = groupConfig;
+  }, [groupConfig]);
 
   useEffect(() => {
     if (!elementRef.current) return;
@@ -40,12 +45,29 @@ export const useVirtualList = (
       const { scrollTop, clientHeight } = elementRef.current as HTMLSpanElement;
       const start = Math.floor(scrollTop / itemHeight) - extra;
       const end = Math.ceil((scrollTop + clientHeight) / itemHeight) + extra;
+
+      // todo 加入分组之后的 虚拟列表计算
+      const actualStart = groupConfigRef.current
+        ? rowToActualRow(start, groupConfigRef.current)
+        : start;
+      const actualEnd = groupConfigRef.current
+        ? rowToActualRow(end, groupConfigRef.current)
+        : end;
+
+      // const minStart = start - (actualStart - start)
+      const maxEnd = end - (actualEnd - end);
+
+      // console.log('useVirtual', start, end);
+      // console.log('useVirtual', actualStart, actualEnd);
+      // console.log('useVirtual', actualStart, maxEnd);
+
       const updateVirtualConfig = {
-        virtualStart: start,
-        virtualEnd: end,
-        paddingTop: start * itemHeight,
-        paddingBottom: (data.length - end) * itemHeight,
+        virtualStart: actualStart,
+        virtualEnd: maxEnd,
+        paddingTop: actualStart * itemHeight,
+        paddingBottom: (data.length - maxEnd) * itemHeight,
       };
+
       if (isEqual(updateVirtualConfig, virtualRef.current)) {
         return;
       }

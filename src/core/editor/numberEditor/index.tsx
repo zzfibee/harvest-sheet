@@ -53,7 +53,22 @@ export const getNumberEditor = (
     );
   };
   NumberEditor.formatter = (value: unknown) => {
-    return isNil(value) ? null : Number(value);
+    if (isNil(value) || isNaN(value as number)) {
+      return null;
+    }
+
+    const result = parseFloat(String(value)?.replace(/,/g, ''));
+    return result;
+  };
+
+  NumberEditor.checker = (value: unknown) => {
+    // parse number with thousands separator
+    const result = parseFloat(String(value as string)?.replace(/,/g, ''));
+
+    if (isNaN(result) || isNaN(value as number)) {
+      return false;
+    }
+    return true;
   };
 
   return NumberEditor;

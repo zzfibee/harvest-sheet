@@ -93,6 +93,11 @@ const Cell = (props: SheetType.CellProps) => {
     if (confirm) {
       setEventState({ confirm: false });
       if (value !== valueRef.current) {
+        if (!cell.dataEditor?.checker?.(value, cell.record)) {
+          setValue(valueRef.current);
+          return;
+        }
+
         eventBus.emit('cell-change', {
           row,
           col,
@@ -108,6 +113,10 @@ const Cell = (props: SheetType.CellProps) => {
   const handleCommit = useCallback(
     (value: string) => {
       if (valueRef.current === value) {
+        return;
+      }
+      if (!cell.dataEditor?.checker?.(value, cell.record)) {
+        setValue(valueRef.current);
         return;
       }
       setValue(value);

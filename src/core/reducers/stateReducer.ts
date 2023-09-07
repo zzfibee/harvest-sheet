@@ -75,6 +75,20 @@ export const stateReducer: Record<string, reducerAction> = {
       history: [...(state.history || []), payload as SheetType.OperateHistory],
     };
   },
+  select(state, payload) {
+    const { start: oldStart, end: oldEnd } = state;
+    const { start, end } = payload as {
+      start: SheetType.CellPosition;
+      end: SheetType.CellPosition;
+    };
+
+    return {
+      ...state,
+      start,
+      end,
+      lastSelected: { start: oldStart, end: oldEnd },
+    };
+  },
   selectRow(state, payload) {
     const startCol = state.data?.[0]?.findIndex((item) => !item.fixed) || 0;
     const endCol =

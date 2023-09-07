@@ -4,13 +4,14 @@ import { groupConfigToGroupMap } from '../util';
 
 const DefaultRow: React.FC<{
   children: React.ReactElement;
+  rowClassName?: string;
 
   row: number;
   groupConfig?: {
     groups: SheetType.RowGroup[];
     groupOpen: boolean[];
   };
-}> = ({ children, row, groupConfig }) => {
+}> = ({ rowClassName, children, row, groupConfig }) => {
   const groupMap = useMemo(() => {
     // 分组逻辑
     return groupConfigToGroupMap(groupConfig);
@@ -21,9 +22,13 @@ const DefaultRow: React.FC<{
     !groupMap.get(row)?.isStart &&
     !groupMap.get(row)?.isOpen
   ) {
-    return <tr style={{ display: 'none' }}>{children}</tr>;
+    return (
+      <tr className={rowClassName} style={{ display: 'none' }}>
+        {children}
+      </tr>
+    );
   }
 
-  return <tr>{children}</tr>;
+  return <tr className={rowClassName}>{children}</tr>;
 };
 export default DefaultRow;

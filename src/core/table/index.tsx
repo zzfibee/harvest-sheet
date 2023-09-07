@@ -40,7 +40,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   );
   const [rowGroupConfig, setGroupConfig] = useGroupConfig(
     dataSource,
-    { defaultOpen: true },
+    { defaultOpen: true, ...groupConfig },
     hasChildren,
   );
   const { groups, groupOpen } = rowGroupConfig || {};
@@ -77,7 +77,8 @@ const Table: React.FC<SheetTableType.TableProps> = ({
           id: rowId,
           row: currentIndex,
           col: -1,
-          editable: false,
+          editable: columns?.[0].editable,
+          readonly: columns?.[0].readonly,
           align: 'center',
           fixed: 'unset',
           value:
