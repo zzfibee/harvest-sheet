@@ -1,12 +1,15 @@
 /* eslint-disable eqeqeq */
 import type { SheetType } from '@zhenliang/sheet/type';
 import { Select } from 'antd';
+
+
 import 'antd/es/select/style/index.css';
 import './index.less';
 
 export const getSelectEditor = (
   options: SheetType.Options[],
   valueKey: string = 'value',
+  extra: React.ReactNode = <></>,
 ): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;
@@ -23,6 +26,13 @@ export const getSelectEditor = (
       }
     };
 
+    const dropdown = (menu: React.ReactNode) => (
+      <>
+        {menu}
+        {extra}
+      </>
+    );
+
     return (
       <Select
         autoFocus
@@ -38,6 +48,7 @@ export const getSelectEditor = (
         onKeyDown={handleKeyDown}
         options={options}
         popupClassName={'excelTablePopupClassName'}
+        dropdownRender={dropdown}
       />
     );
   };
