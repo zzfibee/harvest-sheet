@@ -7,6 +7,11 @@ export type refAssertion = {
 } & HTMLTableSectionElement;
 
 export type CellFixed = SheetType.CellAlign;
+export type RecordRowMap<T> = (
+  value: unknown,
+  record: Record<string, unknown>,
+  index: number,
+) => T;
 
 export type ColumnProps = {
   /**
@@ -31,17 +36,11 @@ export type ColumnProps = {
     className?: string;
   };
   cellConfig?: {
-    className?: string;
+    className?: string | RecordRowMap<string>;
   };
   key?: string;
   editable?: boolean;
-  readonly?:
-    | boolean
-    | ((
-        value: unknown,
-        record: Record<string, unknown>,
-        index: number,
-      ) => boolean);
+  readonly?: boolean | RecordRowMap<boolean>;
   render?: SheetType.CellViewer;
   editor?: SheetType.CellEditor;
 };

@@ -93,7 +93,10 @@ const Cell = (props: SheetType.CellProps) => {
     if (confirm) {
       setEventState({ confirm: false });
       if (value !== valueRef.current) {
-        if (!cell.dataEditor?.checker?.(value, cell.record)) {
+        if (
+          cell?.dataEditor?.checker &&
+          !cell.dataEditor?.checker?.(value, cell.record)
+        ) {
           setValue(valueRef.current);
           return;
         }
