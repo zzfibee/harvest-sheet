@@ -127,7 +127,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
 
     setData(
       dataSource.map((item: any, row: number) => {
-        let rowId: string = String(row);
+        let rowId: string = item.id || item.key || String(row);
         if (rowKey) {
           if (rowKey instanceof Function) {
             rowId = rowKey(item, row);

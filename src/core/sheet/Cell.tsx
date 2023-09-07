@@ -16,6 +16,7 @@ import ValueViewer from './ValueViewer';
 
 type EventInfo = {
   selected: boolean;
+  confirm?: boolean;
   value?: string;
   editing: boolean;
 };
@@ -73,7 +74,12 @@ const Cell = (props: SheetType.CellProps) => {
       return;
     }
     const onCellState = (eventInfo: EventInfo) => {
-      if (eventInfo.value && eventInfo.editing) {
+      console.log('onCellState', eventInfo);
+      if (eventInfo.editing === false && !eventInfo.confirm) {
+        // 退出编辑，重设数据
+        setValue(valueRef.current);
+      } else if (eventInfo.value && eventInfo.editing) {
+        // 单元格直接键盘编辑，设置为输入值
         setValue(eventInfo.value);
       }
       setEventState(eventInfo);
@@ -91,6 +97,7 @@ const Cell = (props: SheetType.CellProps) => {
       return;
     }
     if (confirm) {
+      console.log('onCellState-confirm', value);
       setEventState({ confirm: false });
       if (value !== valueRef.current) {
         if (
@@ -118,7 +125,10 @@ const Cell = (props: SheetType.CellProps) => {
       if (valueRef.current === value) {
         return;
       }
-      if (!cell.dataEditor?.checker?.(value, cell.record)) {
+      if (
+        cell?.dataEditor?.checker &&
+        !cell.dataEditor?.checker?.(value, cell.record)
+      ) {
         setValue(valueRef.current);
         return;
       }
