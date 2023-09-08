@@ -157,9 +157,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
       ?.map((rowData: SheetType.Cell[]) => {
         const row = state?.data?.indexOf(rowData) || 0;
         const rowCN =
-          typeof rowClassName === 'string' || !rowData.length
-            ? rowClassName
-            : rowClassName?.(rowData?.[rowData.length - 1].record as any, row);
+          rowClassName instanceof Function
+            ? rowClassName?.(rowData?.[rowData.length - 1]?.record as any, row)
+            : rowClassName;
         return (
           <Row
             key={row}
@@ -193,7 +193,11 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
         >
           {virtualized && (
             <tr
-              style={{ height: 0, paddingBottom: paddingTop, display: 'block' }}
+              style={{
+                height: 0,
+                paddingBottom: paddingTop,
+                display: 'block',
+              }}
             />
           )}
           {/* {rowElements?.slice(virtualStart, virtualEnd)} */}

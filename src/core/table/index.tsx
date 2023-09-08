@@ -1,4 +1,5 @@
-import { Sheet } from '@zhenliang/sheet';
+import { Sheet, useSetState } from '@zhenliang/sheet';
+import { WidthContext } from '@zhenliang/sheet/hooks/useWidthConfig';
 import { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { Button } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -26,6 +27,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
 }) => {
   const [data, setData] = useState<SheetType.Cell[][]>([[]]);
   const _sheetInstance = useRef<SheetType.SheetInstance | null>(null);
+  const [widths, setWidth] = useSetState<Record<number | string, number>>({});
   const sheetInstance = sheetRef || _sheetInstance;
 
   const hasChildren = dataSource?.some(
@@ -277,55 +279,79 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   }, [columns, draggable, rowSelection, hasChildren, rowGroupConfig]);
 
   return (
-    <Sheet
-      {...args}
-      sheetInstance={sheetInstance}
-      sheetRenderer={WrappedTableShell}
-      groupConfig={rowGroupConfig}
-      data={data}
-      onCellsChanged={handleChanges}
-    >
-      {!hasChildren && rowSelection
-        ? [
-            <SheetEvent
-              key="row-select"
-              name="row-select"
-              handler={handleRowSelect}
-            />,
-            <SheetEvent
-              key="row-select-title"
-              name="row-select-title"
-              handler={handleRowSelect}
-            />,
-          ]
-        : null}
-      {hasChildren
-        ? [
-            <SheetEvent
-              key="group-open"
-              name="group-open"
-              handler={(e: unknown) => {
-                const { row } = e as { row: number };
-                const index = groups.findIndex(
-                  (item) => item.groupStart === row,
-                );
-                if (index >= 0) {
-                  const groupOpen = [...rowGroupConfig.groupOpen];
-                  groupOpen[index] = !rowGroupConfig.groupOpen[index];
+    <WidthContext.Provider value={{ widths, onChange: setWidth }}>
+      <Sheet
+        {...args}
+        sheetInstance={sheetInstance}
+        sheetRenderer={WrappedTableShell}
+        groupConfig={rowGroupConfig}
+        data={data}
+        onCellsChanged={handleChanges}
+      >
+        {!hasChildren && rowSelection
+          ? [
+              <SheetEvent
+                key="row-select"
+                name="row-select"
+                handler={handleRowSelect}
+              />,
+              <SheetEvent
+                key="row-select-title"
+                name="row-select-title"
+                handler={handleRowSelect}
+              />,
+            ]
+          : null}
+        {hasChildren
+          ? [
+              <SheetEvent
+                key="group-open"
+                name="group-open"
+                handler={(e: unknown) => {
+                  const { row } = e as { row: number };
+                  const index = groups.findIndex(
+                    (item) => item.groupStart === row,
+                  );
+                  if (index >= 0) {
+                    const groupOpen = [...rowGroupConfig.groupOpen];
+                    groupOpen[index] = !rowGroupConfig.groupOpen[index];
 
+                    setGroupConfig({
+                      ...rowGroupConfig,
+                      groupOpen: groupOpen,
+                    });
+                    const newGrid = [...data];
+                    newGrid[row] = [...newGrid[row]];
+                    newGrid[row][0] = {
+                      ...(newGrid[row][0] as SheetType.Cell),
+                      record: {
+                        open: !!groupOpen[index],
+                      },
+                    };
+                    setData(newGrid);
+                    sheetInstance.current?.pushToHistory({
+                      type: 'Custom' as SheetType.OperateType,
+                      changes: [],
+                      extraInfo: {
+                        extraType: 'group',
+                        groupConfig: rowGroupConfig,
+                        data,
+                      },
+                    });
+                  }
+                }}
+              />,
+              <SheetEvent
+                key="group-open-title"
+                name="group-open-title"
+                handler={(value) => {
                   setGroupConfig({
                     ...rowGroupConfig,
-                    groupOpen: groupOpen,
+                    groupOpen: Array(rowGroupConfig.groupOpen.length).fill(
+                      value,
+                    ),
                   });
-                  const newGrid = [...data];
-                  newGrid[row] = [...newGrid[row]];
-                  newGrid[row][0] = {
-                    ...(newGrid[row][0] as SheetType.Cell),
-                    record: {
-                      open: !!groupOpen[index],
-                    },
-                  };
-                  setData(newGrid);
+
                   sheetInstance.current?.pushToHistory({
                     type: 'Custom' as SheetType.OperateType,
                     changes: [],
@@ -335,46 +361,26 @@ const Table: React.FC<SheetTableType.TableProps> = ({
                       data,
                     },
                   });
-                }
-              }}
-            />,
-            <SheetEvent
-              key="group-open-title"
-              name="group-open-title"
-              handler={(value) => {
-                setGroupConfig({
-                  ...rowGroupConfig,
-                  groupOpen: Array(rowGroupConfig.groupOpen.length).fill(value),
-                });
+                }}
+              />,
+            ]
+          : null}
 
-                sheetInstance.current?.pushToHistory({
-                  type: 'Custom' as SheetType.OperateType,
-                  changes: [],
-                  extraInfo: {
-                    extraType: 'group',
-                    groupConfig: rowGroupConfig,
-                    data,
-                  },
-                });
-              }}
-            />,
-          ]
-        : null}
-
-      <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
-      {Object.keys(eventHandler || {}).map((key) => (
-        <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
-      ))}
-      {handleAdd ? (
-        <Button
-          type="dashed"
-          style={{ width: '100%', height: 32 }}
-          onClick={handleAdd}
-        >
-          + 添加
-        </Button>
-      ) : null}
-    </Sheet>
+        <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
+        {Object.keys(eventHandler || {}).map((key) => (
+          <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
+        ))}
+        {handleAdd ? (
+          <Button
+            type="dashed"
+            style={{ width: '100%', height: 32 }}
+            onClick={handleAdd}
+          >
+            + 添加
+          </Button>
+        ) : null}
+      </Sheet>
+    </WidthContext.Provider>
   );
 };
 

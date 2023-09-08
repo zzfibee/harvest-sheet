@@ -1,6 +1,6 @@
 import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { useEffect, useMemo, useRef } from 'react';
-import { useSetState } from '../../../hooks';
+import { useSetState, useWidth } from '../../../hooks';
 import { classNames } from '../../util';
 import { CheckViewer } from '../../viewer/checkViewer';
 import { GroupViewer } from '../../viewer/groupViewer';
@@ -27,9 +27,13 @@ export const DraggableShell = ({
         })
       | null
     >(null);
-    const [widths, setWidth] = useSetState<
+    const [_widths, _setWidth] = useSetState<
       Record<number | string, string | number>
     >({});
+    const { widths: contextWidths, onChange: contextSetWidth } = useWidth();
+
+    const setWidth = contextSetWidth || _setWidth;
+    const widths = contextWidths || _widths;
 
     const hasControl = showGroup || showSelect;
 
@@ -174,10 +178,10 @@ export const DraggableShell = ({
             //调整该列中的每个Cell
             const widths = {
               length: columns.length,
-              [hasControl ? changeIndex - 1 : changeIndex]: `${newWidth}px`,
+              [hasControl ? changeIndex - 1 : changeIndex]: newWidth,
             };
 
-            setWidth(widths);
+            setWidth(widths as any);
           }
         }
       };

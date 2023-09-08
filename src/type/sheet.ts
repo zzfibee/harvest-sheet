@@ -119,6 +119,10 @@ export type SheetProps = {
     | ((record: Record<string, unknown>, index: number) => string);
   children?: any[];
 };
+export type WidthConfig = {
+  onChange?: (value: Record<number | string, number>) => void;
+  widths?: Record<number | string, number>;
+};
 
 export type SheetShell = Pick<SheetTableType.TableProps, 'columns'> & {
   className?: string;
