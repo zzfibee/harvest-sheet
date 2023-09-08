@@ -127,6 +127,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
           }
         }
 
+        // 复制到剪贴板的时候执行 formatter
         const currentValue = `${value}${currentRow === row ? '\t' : '\n'} ${
           data[row][col].dataEditor?.formatter
             ? data[row][col].dataEditor?.formatter?.(data[row][col].value)
@@ -172,12 +173,14 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         return true;
       })
       .map(({ row, col, value }) => {
-        const editor = data[row][col].dataEditor;
+        // const editor = data[row][col].dataEditor;
+        // onChange 之后不需要 formatter
         return {
           row,
           col,
           id: data[row][col]?.id,
-          value: editor?.formatter ? editor?.formatter?.(value) : value,
+          value,
+          // value: editor?.formatter ? editor?.formatter?.(value) : value,
         };
       });
     let lastRow = extChanges?.[0]?.row;
@@ -191,7 +194,8 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         return true;
       })
       .map(({ row, col, value }) => {
-        const editor = data[0][col].dataEditor;
+        //
+        // const editor = data[0][col].dataEditor;
         if (lastRow !== row) {
           lastRow = row;
           lastIndex++;
@@ -199,7 +203,8 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         return {
           row,
           col,
-          value: editor?.formatter ? editor?.formatter?.(value) : value,
+          value,
+          // value: editor?.formatter ? editor?.formatter?.(value) : value,
           id: -lastIndex,
         };
       });

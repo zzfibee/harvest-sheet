@@ -112,9 +112,11 @@ const Cell = (props: SheetType.CellProps) => {
           row,
           col,
           id: cell.id,
-          value: cell.dataEditor?.formatter
-            ? cell.dataEditor.formatter?.(value)
-            : value,
+          value,
+          // 没必要format value 已经是legal 的值了
+          // value: cell.dataEditor?.formatter
+          //   ? cell.dataEditor.formatter?.(value)
+          //   : value,
         });
       }
     }

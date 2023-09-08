@@ -20,7 +20,7 @@ export const dataSourceToRowConfig = (
     if (children?.length > 0) {
       groups.push({
         groupStart: currentIndex,
-        groupEnd: currentIndex + children.length + 1,
+        groupEnd: currentIndex + children.length,
         // 默认 key 或者 id 是行数据的唯一标识
         groupName: `${item.key || item.id || index}group`,
       });
