@@ -2,20 +2,20 @@ import type { SheetType } from '@zhenliang/sheet/type';
 import { Cascader } from 'antd';
 import 'antd/es/cascader/style/index.css';
 import { useMemo } from 'react';
-import { optionsTransferToValue, valuesTransferToLabel } from '../../util';
+import {
+  optionsToValuesFromLabelOrValue,
+  valuesTransferToLabel,
+} from '../../util';
 import './index.less';
 
 const getCascaderEditor = (options: SheetType.OptionsType[]) => {
   const CascaderEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;
 
-    const val = useMemo(
-      () =>
-        optionsTransferToValue(options, value as string) ||
-        optionsTransferToValue(options, value as string, 'value'),
-      [value, options],
-    );
-
+    const val = useMemo(() => {
+      const res = optionsToValuesFromLabelOrValue(options, value as string);
+      return res;
+    }, [value, options]);
     const handleChange = (opt: any) => {
       onConfirm(opt ? opt[opt.length - 1] : null);
     };
@@ -40,23 +40,19 @@ const getCascaderEditor = (options: SheetType.OptionsType[]) => {
   };
 
   CascaderEditor.formatter = (value) => {
-    const labelRes = optionsTransferToValue(options, value as string);
-    const valueRes = optionsTransferToValue(options, value as string, 'value');
-    const res = labelRes?.length ? labelRes : valueRes;
-    if (!res?.length) {
-      return '';
-    }
-
-    const label = valuesTransferToLabel(options, res[res.length - 1]);
-
-    return label;
+    const res = optionsToValuesFromLabelOrValue(options, value as string);
+    return !res?.length
+      ? ''
+      : valuesTransferToLabel(options, res[res.length - 1]);
   };
 
+  CascaderEditor.parser = (value) => {
+    const res = optionsToValuesFromLabelOrValue(options, value as string);
+    return res.length ? res[res.length - 1] : null;
+  };
   CascaderEditor.checker = (value) => {
-    const labelRes = optionsTransferToValue(options, value as string);
-    const valueRes = optionsTransferToValue(options, value as string, 'value');
-
-    return !!labelRes?.length || !!valueRes?.length;
+    const res = optionsToValuesFromLabelOrValue(options, value as string);
+    return !!res.length;
   };
   return CascaderEditor;
 };

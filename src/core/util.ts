@@ -248,6 +248,14 @@ export function renderValue(cell: SheetType.Cell) {
   return value === null || typeof value === 'undefined' ? '' : value;
 }
 
+export const optionsToValuesFromLabelOrValue = (
+  options: SheetType.OptionsType[],
+  val: string,
+) => {
+  const labelRes = optionsTransferToValue(options, val as string);
+  const valueRes = optionsTransferToValue(options, val as string, 'value');
+  return labelRes?.length ? labelRes : valueRes;
+};
 export const optionsTransferToValue = (
   options: SheetType.OptionsType[],
   val: string,

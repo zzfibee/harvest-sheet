@@ -2,7 +2,6 @@
 import type { SheetType } from '@zhenliang/sheet/type';
 import { Select } from 'antd';
 
-
 import 'antd/es/select/style/index.css';
 import './index.less';
 
@@ -59,10 +58,16 @@ export const getSelectEditor = (
       options.some((item: any) => item.label === value)
     );
   };
-  SelectEditor.formatter = (value) => {
+  SelectEditor.parser = (value) => {
     return (
       options.find((item: any) => item.value == value)?.[valueKey] ||
       options.find((item: any) => item.label === value)?.[valueKey]
+    );
+  };
+  SelectEditor.formatter = (value) => {
+    return (
+      options.find((item: any) => item.value == value)?.label ||
+      options.find((item: any) => item.label === value)?.label
     );
   };
 

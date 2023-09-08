@@ -45,6 +45,7 @@ export type CellEditorProps = {
 export type CellEditor = React.FC<CellEditorProps> & {
   checker?: (value: unknown, record?: Record<string, unknown>) => boolean;
   formatter?: (value: unknown, record?: Record<string, unknown>) => unknown;
+  parser?: (value: unknown, record?: Record<string, unknown>) => unknown;
 };
 export type CellViewer = React.FC<CellViewerProps>;
 

@@ -173,14 +173,12 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         return true;
       })
       .map(({ row, col, value }) => {
-        // const editor = data[row][col].dataEditor;
-        // onChange 之后不需要 formatter
+        const editor = data[row][col].dataEditor;
         return {
           row,
           col,
           id: data[row][col]?.id,
-          value,
-          // value: editor?.formatter ? editor?.formatter?.(value) : value,
+          value: editor?.parser ? editor?.parser?.(value) : value,
         };
       });
     let lastRow = extChanges?.[0]?.row;
@@ -194,8 +192,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         return true;
       })
       .map(({ row, col, value }) => {
-        //
-        // const editor = data[0][col].dataEditor;
+        const editor = data[0][col].dataEditor;
         if (lastRow !== row) {
           lastRow = row;
           lastIndex++;
@@ -203,8 +200,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         return {
           row,
           col,
-          value,
-          // value: editor?.formatter ? editor?.formatter?.(value) : value,
+          value: editor?.parser ? editor?.parser?.(value) : value,
           id: -lastIndex,
         };
       });
