@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import type { SheetType } from '@zhenliang/sheet/type';
-import { cloneDeep, isNil, range } from 'lodash';
+import { cloneDeep, get, isNil, range } from 'lodash';
 
 export function findParentTd(el: HTMLElement): HTMLElement | null {
   if (!el) return null;
@@ -251,19 +251,21 @@ export function renderValue(cell: SheetType.Cell) {
 export const optionsTransferToValue = (
   options: SheetType.OptionsType[],
   val: string,
+  key: string = 'label',
 ) => {
   let values: string[] = [];
 
   for (let i = 0; i < options.length; i++) {
-    const { label, value, children } = options[i];
+    const { value, children } = options[i];
     if (children) {
-      values = optionsTransferToValue(children, val);
+      values = optionsTransferToValue(children, val, key);
       if (values.length) {
         values = [value, ...values];
         break;
       }
-    } else if (label === val) {
+    } else if (get(options[i], key) === val) {
       values.push(value);
+      console.log('cascader', get(options[i], key), val, value);
       break;
     } else {
       values = [];

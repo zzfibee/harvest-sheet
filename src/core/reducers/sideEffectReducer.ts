@@ -127,9 +127,11 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
           }
         }
 
-        const currentValue = `${value}${
-          currentRow === row ? '\t' : '\n'
-        } ${defaultValueRenderer(data[row][col])}`;
+        const currentValue = `${value}${currentRow === row ? '\t' : '\n'} ${
+          data[row][col].dataEditor?.formatter
+            ? data[row][col].dataEditor?.formatter?.(data[row][col].value)
+            : defaultValueRenderer(data[row][col])
+        }`;
         return {
           currentRow: row,
           value: currentValue,
