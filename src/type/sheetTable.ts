@@ -39,7 +39,7 @@ export type ColumnProps = {
     className?: string | RecordRowMap<string>;
   };
   key?: string;
-  editable?: boolean;
+  editable?: boolean | RecordRowMap<boolean>;
   readonly?: boolean | RecordRowMap<boolean>;
   render?: SheetType.CellViewer;
   editor?: SheetType.CellEditor;

@@ -77,8 +77,12 @@ const Table: React.FC<SheetTableType.TableProps> = ({
           id: rowId,
           row: currentIndex,
           col: -1,
-          editable: columns?.[0].editable,
-          readonly: columns?.[0].readonly,
+          editable: !(columns?.[0].editable instanceof Function)
+            ? columns?.[0]?.editable
+            : columns?.[0]?.editable('', itemRow, currentIndex),
+          readonly: !(columns?.[0].readonly instanceof Function)
+            ? columns?.[0]?.readonly
+            : columns?.[0]?.readonly('', itemRow, currentIndex),
           align: 'center',
           fixed: 'unset',
           value:
@@ -102,7 +106,9 @@ const Table: React.FC<SheetTableType.TableProps> = ({
               : colInfo.readonly(value, itemRow, currentIndex),
             align: colInfo.align,
             fixed: colInfo.fixed,
-            editable: colInfo.editable,
+            editable: !(colInfo.editable instanceof Function)
+              ? colInfo.editable
+              : colInfo.editable(value, itemRow, currentIndex),
             valueViewer: colInfo.render ? colInfo.render : undefined,
             dataEditor: colInfo.editor ? colInfo.editor : undefined,
             row: currentIndex,
@@ -160,7 +166,9 @@ const Table: React.FC<SheetTableType.TableProps> = ({
               : colInfo.readonly(value, item, row),
             align: colInfo.align,
             fixed: colInfo.fixed,
-            editable: colInfo.editable,
+            editable: !(colInfo.editable instanceof Function)
+              ? colInfo.editable
+              : colInfo.editable(value, item, row),
             valueViewer: colInfo.render ? colInfo.render : undefined,
             dataEditor: colInfo.editor ? colInfo.editor : undefined,
             className: !(colInfo.cellConfig?.className instanceof Function)
