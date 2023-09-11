@@ -241,7 +241,7 @@ const App: React.FC = () => {
     setOptions([
       ...options,
       {
-        label: String(`newSelect${random}`),
+        label: String(`newSelect${random(false)}`),
         value: String(random(true)),
       },
     ]);
@@ -251,6 +251,7 @@ const App: React.FC = () => {
     const newColumns = [...columns];
     newColumns[4] = {
       ...columns[4],
+      render: getTypeViewer(options),
       editor: getSelectEditor(
         options,
         'value',
