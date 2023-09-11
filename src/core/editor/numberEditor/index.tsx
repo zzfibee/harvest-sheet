@@ -55,6 +55,12 @@ export const getNumberEditor = (
       }
       return String(value);
     }, []);
+    const handleChange = useCallback(
+      (value) => {
+        onChange && onChange(value ? value : null);
+      },
+      [onChange],
+    );
 
     return (
       <AntInputNumber
@@ -65,7 +71,7 @@ export const getNumberEditor = (
         className="number-editor"
         onMouseDown={(e) => e.stopPropagation()}
         value={value as number}
-        onChange={onChange}
+        onChange={handleChange}
       />
     );
   };

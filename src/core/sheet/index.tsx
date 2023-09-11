@@ -70,9 +70,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           );
           const rowHeight = getRowHeight(container);
           const firstRowCell = container.querySelector(
-            `td.cell[data-col='${start.col}']`,
+            `td.cell[data-col='${start?.col}']`,
           ) as HTMLElement;
-          const colPosition = firstRowCell
+          let colPosition = firstRowCell
             ? firstRowCell.offsetLeft - firstRowCell.clientWidth
             : 0;
 

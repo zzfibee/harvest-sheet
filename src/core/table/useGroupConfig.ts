@@ -29,7 +29,7 @@ export const useGroupConfig = (
 
     setGroupConfig(rowConfig);
     groupConfigRef.current = rowConfig;
-  }, [dataSource, hasChildren]);
+  }, [dataSource.length, hasChildren]);
 
   return [groupConfig, setGroupConfig] as [
     SheetType.RowGroupConfig,
