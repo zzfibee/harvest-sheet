@@ -1,8 +1,9 @@
+import { formatPrecision } from '@zhenliang/sheet/standardUtils';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { InputNumber as AntInputNumber, InputNumberProps } from 'antd';
 import 'antd/es/input-number/style/index.css';
 import { isNil } from 'lodash';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import './index.less';
 
 export const NumberEditor: SheetType.CellEditor = (props) => {
@@ -40,10 +41,26 @@ export const getNumberEditor = (
       inputNumberRef?.current?.focus();
     }, []);
 
+    const { precision, ...inputArgs } = extraProps || {};
+    const valueFormatter = useCallback((value: string | number | undefined) => {
+      if (!value) {
+        return '';
+      }
+      if (typeof value === 'string') {
+        return value as string;
+      }
+      const hasDecimal = value - Math.floor(value) > 0;
+      if (hasDecimal) {
+        return formatPrecision(value, precision);
+      }
+      return String(value);
+    }, []);
+
     return (
       <AntInputNumber
         ref={inputNumberRef}
-        {...extraProps}
+        {...inputArgs}
+        formatter={valueFormatter}
         controls={false}
         className="number-editor"
         onMouseDown={(e) => e.stopPropagation()}
@@ -59,6 +76,12 @@ export const getNumberEditor = (
 
     const result = parseFloat(String(value)?.replace(/,/g, ''));
     return result;
+  };
+  NumberEditor.parser = (value: unknown) => {
+    if (isNil(value) || isNaN(value as number)) {
+      return null;
+    }
+    return formatPrecision(value as number, extraProps?.precision ?? 0);
   };
 
   NumberEditor.checker = (value: unknown) => {

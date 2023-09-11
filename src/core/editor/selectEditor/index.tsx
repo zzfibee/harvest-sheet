@@ -59,7 +59,6 @@ export const getSelectEditor = (
     );
   };
   SelectEditor.parser = (value) => {
-    console.log('parset', value, options);
     return (
       options.find((item: any) => item.value == value)?.[valueKey] ||
       options.find((item: any) => item.label === value)?.[valueKey]

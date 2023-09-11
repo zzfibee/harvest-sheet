@@ -93,8 +93,8 @@ export type TableProps = {
   };
   groupConfig?: {
     defaultOpen?: boolean;
-    rowGroup: TableGroupConfig;
-    onChange: (value: TableGroupConfig) => void;
+    rowGroup?: TableGroupConfig;
+    onChange?: (value: TableGroupConfig) => void;
   };
 
   onChange: (changes: TableChange[], extChanges?: TableChange[]) => void;
