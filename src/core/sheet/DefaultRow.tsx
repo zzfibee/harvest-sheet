@@ -29,7 +29,6 @@ const DefaultRow: React.FC<{
     );
   }
 
-  console.log('DefaultRow', rowClassName);
   return <tr className={rowClassName}>{children}</tr>;
 };
 export default DefaultRow;

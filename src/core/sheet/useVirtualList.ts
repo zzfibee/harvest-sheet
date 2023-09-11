@@ -57,10 +57,6 @@ export const useVirtualList = (
       // const minStart = start - (actualStart - start)
       const maxEnd = end - (actualEnd - end);
 
-      // console.log('useVirtual', start, end);
-      // console.log('useVirtual', actualStart, actualEnd);
-      // console.log('useVirtual', actualStart, maxEnd);
-
       const updateVirtualConfig = {
         virtualStart: actualStart,
         virtualEnd: maxEnd,

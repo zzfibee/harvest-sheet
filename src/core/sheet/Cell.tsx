@@ -74,7 +74,6 @@ const Cell = (props: SheetType.CellProps) => {
       return;
     }
     const onCellState = (eventInfo: EventInfo) => {
-      console.log('onCellState', eventInfo);
       if (eventInfo.editing === false && !eventInfo.confirm) {
         // 退出编辑，重设数据
         setValue(valueRef.current);
@@ -97,7 +96,6 @@ const Cell = (props: SheetType.CellProps) => {
       return;
     }
     if (confirm) {
-      console.log('onCellState-confirm', value);
       setEventState({ confirm: false });
       if (value !== valueRef.current) {
         if (
