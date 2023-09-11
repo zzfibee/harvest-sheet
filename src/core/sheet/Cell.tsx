@@ -233,6 +233,7 @@ export default memo(Cell, (pre, next) => {
     pre.col === next.col &&
     pre.row === next.row &&
     pre.cell.value === next.cell.value &&
+    pre.cell.dataEditor === next.cell.dataEditor &&
     pre.cell.record === next.cell.record;
   return shouldUpdate;
 });

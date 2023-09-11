@@ -1,6 +1,6 @@
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { cloneDeep, random } from 'lodash';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   getCascaderEditor,
   getDateEditor,
@@ -131,7 +131,7 @@ const columns: SheetTableType.ColumnProps[] = [
     width: 200,
     dataIndex: 'select',
     render: getTypeViewer(SelectorOptions),
-    editor: TypeSelector,
+    editor: getSelectEditor(SelectorOptions, 'label'),
   },
   {
     title: 'Column 2',
@@ -197,6 +197,7 @@ const data = [
 
 const App: React.FC = () => {
   const [state, setState] = useState(data);
+  const [options, setOptions] = useState(SelectorOptions);
 
   const sheetInstance = useRef<SheetType.SheetInstance | null>(null);
   const handleChange = useCallback(
@@ -235,11 +236,36 @@ const App: React.FC = () => {
       },
     ]);
   }, [state]);
+
+  const handleOptionsAdd = useCallback(() => {
+    setOptions([
+      ...options,
+      {
+        label: String(`newSelect${random}`),
+        value: String(random(true)),
+      },
+    ]);
+  }, [options]);
+
+  const antColumns = useMemo(() => {
+    const newColumns = [...columns];
+    newColumns[4] = {
+      ...columns[4],
+      editor: getSelectEditor(
+        options,
+        'value',
+        <Button id="antColumnAdd" type="link" onClick={handleOptionsAdd}>
+          新增
+        </Button>,
+      ),
+    };
+    return newColumns;
+  }, [options]);
   return (
     <Table
       freePaste
       sheetInstance={sheetInstance}
-      columns={columns}
+      columns={antColumns}
       dataSource={state}
       scroll={{ x: '100%' }}
       onChange={handleChange}
