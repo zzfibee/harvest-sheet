@@ -12,6 +12,7 @@ export type SheetAction =
   | 'pushHistory'
   | 'popHistory'
   | 'selectRow'
+  | 'select'
   | 'clearSelect'
   | 'clearSelectIfNotSingleRow'
   | 'clearEdit'
@@ -47,6 +48,7 @@ const sheetReducer = (
     case 'pushHistory':
     case 'popHistory':
     case 'selectRow':
+    case 'select':
     case 'clearSelect':
     case 'clearSelectIfNotSingleRow':
     case 'clearEdit':

@@ -21,6 +21,7 @@ import { useCellEvent } from './useCellEvent';
 import { useContextMenu } from './useContextMenu';
 import { useKeyBoardEvent } from './useKeyBoardEvent';
 import { useMouseEvent } from './useMouseEvent';
+import { useSelectVisible } from './useSelectVisible';
 import { useVirtualList } from './useVirtualList';
 
 const Sheet: React.FC<SheetType.SheetProps> = (props) => {
@@ -178,22 +179,8 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   }, [state.data, groupConfig, virtualStart, virtualEnd, rowClassName]);
 
   const memoHeight = Math.min((state?.data?.length ?? 0) + 1, 10) * 42 + 43;
-  const startRowVisible = useMemo(() => {
-    if (isNil(state.start)) return true;
-    const startCell = sheetWrapperRef.current?.querySelector(
-      `td.cell[data-row='${state.start.row}']`,
-    ) as HTMLElement;
-    if (!startCell) return false;
-    const { top = 0, bottom = 0 } =
-      sheetWrapperRef.current?.getBoundingClientRect() || {};
-    const { top: cellTop, bottom: cellBottom } =
-      startCell?.getBoundingClientRect() || {};
 
-    if (top < cellTop && bottom > cellBottom) {
-      return true;
-    }
-    return false;
-  }, [state.start, virtualStart, virtualEnd]);
+  const startRowVisible = useSelectVisible(sheetWrapperRef, state.start);
 
   return (
     <SheetEventContext.Provider value={eventBus}>

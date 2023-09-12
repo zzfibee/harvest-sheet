@@ -263,7 +263,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         cell: data?.[item.row]?.[item.col],
         row: item.row,
         col: item.col,
-        value: '',
+        value: null,
         id: data?.[item.row]?.[item.col].id,
       }));
 

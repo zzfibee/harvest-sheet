@@ -92,8 +92,8 @@ export type SheetInstance = {
   pushToHistory: (value: OperateHistory) => void;
   selectRow: (row?: number) => void;
   select: (props: {
-    start: SheetType.CellPosition[];
-    end: SheetType.CellPosition[];
+    start: SheetType.CellPosition;
+    end: SheetType.CellPosition;
   }) => void;
   popHistory: () => OperateHistory;
 };

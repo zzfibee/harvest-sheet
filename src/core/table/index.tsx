@@ -31,9 +31,9 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   const [widths, setWidth] = useSetState<Record<number | string, number>>({});
   const sheetInstance = sheetRef || _sheetInstance;
 
-  const hasChildren = dataSource?.some(
-    (item) => (item?.children as Array<any>)?.length > 0,
-  );
+  const hasChildren =
+    dataSource?.some((item) => (item?.children as Array<any>)?.length > 0) ||
+    groupConfig;
   const hasControl = hasChildren || rowSelection;
 
   const [checkedRow, setCheckedRow] = useRowSelection(

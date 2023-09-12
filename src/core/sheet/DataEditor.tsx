@@ -15,6 +15,7 @@ const DataEditor: SheetType.CellEditor = ({ value, onChange }) => {
   return (
     <input
       ref={inputRef}
+      onMouseDown={(e) => e.stopPropagation()}
       className="data-editor"
       value={value as string}
       onChange={handleChange}
