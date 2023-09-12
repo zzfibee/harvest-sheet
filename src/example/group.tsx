@@ -90,6 +90,12 @@ const App: React.FC = () => {
       draggable
       scroll={{ x: '100%' }}
       columns={columns}
+      showBackEdit
+      backEditStyle={{
+        marginLeft: '10px',
+        bottom: '5px',
+        right: '5px',
+      }}
       // expandable={{
       //   expandedRowRender: (record) => (
       //     <p style={{ margin: 0 }}>{record.description}</p>

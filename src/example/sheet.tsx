@@ -319,11 +319,9 @@ const BasicSheet: React.FC = () => {
     },
     [state, groupConfig],
   );
-  console.log('render', performance.now());
   useEffect(() => {
     console.log('rendered', performance.now());
   }, []);
-  console.log(state.length);
 
   return (
     <Sheet
@@ -331,6 +329,7 @@ const BasicSheet: React.FC = () => {
       className="excel-sheet"
       virtualized
       freePaste
+      showBackEdit
       data={state as any}
       groupConfig={groupConfig}
       scroll={{ x: '100%', y: '100vh' }}

@@ -6,6 +6,7 @@ import ReduxThunk from 'redux-thunk';
 import DefaultRow from './DefaultRow';
 import DefaultShell from './DefaultShell';
 
+import { Button } from 'antd';
 import { isNil, isNumber } from 'lodash';
 import {
   SheetEventContext,
@@ -38,6 +39,8 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     rowClassName,
     scroll,
     children,
+    showBackEdit,
+    backEditStyle,
   } = props;
   const sheetWrapperRef = useRef<SheetType.refAssertion>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -175,6 +178,22 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   }, [state.data, groupConfig, virtualStart, virtualEnd, rowClassName]);
 
   const memoHeight = Math.min((state?.data?.length ?? 0) + 1, 10) * 42 + 43;
+  const startRowVisible = useMemo(() => {
+    if (isNil(state.start)) return true;
+    const startCell = sheetWrapperRef.current?.querySelector(
+      `td.cell[data-row='${state.start.row}']`,
+    ) as HTMLElement;
+    if (!startCell) return false;
+    const { top = 0, bottom = 0 } =
+      sheetWrapperRef.current?.getBoundingClientRect() || {};
+    const { top: cellTop, bottom: cellBottom } =
+      startCell?.getBoundingClientRect() || {};
+
+    if (top < cellTop && bottom > cellBottom) {
+      return true;
+    }
+    return false;
+  }, [state.start, virtualStart, virtualEnd]);
 
   return (
     <SheetEventContext.Provider value={eventBus}>
@@ -222,7 +241,27 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             />
           </div>
         ) : null}
-        <div className="harvest-sheet-control">{children}</div>
+        <div className="harvest-sheet-control">
+          {children}
+          {showBackEdit && !startRowVisible ? (
+            <Button
+              type="dashed"
+              onClick={() => sheetInstance?.current?.zoomTo()}
+              style={{
+                position: 'absolute',
+                zIndex: 4,
+                ...(!backEditStyle
+                  ? {
+                      top: 0,
+                      right: 0,
+                    }
+                  : backEditStyle),
+              }}
+            >
+              回到编辑行
+            </Button>
+          ) : null}
+        </div>
       </span>
     </SheetEventContext.Provider>
   );

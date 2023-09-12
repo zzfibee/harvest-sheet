@@ -94,7 +94,9 @@ export const stateReducer: Record<string, reducerAction> = {
     const endCol =
       (state.data?.[0]?.findIndex(
         (item) => item.fixed === SheetType.CellAlign.right,
-      ) || 0) - 1;
+      ) ||
+        state.data?.[0]?.length ||
+        0) - 1;
     // const endCol = (state.data?.[0].length || 0) - 1;
     if (startCol >= 0 && endCol >= 0) {
       return {

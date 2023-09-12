@@ -9,6 +9,7 @@ import { TableShell } from '../shell/tableShell';
 import { groupConfigToGroupMap } from '../util';
 import { CheckViewer } from '../viewer/checkViewer';
 import { GroupViewer } from '../viewer/groupViewer';
+import { GroupEvent, SelectionEvent } from './events';
 import { useGroupConfig } from './useGroupConfig';
 import { useRowSelection } from './useRowSelection';
 
@@ -238,9 +239,10 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   const handleRowSelect = useCallback(
     (value: unknown) => {
       if (!sheetInstance.current) return;
+      const currentRow = value as number;
       // sheetInstance.current?.selectRow(value as number);
       const newChecked = Array(checkedRow.length).fill(false);
-      newChecked[value as number] = !newChecked[value as number];
+      newChecked[currentRow] = !newChecked[currentRow];
       setCheckedRow(newChecked);
     },
     [sheetInstance, checkedRow],
@@ -288,84 +290,19 @@ const Table: React.FC<SheetTableType.TableProps> = ({
         data={data}
         onCellsChanged={handleChanges}
       >
-        {!hasChildren && rowSelection
-          ? [
-              <SheetEvent
-                key="row-select"
-                name="row-select"
-                handler={handleRowSelect}
-              />,
-              <SheetEvent
-                key="row-select-title"
-                name="row-select-title"
-                handler={handleRowSelect}
-              />,
-            ]
-          : null}
-        {hasChildren
-          ? [
-              <SheetEvent
-                key="group-open"
-                name="group-open"
-                handler={(e: unknown) => {
-                  const { row } = e as { row: number };
-                  const index = groups.findIndex(
-                    (item) => item.groupStart === row,
-                  );
-                  if (index >= 0) {
-                    const groupOpen = [...rowGroupConfig.groupOpen];
-                    groupOpen[index] = !rowGroupConfig.groupOpen[index];
-
-                    setGroupConfig({
-                      ...rowGroupConfig,
-                      groupOpen: groupOpen,
-                    });
-                    const newGrid = [...data];
-                    newGrid[row] = [...newGrid[row]];
-                    newGrid[row][0] = {
-                      ...(newGrid[row][0] as SheetType.Cell),
-                      record: {
-                        open: !!groupOpen[index],
-                      },
-                    };
-                    setData(newGrid);
-                    sheetInstance.current?.pushToHistory({
-                      type: 'Custom' as SheetType.OperateType,
-                      changes: [],
-                      extraInfo: {
-                        extraType: 'group',
-                        groupConfig: rowGroupConfig,
-                        data,
-                      },
-                    });
-                  }
-                }}
-              />,
-              <SheetEvent
-                key="group-open-title"
-                name="group-open-title"
-                handler={(value) => {
-                  setGroupConfig({
-                    ...rowGroupConfig,
-                    groupOpen: Array(rowGroupConfig.groupOpen.length).fill(
-                      value,
-                    ),
-                  });
-
-                  sheetInstance.current?.pushToHistory({
-                    type: 'Custom' as SheetType.OperateType,
-                    changes: [],
-                    extraInfo: {
-                      extraType: 'group',
-                      groupConfig: rowGroupConfig,
-                      data,
-                    },
-                  });
-                }}
-              />,
-            ]
-          : null}
-
+        <SelectionEvent
+          hasChildren={hasChildren}
+          rowSelection={rowSelection}
+          onChange={handleRowSelect}
+        />
+        <GroupEvent
+          hasChildren={hasChildren}
+          data={data}
+          rowGroupConfig={rowGroupConfig}
+          sheetInstance={sheetInstance.current}
+          onGridChange={setData}
+          onGroupChange={setGroupConfig}
+        />
         <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
         {Object.keys(eventHandler || {}).map((key) => (
           <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />

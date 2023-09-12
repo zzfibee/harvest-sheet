@@ -1,3 +1,4 @@
+import { SheetTableType } from '@zhenliang/sheet';
 import { useEffect, useRef, useState } from 'react';
 
 export const useRowSelection = (

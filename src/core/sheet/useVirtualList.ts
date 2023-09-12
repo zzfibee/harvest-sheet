@@ -16,7 +16,7 @@ type VirtualConfig = {
 export const useVirtualList = (
   elementRef: React.RefObject<SheetType.refAssertion>,
   data: SheetType.Cell[][] = [],
-  groupConfig: SheetType.RowGroupConfig,
+  groupConfig?: SheetType.RowGroupConfig,
   virtualized?: boolean,
 ) => {
   const [state, setState] = useState({
@@ -29,7 +29,9 @@ export const useVirtualList = (
   });
   const { virtualStart, virtualEnd, paddingTop, paddingBottom } = state;
   const virtualRef = useRef<VirtualConfig | null>();
-  const groupConfigRef = useRef<SheetType.RowGroupConfig>(groupConfig);
+  const groupConfigRef = useRef<SheetType.RowGroupConfig | undefined>(
+    groupConfig,
+  );
   useEffect(() => {
     groupConfigRef.current = groupConfig;
   }, [groupConfig]);

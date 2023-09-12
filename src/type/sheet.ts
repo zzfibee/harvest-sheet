@@ -106,6 +106,8 @@ export type SheetProps = {
   data: Cell[][];
   freePaste?: boolean;
   virtualized?: boolean;
+  showBackEdit?: boolean;
+  backEditStyle?: Partial<CSSStyleDeclaration>;
 
   groupConfig?: RowGroupConfig;
 

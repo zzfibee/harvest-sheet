@@ -51,13 +51,16 @@ export type TableChange = {
   value: unknown;
 };
 export type TableRowSelection = {
-  onChange: (
+  rowSelected?: string[];
+  onChange?: (
     selectedRowKeys: string[],
     selectedRows: Record<string, unknown>[],
   ) => void;
 };
 export type TableGroupConfig = {
-  defaultOpen: boolean;
+  defaultOpen?: boolean;
+  rowGroup?: SheetType.RowGroupConfig;
+  onChange?: (value: SheetType.RowGroupConfig) => void;
 };
 export type EventHandler = (value: any) => void;
 export type TableProps = {
@@ -84,18 +87,10 @@ export type TableProps = {
   sticky?: boolean;
   draggable?: boolean;
   freePaste?: boolean;
-  rowSelection?: {
-    rowSelected: string[];
-    onChange: (
-      selectedRowKeys: string[],
-      selectedRows: Record<string, unknown>[],
-    ) => void;
-  };
-  groupConfig?: {
-    defaultOpen?: boolean;
-    rowGroup?: TableGroupConfig;
-    onChange?: (value: TableGroupConfig) => void;
-  };
+  showBackEdit?: boolean;
+  backEditStyle?: Partial<CSSStyleDeclaration>;
+  rowSelection?: TableRowSelection;
+  groupConfig?: TableGroupConfig;
 
   onChange: (changes: TableChange[], extChanges?: TableChange[]) => void;
   handleAdd?: () => void;
