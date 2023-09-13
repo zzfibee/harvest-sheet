@@ -29,6 +29,7 @@ export const useSelectVisible = (
         setStartVisible(false);
       }
     }, 100);
+    handleScroll();
     sheetWrapper.current?.addEventListener('scroll', handleScroll);
 
     return () => {

@@ -109,7 +109,7 @@ export const DraggableShell = ({
                 //调整宽度
               }}
             >
-              {item.title}
+              <span className="value-viewer">{item.title}</span>
             </th>,
           );
       });

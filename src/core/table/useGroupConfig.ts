@@ -1,5 +1,5 @@
 import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { dataSourceToRowConfig } from './util';
 
 export const useGroupConfig = (
@@ -9,9 +9,24 @@ export const useGroupConfig = (
 ) => {
   const [groupConfig, setGroupConfig] = useState<SheetType.RowGroupConfig>();
   const groupConfigRef = useRef<SheetType.RowGroupConfig>();
+  const childrenLength = useMemo(() => {
+    if (!dataSource?.length) return 0;
+    const data = dataSource as (Record<string, unknown> & {
+      children: Array<unknown>;
+    })[];
+    const childrenCount = data
+      .filter((item) => !!(item.children as Array<unknown>)?.length)
+      .reduce(
+        (count, { children }) =>
+          count + children?.length ? children.length : 0,
+        0,
+      );
+    return childrenCount;
+  }, [dataSource]);
   useEffect(() => {
     if (!hasChildren) return;
 
+    console.log('groupConfigEffect', dataSource.length);
     const rowConfig = dataSourceToRowConfig(
       dataSource,
       tableGroupConfig?.defaultOpen,
@@ -28,10 +43,19 @@ export const useGroupConfig = (
     }
 
     setGroupConfig(rowConfig);
+    console.log('groupConfigEffect', rowConfig.groups, rowConfig.groupOpen);
     groupConfigRef.current = rowConfig;
-  }, [dataSource.length, hasChildren]);
+  }, [dataSource.length, childrenLength, hasChildren]);
 
-  return [groupConfig, setGroupConfig] as [
+  const handleGroupChange = useCallback(
+    (value: SheetType.RowGroupConfig) => {
+      setGroupConfig(value);
+      groupConfigRef.current = value;
+    },
+    [setGroupConfig],
+  );
+
+  return [groupConfig, handleGroupChange] as [
     SheetType.RowGroupConfig,
     (value: SheetType.RowGroupConfig) => void,
   ];

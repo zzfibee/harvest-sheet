@@ -223,7 +223,7 @@ const Cell = (props: SheetType.CellProps) => {
       className={className}
       style={widthStyle(cell)}
     >
-      {content}
+      <span className="value-viewer"> {content}</span>
     </CellRenderer>
   );
 };

@@ -65,7 +65,7 @@ export const TableShell = ({
                 right: item.fixed === 'right' ? 0 : 'unset',
               }}
             >
-              {item.title}
+              <span className="value-viewer">{item.title}</span>
             </th>,
           );
       });
