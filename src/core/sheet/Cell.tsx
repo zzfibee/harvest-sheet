@@ -79,7 +79,11 @@ const Cell = (props: SheetType.CellProps) => {
         setValue(valueRef.current);
       } else if (eventInfo.value && eventInfo.editing) {
         // 单元格直接键盘编辑，设置为输入值
-        setValue(eventInfo.value);
+        setValue(
+          cell.dataEditor?.parser
+            ? (cell?.dataEditor?.parser?.(eventInfo.value) as string)
+            : value,
+        );
       }
       setEventState(eventInfo);
     };

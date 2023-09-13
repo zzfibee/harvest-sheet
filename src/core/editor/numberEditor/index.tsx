@@ -87,7 +87,7 @@ export const getNumberEditor = (
     if (isNil(value) || isNaN(value as number)) {
       return null;
     }
-    return formatPrecision(value as number, extraProps?.precision ?? 0);
+    return Number(formatPrecision(value as number, extraProps?.precision ?? 0));
   };
 
   NumberEditor.checker = (value: unknown) => {
