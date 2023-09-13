@@ -131,10 +131,8 @@ export const stateReducer: Record<string, reducerAction> = {
   },
   clearSelectIfNotSingleRow(state) {
     const { start, end } = state;
-    if (start?.row === end?.row) {
-      return {
-        ...state,
-      };
+    if (!start || !end || start?.row === end?.row) {
+      return state;
     }
     return {
       ...state,
@@ -148,6 +146,7 @@ export const stateReducer: Record<string, reducerAction> = {
   },
   clearEdit(state) {
     const { editing } = state;
+    if (!editing) return state;
     return {
       ...state,
       editing: undefined,

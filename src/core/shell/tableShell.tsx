@@ -12,7 +12,7 @@ export const TableShell = ({
   showGroup,
   showSelect,
   controlProps,
-  controlWidth = 25,
+  controlWidth = 30,
 }: SheetType.SheetShell) => {
   const TableShell: React.FC<{
     children: React.ReactElement;

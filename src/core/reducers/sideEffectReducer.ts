@@ -109,6 +109,10 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
   },
   copy(d, getState) {
     const { start, end, data, groupConfig } = getState();
+    if (!start || !end) {
+      return;
+    }
+
     const cellIndex = flatRowColIndex(start, end);
 
     const groupMap = groupConfigToGroupMap(groupConfig);
@@ -153,6 +157,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       data,
       groupConfig,
     } = getState();
+    if (!start || !end) return;
     const pasteData = await clipboardDataToString();
 
     const changeInfo = formatDataToCell({

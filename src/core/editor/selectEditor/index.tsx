@@ -3,6 +3,7 @@ import type { SheetType } from '@zhenliang/sheet/type';
 import { Select } from 'antd';
 
 import 'antd/es/select/style/index.css';
+import { isNil } from 'lodash';
 import './index.less';
 
 export const getSelectEditor = (
@@ -53,6 +54,7 @@ export const getSelectEditor = (
   };
 
   SelectEditor.checker = (value) => {
+    if (isNil(value)) return true;
     return (
       options.some((item: any) => item.value == value) ||
       options.some((item: any) => item.label === value)

@@ -422,6 +422,7 @@ export const getNextVisibleRow = (
     number,
     SheetType.RowGroup & { isStart: boolean; isOpen: boolean }
   >,
+  up: number = 1,
 ): number | null => {
   if (!groupMap?.size) {
     return row;
@@ -434,7 +435,7 @@ export const getNextVisibleRow = (
     !groupMap.get(row)?.isOpen &&
     !groupMap.get(row)?.isStart
   ) {
-    return getNextVisibleRow(row + 1, maxRow, groupMap);
+    return getNextVisibleRow(row + up, maxRow, groupMap);
   }
   return row;
 };

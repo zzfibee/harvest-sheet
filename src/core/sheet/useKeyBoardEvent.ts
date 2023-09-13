@@ -2,6 +2,7 @@ import { useKeyBoard } from '@zhenliang/sheet';
 import { Dispatch } from '@zhenliang/sheet/hooks/useMiddlewareReducer';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { sideEffectReducer } from '../reducers/sideEffectReducer';
+import { getRowHeight } from '../util';
 
 export const useKeyBoardEvent = (
   dispatch: Dispatch,
@@ -10,7 +11,15 @@ export const useKeyBoardEvent = (
   useKeyBoard(
     {
       move: (e, value: any) => {
+        e.preventDefault();
         dispatch({ type: 'move', payload: value });
+        // todo 横向滚动的处理
+        const { row } = value as SheetType.CellPosition;
+        if (Math.abs(row) !== 0) {
+          const rowHeight = getRowHeight(elementRef.current as HTMLSpanElement);
+          const itemHeight = rowHeight || 30;
+          elementRef?.current?.scrollBy({ top: itemHeight * row });
+        }
       },
       escape: () => {
         dispatch({ type: 'escape' });

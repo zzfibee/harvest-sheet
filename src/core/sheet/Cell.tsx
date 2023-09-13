@@ -178,13 +178,15 @@ const Cell = (props: SheetType.CellProps) => {
     const val = renderValue(cell);
 
     return (
-      <Viewer
-        record={cell.record}
-        cell={cell}
-        row={row}
-        col={col}
-        value={val}
-      />
+      <span className="value-viewer">
+        <Viewer
+          record={cell.record}
+          cell={cell}
+          row={row}
+          col={col}
+          value={val}
+        />
+      </span>
     );
   };
 
@@ -223,7 +225,7 @@ const Cell = (props: SheetType.CellProps) => {
       className={className}
       style={widthStyle(cell)}
     >
-      <span className="value-viewer"> {content}</span>
+      {content}
     </CellRenderer>
   );
 };

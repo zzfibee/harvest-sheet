@@ -18,7 +18,7 @@ export const GroupViewer: SheetType.CellViewer = (props) => {
   }, [eventBus, row, record?.open]);
   if (value) {
     return (
-      <span onClick={handleChange}>
+      <span onMouseDown={(e) => e.stopPropagation()} onClick={handleChange}>
         {!record?.open ? <PlusSquareOutlined /> : <MinusSquareOutlined />}
       </span>
     );

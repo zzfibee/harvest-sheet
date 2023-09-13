@@ -13,6 +13,7 @@ export const keyboardReducer: Record<string, reducerAction> = {
         newRow as number,
         data.length,
         groupConfigToGroupMap(groupConfig),
+        row < 0 ? -1 : 1,
       );
     }
     let currentPos = {

@@ -33,8 +33,8 @@ const Table: React.FC<SheetTableType.TableProps> = ({
 
   const hasChildren =
     dataSource?.some((item) => (item?.children as Array<any>)?.length > 0) ||
-    groupConfig;
-  const hasControl = hasChildren || rowSelection;
+    !!groupConfig;
+  const hasControl = hasChildren || !!rowSelection;
 
   const [checkedRow, setCheckedRow] = useRowSelection(
     dataSource,
@@ -247,7 +247,13 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     },
     [sheetInstance, checkedRow],
   );
+
+  const headGroupOpen = !rowGroupConfig?.groupOpen?.some(
+    (value: boolean) => !value,
+  );
+  const headSelection = !!rowSelection;
   const WrappedTableShell = useMemo(() => {
+    console.log('shell-render', '损耗性能大');
     if (draggable) {
       return DraggableShell({
         columns,
@@ -256,7 +262,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
         showSelect: !!rowSelection,
         controlProps: {
           group: {
-            open: !rowGroupConfig?.groupOpen?.some((value: boolean) => !value),
+            open: headGroupOpen,
           },
           check: {
             checked: false,
@@ -271,14 +277,14 @@ const Table: React.FC<SheetTableType.TableProps> = ({
       showSelect: !!rowSelection,
       controlProps: {
         group: {
-          open: !rowGroupConfig?.groupOpen?.some((value: boolean) => !value),
+          open: headGroupOpen,
         },
         check: {
           checked: false,
         },
       },
     });
-  }, [columns, draggable, rowSelection, hasChildren, rowGroupConfig]);
+  }, [columns.length, draggable, headSelection, hasChildren, headGroupOpen]);
 
   return (
     <WidthContext.Provider value={{ widths, onChange: setWidth }}>
