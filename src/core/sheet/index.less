@@ -27,12 +27,20 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
   tr{
     height:var(--row-height);
 
-    th{
+    th.cell-title{
       line-height: var(--row-height);
+      border-bottom: 1px solid transparent;
     }
 
     td{
       line-height: var(--row-height);
+    }
+    
+    &:last-of-type{
+      .td{
+      border-bottom: 1px solid transparent;
+      }
+
     }
   }
 

@@ -208,13 +208,15 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           )}
           {/* {rowElements?.slice(virtualStart, virtualEnd)} */}
           {rowElements}
-          <tr
-            style={{
-              height: 0,
-              paddingBottom: paddingBottom,
-              display: 'block',
-            }}
-          />
+          {virtualized && paddingBottom > 0 && (
+            <tr
+              style={{
+                height: 0,
+                paddingBottom: paddingBottom,
+                display: 'block',
+              }}
+            />
+          )}
         </SheetShell>
         {ContextMenu ? (
           <div
