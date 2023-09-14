@@ -9,7 +9,7 @@ import {
 } from '../core/editor';
 import Table from '../core/table';
 import { BtnViewer } from '../core/viewer/btnViewer';
-import { GetCascaderViewer } from '../core/viewer/cascaderViewer';
+import { getCascaderViewer } from '../core/viewer/cascaderViewer';
 import { EditViewer } from '../core/viewer/editViewer';
 import { SwitchViewer } from '../core/viewer/switchViewer';
 import { SheetTableType, SheetType } from '../type';
@@ -87,7 +87,7 @@ const cascaderOptions = [
   },
 ];
 
-const CascaderViewer = GetCascaderViewer(cascaderOptions);
+const CascaderViewer = getCascaderViewer(cascaderOptions);
 
 const CascaderSelector = getCascaderEditor(cascaderOptions);
 

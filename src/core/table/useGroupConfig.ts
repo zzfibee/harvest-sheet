@@ -1,4 +1,5 @@
 import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
+import { flatten } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { dataSourceToRowConfig } from './util';
 
@@ -14,13 +15,11 @@ export const useGroupConfig = (
     const data = dataSource as (Record<string, unknown> & {
       children: Array<unknown>;
     })[];
-    const childrenCount = data
-      .filter((item) => !!(item.children as Array<unknown>)?.length)
-      .reduce(
-        (count, { children }) =>
-          count + children?.length ? children.length : 0,
-        0,
-      );
+    const childrenCount = flatten(
+      data
+        .filter((item) => !!(item.children as Array<unknown>)?.length)
+        .map((item) => item.children),
+    ).length;
     return childrenCount;
   }, [dataSource]);
   useEffect(() => {
@@ -46,6 +45,7 @@ export const useGroupConfig = (
     console.log('groupConfigEffect', rowConfig.groups, rowConfig.groupOpen);
     groupConfigRef.current = rowConfig;
   }, [dataSource.length, childrenLength, hasChildren]);
+  console.log('groupConfigEffect', dataSource.length, childrenLength);
 
   const handleGroupChange = useCallback(
     (value: SheetType.RowGroupConfig) => {

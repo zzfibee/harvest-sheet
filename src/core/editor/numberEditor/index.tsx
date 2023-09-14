@@ -28,9 +28,11 @@ export const NumberEditor: SheetType.CellEditor = (props) => {
 };
 
 export const getNumberEditor = (
-  extraProps?: Pick<
-    InputNumberProps,
-    'max' | 'min' | 'addonBefore' | 'addonAfter' | 'precision'
+  extraProps?: Partial<
+    Pick<
+      InputNumberProps,
+      'max' | 'min' | 'addonBefore' | 'addonAfter' | 'precision'
+    >
   >,
 ) => {
   const NumberEditor: SheetType.CellEditor = (props) => {

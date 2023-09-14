@@ -3,7 +3,7 @@
 import { SheetType } from '@zhenliang/sheet/type';
 import { valuesTransferToLabel } from '../../util';
 
-export const GetCascaderViewer = (options: SheetType.OptionsType[]) => {
+export const getCascaderViewer = (options: SheetType.OptionsType[]) => {
   const TypeViewer: SheetType.CellViewer = (props) => {
     const { value } = props;
     return valuesTransferToLabel(options, value as string) || (value as string);
