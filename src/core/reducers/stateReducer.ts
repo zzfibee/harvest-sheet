@@ -91,13 +91,13 @@ export const stateReducer: Record<string, reducerAction> = {
   },
   selectRow(state, payload) {
     const startCol = state.data?.[0]?.findIndex((item) => !item.fixed) || 0;
-    const endCol =
-      (state.data?.[0]?.findIndex(
-        (item) => item.fixed === SheetType.CellAlign.right,
-      ) ||
-        state.data?.[0]?.length ||
-        0) - 1;
-    // const endCol = (state.data?.[0].length || 0) - 1;
+    let endCol = (state.data?.[0]?.length ?? 0) - 1;
+    const lastFixed = state.data?.[0]?.find(
+      (item) => item.fixed === SheetType.CellAlign.right,
+    );
+    if (lastFixed) {
+      endCol = state.data?.[0].indexOf(lastFixed) ?? 0 - 1;
+    }
     if (startCol >= 0 && endCol >= 0) {
       return {
         ...state,
@@ -115,7 +115,7 @@ export const stateReducer: Record<string, reducerAction> = {
         },
       };
     }
-    return {};
+    return state;
   },
   clearSelect(state) {
     const { start, end } = state;

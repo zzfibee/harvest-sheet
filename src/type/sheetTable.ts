@@ -92,6 +92,9 @@ export type TableProps = {
   rowSelection?: TableRowSelection;
   groupConfig?: TableGroupConfig;
 
+  menuRenderer?: React.FC<SheetType.MenuRenderProps>;
+  onContextMenu?: (event: any) => void;
+
   onChange: (changes: TableChange[], extChanges?: TableChange[]) => void;
   handleAdd?: () => void;
   eventHandler?: Record<
