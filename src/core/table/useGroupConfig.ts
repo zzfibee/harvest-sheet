@@ -24,8 +24,6 @@ export const useGroupConfig = (
   }, [dataSource]);
   useEffect(() => {
     if (!hasChildren) return;
-
-    console.log('groupConfigEffect', dataSource.length);
     const rowConfig = dataSourceToRowConfig(
       dataSource,
       tableGroupConfig?.defaultOpen,
@@ -42,10 +40,8 @@ export const useGroupConfig = (
     }
 
     setGroupConfig(rowConfig);
-    console.log('groupConfigEffect', rowConfig.groups, rowConfig.groupOpen);
     groupConfigRef.current = rowConfig;
   }, [dataSource.length, childrenLength, hasChildren]);
-  console.log('groupConfigEffect', dataSource.length, childrenLength);
 
   const handleGroupChange = useCallback(
     (value: SheetType.RowGroupConfig) => {

@@ -3,6 +3,7 @@ import type { SheetType } from '@zhenliang/sheet/type';
 import { Select, SelectProps } from 'antd';
 
 import 'antd/es/select/style/index.css';
+import { useState } from 'react';
 import { isNil } from 'lodash';
 import './index.less';
 
@@ -13,6 +14,7 @@ export const getSelectEditor = (
   selectProps: Partial<SelectProps> = {},
 ): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
+    const [isOpen, setIsOpen] = useState<boolean>(true);
     const { value, onConfirm } = props;
 
     const handleChange = (opt: any) => {
@@ -28,10 +30,10 @@ export const getSelectEditor = (
     };
 
     const dropdown = (menu: React.ReactNode) => (
-      <>
+      <div onClick={()=>{setIsOpen(false)}}>
         {menu}
         {extra}
-      </>
+      </div>
     );
 
     return (
@@ -39,9 +41,8 @@ export const getSelectEditor = (
         {...selectProps}
         autoFocus
         className="select-editor"
-        defaultOpen
         allowClear
-        open
+        open={isOpen}
         onMouseDown={(e) => {
           e.stopPropagation();
         }}

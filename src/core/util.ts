@@ -273,7 +273,6 @@ export const optionsTransferToValue = (
       }
     } else if (get(options[i], key) === val) {
       values.push(value);
-      console.log('cascader', get(options[i], key), val, value);
       break;
     } else {
       values = [];
