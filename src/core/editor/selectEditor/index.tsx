@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
 import type { SheetType } from '@zhenliang/sheet/type';
-import { Select } from 'antd';
+import { Select, SelectProps } from 'antd';
 
 import 'antd/es/select/style/index.css';
 import { isNil } from 'lodash';
@@ -10,6 +10,7 @@ export const getSelectEditor = (
   options: SheetType.Options[],
   valueKey: string = 'value',
   extra: React.ReactNode = <></>,
+  selectProps: Partial<SelectProps> = {},
 ): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;
@@ -35,6 +36,7 @@ export const getSelectEditor = (
 
     return (
       <Select
+        {...selectProps}
         autoFocus
         className="select-editor"
         defaultOpen
