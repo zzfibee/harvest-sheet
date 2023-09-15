@@ -78,6 +78,7 @@ export type RowGroup = {
   groupEnd: number;
 };
 export type RowGroupConfig = {
+  defaultOpen?: boolean;
   groups: RowGroup[];
   groupOpen: boolean[];
 };

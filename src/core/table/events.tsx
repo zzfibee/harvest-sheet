@@ -86,7 +86,8 @@ export const GroupEvent: FC<{
           onGroupChange &&
             onGroupChange({
               ...rowGroupConfig,
-              groupOpen: Array(rowGroupConfig.groupOpen.length).fill(value),
+              groupOpen: Array(rowGroupConfig?.groupOpen.length).fill(value),
+              defaultOpen: !groups.length ? (value as boolean) : undefined,
             });
 
           sheetInstance?.pushToHistory({
