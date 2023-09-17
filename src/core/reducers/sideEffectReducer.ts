@@ -145,7 +145,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       { currentRow: -1, value: '' },
     );
     const text = copyData.value.trimStart();
-    stringToClipboardData(text);
+    stringToClipboardData(text, cellIndex.length);
   },
   async paste(dispatch, getState) {
     const {

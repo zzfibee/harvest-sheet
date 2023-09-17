@@ -99,7 +99,7 @@ export const DraggableShell = ({
               }}
               onMouseMove={(e) => {
                 const target = e.target as HTMLTableHeaderCellElement;
-                if (e.nativeEvent.offsetX > target.offsetWidth - 10) {
+                if (e.nativeEvent.offsetX > target.offsetWidth - 8) {
                   target.style.cursor = 'col-resize';
                 } else {
                   target.style.cursor = 'default';

@@ -56,6 +56,7 @@ const data = [
 
 const App: React.FC = () => (
   <Table
+    draggable
     columns={columns}
     dataSource={data}
     scroll={{ x: '100%' }}

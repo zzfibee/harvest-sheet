@@ -66,6 +66,7 @@ const App: React.FC = () => {
 
   return (
     <Table
+      draggable
       columns={columns}
       rowKey="key"
       dataSource={dataSource}

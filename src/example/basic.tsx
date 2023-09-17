@@ -98,7 +98,12 @@ const App: React.FC = () => {
   );
 
   return (
-    <Table columns={columns} dataSource={dataSource} onChange={onChange} />
+    <Table
+      draggable
+      columns={columns}
+      dataSource={dataSource}
+      onChange={onChange}
+    />
   );
 };
 

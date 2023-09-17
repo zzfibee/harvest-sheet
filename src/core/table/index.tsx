@@ -253,7 +253,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     : !rowGroupConfig?.groupOpen?.some((value: boolean) => !value);
 
   const headSelection = !!rowSelection;
-  console.log('shell-render', rowGroupConfig?.defaultOpen, headGroupOpen);
   const WrappedTableShell = useMemo(() => {
     console.log('shell-render', '损耗性能大');
     if (draggable) {

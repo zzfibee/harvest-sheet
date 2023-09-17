@@ -265,6 +265,7 @@ const App: React.FC = () => {
   return (
     <Table
       freePaste
+      draggable
       sheetInstance={sheetInstance}
       columns={antColumns}
       dataSource={state}

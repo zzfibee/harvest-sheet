@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import type { SheetType } from '@zhenliang/sheet/type';
+import { message } from 'antd';
 import { cloneDeep, get, isNil, range } from 'lodash';
 
 export function findParentTd(el: HTMLElement): HTMLElement | null {
@@ -82,14 +83,16 @@ export function classNames(...args: (string | null | undefined)[]) {
   return args.filter(Boolean).join(' ');
 }
 
-export function stringToClipboardData(str: string) {
+export function stringToClipboardData(str: string, count: number) {
   // navigator.clipboard.writeText(str);
   navigator.clipboard.writeText(str).then(
     () => {
-      console.log('复制成功');
+      // console.log('复制成功');
+      message.success(`已复制${count}个单元格`);
     },
     () => {
-      console.error('复制失败');
+      // console.error('复制失败');
+      message.info(`复制失败`);
     },
   );
 }

@@ -62,7 +62,7 @@ const data = [
 ];
 
 const App: React.FC = () => (
-  <Table columns={columns} dataSource={data} onChange={() => {}} />
+  <Table draggable columns={columns} dataSource={data} onChange={() => {}} />
 );
 
 export default App;
