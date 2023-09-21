@@ -8,7 +8,12 @@ import {
 } from '../../util';
 import './index.less';
 
-const getCascaderEditor = (options: SheetType.OptionsType[]) => {
+const getCascaderEditor = (
+  options: SheetType.OptionsType[],
+  getCustomOptions?: (
+    props: SheetType.CellEditorProps,
+  ) => SheetType.OptionsType[],
+) => {
   const CascaderEditor: SheetType.CellEditor = (props) => {
     const { value, onConfirm } = props;
 
@@ -19,7 +24,7 @@ const getCascaderEditor = (options: SheetType.OptionsType[]) => {
     const handleChange = (opt: any) => {
       onConfirm(opt ? opt[opt.length - 1] : null);
     };
-
+    const customOptions = getCustomOptions ? getCustomOptions(props) : options;
     return (
       <Cascader
         autoFocus
@@ -29,12 +34,13 @@ const getCascaderEditor = (options: SheetType.OptionsType[]) => {
           event.stopPropagation();
         }}
         value={val}
+        allowClear
         // allowClear={false}
         displayRender={(label) => label[label.length - 1]}
         onChange={handleChange}
         // onBlur={handleBlur}
         // onKeyDown={handleKeyDown}
-        options={options}
+        options={customOptions}
       />
     );
   };

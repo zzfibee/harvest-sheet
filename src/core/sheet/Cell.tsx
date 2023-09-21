@@ -130,6 +130,7 @@ const Cell = (props: SheetType.CellProps) => {
         return;
       }
       if (
+        value !== null &&
         cell?.dataEditor?.checker &&
         !cell.dataEditor?.checker?.(value, cell.record)
       ) {

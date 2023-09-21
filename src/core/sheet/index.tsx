@@ -1,6 +1,6 @@
 import type { SheetType } from '@zhenliang/sheet/type';
 import { useEffect, useMemo, useRef } from 'react';
-import ReduxLogger from 'redux-logger';
+// import ReduxLogger from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 
 import DefaultRow from './DefaultRow';
@@ -57,7 +57,8 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
       groupConfig,
       eventBus,
     },
-    [ReduxThunk, ReduxLogger],
+    // [ReduxThunk, ReduxLogger],
+    [ReduxThunk],
   );
 
   useEffect(() => {

@@ -12,6 +12,9 @@ export const getSelectEditor = (
   valueKey: string = 'value',
   extra: React.ReactNode = <></>,
   selectProps: Partial<SelectProps> = {},
+  getCustomOptions?: (
+    props: SheetType.CellEditorProps,
+  ) => SheetType.Options[],
 ): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -36,6 +39,8 @@ export const getSelectEditor = (
       </div>
     );
 
+    const customOptions = getCustomOptions ? getCustomOptions(props) : options;
+
     return (
       <Select
         {...selectProps}
@@ -49,7 +54,7 @@ export const getSelectEditor = (
         value={SelectEditor.formatter ? SelectEditor.formatter(value) : value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        options={options}
+        options={customOptions}
         popupClassName={'excelTablePopupClassName'}
         dropdownRender={dropdown}
       />

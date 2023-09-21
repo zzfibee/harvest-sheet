@@ -207,7 +207,7 @@ export type UpdateStateType = {
 export type UpdateFocus = (start: CellPosition, end: CellPosition) => void;
 
 export type Options<T = any> = {
-  value: string;
+  value: string | number;
   label: string;
 } & T;
 
