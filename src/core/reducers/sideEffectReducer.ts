@@ -3,7 +3,6 @@ import { head, isNil, last, pick } from 'lodash';
 import { FunctionAction, NormalAction } from '../../hooks';
 import {
   clipboardDataToString,
-  defaultValueRenderer,
   flatRowCol,
   flatRowColIndex,
   formatDataToCell,
@@ -132,11 +131,24 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         }
 
         // 复制到剪贴板的时候执行 formatter
-        const currentValue = `${value}${currentRow === row ? '\t' : '\n'} ${
-          data[row][col].dataEditor?.formatter
-            ? data[row][col].dataEditor?.formatter?.(data[row][col].value)
-            : defaultValueRenderer(data[row][col])
-        }`;
+        const { value: dataValue, dataEditor } = data[row][col];
+        const { formatter: dataFormatter } = dataEditor || {};
+        let formattedValue: string | null = (
+          dataFormatter ? dataFormatter(dataValue) : dataValue
+        ) as string;
+        if (isNil(dataValue)) {
+          formattedValue = ' ';
+        }
+        if (currentRow === -1) {
+          return {
+            currentRow: row,
+            value: formattedValue,
+          };
+        }
+        const currentValue = `${value}${
+          currentRow === row ? '\t' : '\n'
+        } ${formattedValue}`;
+
         return {
           currentRow: row,
           value: currentValue,
@@ -144,7 +156,7 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
       },
       { currentRow: -1, value: '' },
     );
-    const text = copyData.value.trimStart();
+    const text = copyData.value;
     stringToClipboardData(text, cellIndex.length);
   },
   async paste(dispatch, getState) {

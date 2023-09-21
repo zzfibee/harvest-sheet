@@ -109,6 +109,7 @@ export type SheetProps = {
   virtualized?: boolean;
   showBackEdit?: boolean;
   backEditStyle?: Partial<CSSStyleDeclaration>;
+  sticky?: boolean;
 
   groupConfig?: RowGroupConfig;
 

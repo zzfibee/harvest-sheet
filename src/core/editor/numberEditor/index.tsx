@@ -86,17 +86,23 @@ export const getNumberEditor = (
     return result;
   };
   NumberEditor.parser = (value: unknown) => {
-    if (isNil(value) || isNaN(value as number)) {
+    const result = parseFloat(String(value as string)?.replace(/,/g, ''));
+    if (isNil(result) || isNaN(result)) {
       return null;
     }
-    return Number(formatPrecision(value as number, extraProps?.precision ?? 0));
+    return Number(
+      formatPrecision(result as number, extraProps?.precision ?? 0),
+    );
   };
 
   NumberEditor.checker = (value: unknown) => {
+    if (isNil(value)) {
+      return true;
+    }
     // parse number with thousands separator
     const result = parseFloat(String(value as string)?.replace(/,/g, ''));
 
-    if (isNaN(result) || isNaN(value as number)) {
+    if (isNaN(result)) {
       return false;
     }
     return true;

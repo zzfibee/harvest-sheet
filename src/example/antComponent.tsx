@@ -8,6 +8,7 @@ import {
   getSelectEditor,
 } from '../core/editor';
 import Table from '../core/table';
+import { getSelectorViewer } from '../core/viewer';
 import { BtnViewer } from '../core/viewer/btnViewer';
 import { getCascaderViewer } from '../core/viewer/cascaderViewer';
 import { EditViewer } from '../core/viewer/editViewer';
@@ -43,14 +44,13 @@ const SelectorOptions = [
 
 const getTypeViewer = (options: SheetType.Options[]) => {
   const TypeViewer: SheetType.CellViewer = (props) => {
+    console.log('getTypeViewer', options);
     return options.find(
       (item) => item.label === props.value || item.value == props.value,
-    ).label;
+    )?.label;
   };
   return TypeViewer;
 };
-
-const TypeSelector = getSelectEditor(SelectorOptions, 'label');
 
 const cascaderOptions = [
   {
@@ -130,7 +130,7 @@ const columns: SheetTableType.ColumnProps[] = [
     title: 'select',
     width: 200,
     dataIndex: 'select',
-    render: getTypeViewer(SelectorOptions),
+    render: getSelectorViewer(SelectorOptions),
     editor: getSelectEditor(SelectorOptions, 'label'),
   },
   {

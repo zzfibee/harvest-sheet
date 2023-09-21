@@ -31,6 +31,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     rowRenderer: Row = DefaultRow,
     menuRenderer: ContextMenu,
     virtualized = false,
+    sticky,
     className,
     data,
     freePaste = false,
