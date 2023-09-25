@@ -82,7 +82,7 @@ const Cell = (props: SheetType.CellProps) => {
         setValue(
           cell.dataEditor?.parser
             ? (cell?.dataEditor?.parser?.(eventInfo.value) as string)
-            : value,
+            : eventInfo.value,
         );
       }
       setEventState(eventInfo);

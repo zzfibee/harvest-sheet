@@ -29,13 +29,23 @@ export const useGroupConfig = (
       tableGroupConfig?.defaultOpen,
     );
     if (groupConfigRef.current) {
-      groupConfigRef.current.groups.forEach(({ groupName }, index) => {
-        const rowIndex = rowConfig.groups.findIndex(
-          (item) => item.groupName === groupName,
-        );
-        rowConfig.groupOpen[rowIndex] =
-          groupConfigRef.current?.groupOpen[index] ||
-          rowConfig.groupOpen[rowIndex];
+      rowConfig.groups.forEach(({ groupName }, index) => {
+        const rowIndex =
+          groupConfigRef.current?.groups.findIndex(
+            (item) => item.groupName === groupName,
+          ) ?? -1;
+        if (rowIndex >= 0) {
+          const hasNewLine =
+            rowConfig.groups[rowIndex].groupEnd !==
+            groupConfigRef.current?.groups[index].groupEnd;
+
+          rowConfig.groupOpen[rowIndex] = hasNewLine
+            ? true
+            : (groupConfigRef.current?.groupOpen[index] as boolean);
+        } else {
+          // 新子行
+          rowConfig.groupOpen[index] = true;
+        }
       });
     }
 
@@ -47,6 +57,8 @@ export const useGroupConfig = (
     (value: SheetType.RowGroupConfig) => {
       setGroupConfig(value);
       groupConfigRef.current = value;
+
+      console.log('handler', childrenLength, groupConfigRef.current?.groupOpen);
     },
     [setGroupConfig],
   );

@@ -96,7 +96,7 @@ export const stateReducer: Record<string, reducerAction> = {
       (item) => item.fixed === SheetType.CellAlign.right,
     );
     if (lastFixed) {
-      endCol = state.data?.[0].indexOf(lastFixed) ?? 0 - 1;
+      endCol = (state.data?.[0].indexOf(lastFixed) ?? 0) - 1;
     }
     if (startCol >= 0 && endCol >= 0) {
       return {

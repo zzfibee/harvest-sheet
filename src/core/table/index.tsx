@@ -256,7 +256,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
 
   const headSelection = !!rowSelection;
   const WrappedTableShell = useMemo(() => {
-    console.log('shell-render', '损耗性能大');
     if (draggable) {
       return DraggableShell({
         columns,
