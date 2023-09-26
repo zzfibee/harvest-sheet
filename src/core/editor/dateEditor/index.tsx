@@ -2,6 +2,7 @@ import { DatePicker, DatePickerProps } from 'antd';
 import 'antd/es/date-picker/style/index.css';
 
 import type { SheetType } from '@zhenliang/sheet/type';
+import { isNil } from 'lodash';
 import moment from 'moment';
 import { useEffect, useMemo, useRef } from 'react';
 import './index.less';
@@ -41,6 +42,9 @@ export const getDateEditor = (
   };
 
   DateEditor.checker = (value) => {
+    if (isNil(value)) {
+      return true;
+    }
     const reg =
       /^[1-9]\d{3}(-|\/)(0[1-9]|1[0-2])(-|\/)(0[1-9]|[1-2][0-9]|3[0-1])$/;
     return reg.test(value as string);

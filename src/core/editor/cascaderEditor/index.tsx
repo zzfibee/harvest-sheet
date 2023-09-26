@@ -1,6 +1,7 @@
 import type { SheetType } from '@zhenliang/sheet/type';
 import { Cascader } from 'antd';
 import 'antd/es/cascader/style/index.css';
+import { isNil } from 'lodash';
 import { useMemo } from 'react';
 import {
   optionsToValuesFromLabelOrValue,
@@ -36,11 +37,8 @@ const getCascaderEditor = (
         }}
         value={val}
         allowClear
-        // allowClear={false}
         displayRender={(label) => label[label.length - 1]}
         onChange={handleChange}
-        // onBlur={handleBlur}
-        // onKeyDown={handleKeyDown}
         options={customOptions}
       />
     );
@@ -58,6 +56,9 @@ const getCascaderEditor = (
     return res.length ? res[res.length - 1] : null;
   };
   CascaderEditor.checker = (value) => {
+    if (isNil(value)) {
+      return true;
+    }
     const res = optionsToValuesFromLabelOrValue(options, value as string);
     return !!res.length;
   };

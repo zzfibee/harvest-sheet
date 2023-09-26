@@ -130,13 +130,19 @@ export const DraggableShell = ({
           />,
         );
       }
+      let i = 0;
       columns.forEach((item: SheetTableType.ColumnProps, index: number) => {
+        let currentWidth: number | string = item.width || 'unset';
+        if (item.titleConfig?.colSpan !== 0) {
+          currentWidth = widths[i] || item.width || 'unset';
+          i++;
+        }
         cols.push(
           <col
             className={classNames('cell')}
             key={item.dataIndex ?? index}
             style={{
-              width: widths[index] || item.width || 'unset',
+              width: currentWidth,
             }}
           />,
         );

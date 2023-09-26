@@ -1,5 +1,5 @@
 import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
-import { flatten } from 'lodash';
+import { flatten, isNil } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { dataSourceToRowConfig } from './util';
 
@@ -29,24 +29,39 @@ export const useGroupConfig = (
       tableGroupConfig?.defaultOpen,
     );
     if (groupConfigRef.current) {
-      rowConfig.groups.forEach(({ groupName }, index) => {
-        const rowIndex =
-          groupConfigRef.current?.groups.findIndex(
-            (item) => item.groupName === groupName,
-          ) ?? -1;
-        if (rowIndex >= 0) {
-          const hasNewLine =
-            rowConfig.groups[rowIndex].groupEnd !==
-            groupConfigRef.current?.groups[index].groupEnd;
+      rowConfig.groups.forEach(
+        (
+          { groupName, groupStart: newGroupStart, groupEnd: newGroupEnd },
+          index,
+        ) => {
+          const rowIndex =
+            groupConfigRef.current?.groups.findIndex(
+              (item) => item.groupName === groupName,
+            ) ?? -1;
+          if (rowIndex >= 0) {
+            let hasNewLine = false;
+            const currentOld = groupConfigRef.current?.groups[rowIndex];
+            if (
+              currentOld &&
+              !isNil(currentOld.groupEnd) &&
+              !isNil(currentOld.groupStart)
+            ) {
+              const oldLength = currentOld.groupEnd - currentOld.groupStart;
+              const newLength = newGroupEnd - newGroupStart;
+              hasNewLine = newLength > oldLength;
+            } else {
+              hasNewLine = true;
+            }
 
-          rowConfig.groupOpen[rowIndex] = hasNewLine
-            ? true
-            : (groupConfigRef.current?.groupOpen[index] as boolean);
-        } else {
-          // 新子行
-          rowConfig.groupOpen[index] = true;
-        }
-      });
+            rowConfig.groupOpen[index] = hasNewLine
+              ? true
+              : (groupConfigRef.current?.groupOpen[rowIndex] as boolean);
+          } else {
+            // 新子行
+            rowConfig.groupOpen[index] = true;
+          }
+        },
+      );
     }
 
     setGroupConfig(rowConfig);
@@ -57,8 +72,6 @@ export const useGroupConfig = (
     (value: SheetType.RowGroupConfig) => {
       setGroupConfig(value);
       groupConfigRef.current = value;
-
-      console.log('handler', childrenLength, groupConfigRef.current?.groupOpen);
     },
     [setGroupConfig],
   );

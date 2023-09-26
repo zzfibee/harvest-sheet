@@ -3,8 +3,8 @@ import type { SheetType } from '@zhenliang/sheet/type';
 import { Select, SelectProps } from 'antd';
 
 import 'antd/es/select/style/index.css';
-import { useState } from 'react';
 import { isNil } from 'lodash';
+import { useState } from 'react';
 import './index.less';
 
 export const getSelectEditor = (
@@ -12,9 +12,7 @@ export const getSelectEditor = (
   valueKey: string = 'value',
   extra: React.ReactNode = <></>,
   selectProps: Partial<SelectProps> = {},
-  getCustomOptions?: (
-    props: SheetType.CellEditorProps,
-  ) => SheetType.Options[],
+  getCustomOptions?: (props: SheetType.CellEditorProps) => SheetType.Options[],
 ): SheetType.CellEditor => {
   const SelectEditor: SheetType.CellEditor = (props) => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -33,7 +31,11 @@ export const getSelectEditor = (
     };
 
     const dropdown = (menu: React.ReactNode) => (
-      <div onClick={()=>{setIsOpen(false)}}>
+      <div
+        onClick={() => {
+          setIsOpen(false);
+        }}
+      >
         {menu}
         {extra}
       </div>
@@ -51,7 +53,7 @@ export const getSelectEditor = (
         onMouseDown={(e) => {
           e.stopPropagation();
         }}
-        value={SelectEditor.formatter ? SelectEditor.formatter(value) : value}
+        value={SelectEditor.parser ? SelectEditor.parser(value) : value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         options={customOptions}
