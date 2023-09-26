@@ -19,6 +19,7 @@ const getCascaderEditor = (
 
     const val = useMemo(() => {
       const res = optionsToValuesFromLabelOrValue(options, value as string);
+      console.log('cascader-editor', options, res, value);
       return res;
     }, [value, options]);
     const handleChange = (opt: any) => {
