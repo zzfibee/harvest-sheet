@@ -6,6 +6,13 @@ import { isNil } from 'lodash';
 import { useCallback, useEffect, useRef } from 'react';
 import './index.less';
 
+type inputProps = Partial<
+  Pick<
+    InputNumberProps,
+    'max' | 'min' | 'addonBefore' | 'addonAfter' | 'precision'
+  >
+>;
+
 export const NumberEditor: SheetType.CellEditor = (props) => {
   const { value, onChange } = props;
   const inputNumberRef = useRef<HTMLInputElement>(null);
@@ -28,12 +35,8 @@ export const NumberEditor: SheetType.CellEditor = (props) => {
 };
 
 export const getNumberEditor = (
-  extraProps?: Partial<
-    Pick<
-      InputNumberProps,
-      'max' | 'min' | 'addonBefore' | 'addonAfter' | 'precision'
-    >
-  >,
+  extraProps?: inputProps,
+  getExtraProps?: (props: SheetType.CellEditorProps) => inputProps,
 ) => {
   const NumberEditor: SheetType.CellEditor = (props) => {
     const { value, onChange } = props;
@@ -43,7 +46,9 @@ export const getNumberEditor = (
       inputNumberRef?.current?.focus();
     }, []);
 
-    const { precision, ...inputArgs } = extraProps || {};
+    const { precision, ...inputArgs } = getExtraProps
+      ? getExtraProps(props)
+      : extraProps ?? {};
     const valueFormatter = useCallback((value: string | number | undefined) => {
       if (!value) {
         return '';

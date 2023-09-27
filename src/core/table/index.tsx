@@ -108,12 +108,12 @@ const Table: React.FC<SheetTableType.TableProps> = ({
             record: itemRow,
             readonly: !(colInfo.readonly instanceof Function)
               ? colInfo.readonly
-              : colInfo.readonly(value, itemRow, currentIndex),
+              : colInfo.readonly(value, itemRow, currentIndex, col),
             align: colInfo.align,
             fixed: colInfo.fixed,
             editable: !(colInfo.editable instanceof Function)
               ? colInfo.editable
-              : colInfo.editable(value, itemRow, currentIndex),
+              : colInfo.editable(value, itemRow, currentIndex, col),
             valueViewer: colInfo.render ? colInfo.render : undefined,
             dataEditor: colInfo.editor ? colInfo.editor : undefined,
             row: currentIndex,
@@ -168,7 +168,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
             record: item,
             readonly: !(colInfo.readonly instanceof Function)
               ? colInfo.readonly
-              : colInfo.readonly(value, item, row),
+              : colInfo.readonly(value, item, row, col),
             align: colInfo.align,
             fixed: colInfo.fixed,
             editable: !(colInfo.editable instanceof Function)
@@ -199,6 +199,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
       onChange &&
         onChange(
           changes.map((item) => ({
+            col: item.col,
             row: item.row,
             id: item.id,
             key: columns[hasControl ? item.col - 1 : item.col]
@@ -206,6 +207,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
             value: item.value,
           })),
           extChange?.map((item) => ({
+            col: item.col,
             row: item.row,
             id: item.id,
             key: columns[hasControl ? item.col - 1 : item.col]

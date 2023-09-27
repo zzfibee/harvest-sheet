@@ -11,6 +11,7 @@ export type RecordRowMap<T> = (
   value: unknown,
   record: Record<string, unknown>,
   index: number,
+  colIndex?: number,
 ) => T;
 
 export type ColumnProps = {
@@ -45,6 +46,7 @@ export type ColumnProps = {
   editor?: SheetType.CellEditor;
 };
 export type TableChange = {
+  col?: number;
   row: number;
   id: string;
   key: string;
