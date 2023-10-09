@@ -172,6 +172,7 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
   background: var(--cell-read-only-background-color);
   color: var(--read-color);
   text-align: center;
+  cursor: not-allowed;
 }
 
 
@@ -288,4 +289,15 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
   bottom: 0;
   left: 0;
   background-color: white;
+}
+
+.harvest-sheet-container .harvest-sheet-control .back-edit{
+  padding: 5px 8px;
+  display: flex;
+  width: 105px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 4,
 }

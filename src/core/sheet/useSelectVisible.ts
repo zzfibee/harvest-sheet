@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react';
 export const useSelectVisible = (
   sheetWrapper: React.RefObject<SheetType.refAssertion>,
   start?: SheetType.CellPosition,
-) => {
+): [boolean, 'up' | 'down'] => {
   const [startVisible, setStartVisible] = useState(true);
+  const [backDirection, setBackDirection] = useState<'up' | 'down'>('up');
 
   useEffect(() => {
     const handleScroll = throttle(() => {
@@ -27,6 +28,7 @@ export const useSelectVisible = (
         setStartVisible(true);
       } else {
         setStartVisible(false);
+        setBackDirection(top < cellTop ? 'down' : 'up');
       }
     }, 100);
     handleScroll();
@@ -38,7 +40,7 @@ export const useSelectVisible = (
   }, [sheetWrapper.current, start]);
 
   if (!start) {
-    return true;
+    return [true, 'up'];
   }
-  return startVisible;
+  return [startVisible, backDirection];
 };

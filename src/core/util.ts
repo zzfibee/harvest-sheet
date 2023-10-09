@@ -398,15 +398,80 @@ export const changeGroupConfig = (
 export const rowToActualRow = (
   row: number,
   groupConfig?: SheetType.RowGroupConfig,
+  max = 1000,
 ) => {
   const groupMap = groupConfigToGroupMap(groupConfig);
-  if (!groupMap.size) return row;
+  if (!groupMap.size || row < 0) return row;
+
+  let openCount = 0;
+  for (let i = 0; i < max; i++) {
+    if (
+      groupMap.has(i) &&
+      !groupMap.get(i)?.isOpen &&
+      !groupMap.get(i)?.isStart
+    ) {
+      continue;
+    } else {
+      openCount++;
+      if (i >= row) {
+        break;
+      }
+    }
+  }
+  return openCount;
+  // 减法的做法 有bug
   groupMap.forEach((item, index) => {
     if (index <= row && !item?.isOpen && !item?.isStart) {
       row--;
     }
   });
   return row;
+};
+
+export const rowToCountRow = (
+  row: number,
+  groupConfig: SheetType.RowGroupConfig,
+  max: number,
+): number => {
+  const groupMap = groupConfigToGroupMap(groupConfig);
+  if (!groupMap.size || row < 0) return row;
+
+  // 加法的做法
+  let maxCount = 0;
+  let maxIndex = max;
+
+  for (let i = 0; i < max; i++) {
+    if (
+      groupMap.has(i) &&
+      !groupMap.get(i)?.isOpen &&
+      !groupMap.get(i)?.isStart
+    ) {
+      continue;
+    } else {
+      maxCount++;
+    }
+  }
+  if (row >= maxCount) {
+    return maxIndex;
+  }
+  maxIndex = 0;
+  let openCount = 0;
+  for (let i = 0; i < max; i++) {
+    if (
+      groupMap.has(i) &&
+      !groupMap.get(i)?.isOpen &&
+      !groupMap.get(i)?.isStart
+    ) {
+      continue;
+    } else {
+      openCount++;
+      if (openCount >= row) {
+        maxIndex = i;
+        break;
+      }
+    }
+  }
+  return maxIndex;
 };
 
 export const getRowHeight = (container: HTMLSpanElement) => {

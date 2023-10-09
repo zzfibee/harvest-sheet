@@ -6,7 +6,7 @@ import ReduxThunk from 'redux-thunk';
 import DefaultRow from './DefaultRow';
 import DefaultShell from './DefaultShell';
 
-import { Button } from 'antd';
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { isNil, isNumber } from 'lodash';
 import {
   SheetEventContext,
@@ -182,7 +182,10 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
 
   const memoHeight = Math.min((state?.data?.length ?? 0) + 1, 10) * 42 + 43;
 
-  const startRowVisible = useSelectVisible(sheetWrapperRef, state.start);
+  const [startRowVisible, direction] = useSelectVisible(
+    sheetWrapperRef,
+    state.start,
+  );
 
   return (
     <SheetEventContext.Provider value={eventBus}>
@@ -199,7 +202,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           key="sheet"
           className={classNames('harvest-sheet', className)}
         >
-          {virtualized && (
+          {virtualized && paddingTop > 0 && (
             <tr
               style={{
                 height: 0,
@@ -235,12 +238,10 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
         <div className="harvest-sheet-control">
           {children}
           {showBackEdit && !startRowVisible ? (
-            <Button
-              type="dashed"
+            <div
+              className="back-edit"
               onClick={() => sheetInstance?.current?.zoomTo()}
               style={{
-                position: 'absolute',
-                zIndex: 4,
                 ...(!backEditStyle
                   ? {
                       top: 0,
@@ -249,8 +250,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
                   : backEditStyle),
               }}
             >
-              回到编辑行
-            </Button>
+              {direction === 'up' ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              <span style={{ marginLeft: 0 }}>返回编辑行</span>
+            </div>
           ) : null}
         </div>
       </span>
