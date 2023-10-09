@@ -283,21 +283,25 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 
 }
 
-.harvest-sheet-container .harvest-sheet-control{
-  position: sticky;
+.harvest-sheet-control{
+  position: relative;
   z-index: 3;
   bottom: 0;
   left: 0;
   background-color: white;
 }
 
-.harvest-sheet-container .harvest-sheet-control .back-edit{
+.harvest-sheet-control .back-edit{
   padding: 5px 8px;
+  margin: 1px;
+  height: 30px;
   display: flex;
   width: 105px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
   position: absolute;
-  z-index: 4,
+  z-index: 4;
+  border:1px solid #D8DFEB;
+  border-radius:2px;
 }

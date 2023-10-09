@@ -31,7 +31,7 @@ export type ColumnProps = {
    */
   width?: string | number;
   dataIndex?: string;
-  title: string | ReactNode | ReactNode[];
+  title: string | ReactNode | ReactNode[] | React.FC;
   titleConfig?: {
     colSpan?: number;
     className?: string;

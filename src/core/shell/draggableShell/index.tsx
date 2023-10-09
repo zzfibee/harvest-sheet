@@ -1,5 +1,5 @@
 import type { SheetTableType, SheetType } from '@zhenliang/sheet/type';
-import { useEffect, useMemo, useRef } from 'react';
+import { createElement, useEffect, useMemo, useRef } from 'react';
 import { useSetState, useWidth } from '../../../hooks';
 import { classNames } from '../../util';
 import { CheckViewer } from '../../viewer/checkViewer';
@@ -109,7 +109,11 @@ export const DraggableShell = ({
                 //调整宽度
               }}
             >
-              <span className="value-viewer">{item.title}</span>
+              <span className="value-viewer">
+                {typeof item.title === 'function'
+                  ? createElement(item.title as React.FC)
+                  : item.title}
+              </span>
             </th>,
           );
       });

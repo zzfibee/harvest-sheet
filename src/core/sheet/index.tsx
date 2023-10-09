@@ -67,7 +67,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
         // 给定 row 回到行
         // 不给定 row 默认回到编辑行和列
         dispatch((d: unknown, getState: () => SheetType.UpdateStateType) => {
-          const { start, groupConfig } = getState();
+          const { start, groupConfig, data } = getState();
           const container = sheetWrapperRef.current as HTMLSpanElement;
           if (!start && isNil(row)) return;
           const actual = rowToActualRow(
@@ -82,10 +82,22 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             ? firstRowCell.offsetLeft - firstRowCell.clientWidth
             : 0;
 
+          const scrollHeight = (actual - 1) * rowHeight;
           sheetWrapperRef.current?.scrollTo(
             isNumber(row) ? 0 : colPosition,
-            rowHeight * actual,
+            scrollHeight,
           );
+
+          // to do 最后一行的有bug
+          if (isNil(row) && start.row === data.length - 1) {
+            setTimeout(() => {
+              console.log(scrollHeight, sheetWrapperRef.current?.scrollHeight);
+              sheetWrapperRef.current?.scrollTo(
+                isNumber(row) ? 0 : colPosition,
+                sheetWrapperRef.current?.scrollHeight || scrollHeight,
+              );
+            }, 500);
+          }
         });
       },
       pushToHistory: (config: SheetType.OperateHistory) => {
@@ -189,52 +201,55 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
 
   return (
     <SheetEventContext.Provider value={eventBus}>
-      <span
-        ref={sheetWrapperRef}
-        tabIndex={0}
-        className={classNames('harvest harvest-sheet-container', className)}
-        style={{
-          maxHeight: scroll?.y ?? memoHeight,
-          width: scroll?.x ?? '100%',
-        }}
-      >
-        <SheetShell
-          key="sheet"
-          className={classNames('harvest-sheet', className)}
+      <span>
+        <span
+          ref={sheetWrapperRef}
+          tabIndex={0}
+          className={classNames('harvest harvest-sheet-container', className)}
+          style={{
+            maxHeight: scroll?.y ?? memoHeight,
+            width: scroll?.x ?? '100%',
+          }}
         >
-          {virtualized && paddingTop > 0 && (
-            <tr
-              style={{
-                height: 0,
-                paddingBottom: paddingTop,
-                display: 'block',
-              }}
-            />
-          )}
-          {/* {rowElements?.slice(virtualStart, virtualEnd)} */}
-          {rowElements}
-          {virtualized && paddingBottom > 0 && (
-            <tr
-              style={{
-                height: 0,
-                paddingBottom: paddingBottom,
-                display: 'block',
-              }}
-            />
-          )}
-        </SheetShell>
-        {ContextMenu ? (
-          <div
-            ref={contextMenuRef}
-            style={{ display: menu.showMenu ? '' : 'none' }}
+          <SheetShell
+            key="sheet"
+            className={classNames('harvest-sheet', className)}
           >
-            <ContextMenu
-              position={menu.position}
-              cell={menu.cellPosition}
-              onContextMenu={onContextMenu}
-            />
-          </div>
-        ) : null}
+            {virtualized && paddingTop > 0 && (
+              <tr
+                style={{
+                  height: 0,
+                  paddingBottom: paddingTop,
+                  display: 'block',
+                }}
+              />
+            )}
+            {/* {rowElements?.slice(virtualStart, virtualEnd)} */}
+            {rowElements}
+            {virtualized && paddingBottom > 0 && (
+              <tr
+                style={{
+                  height: 0,
+                  paddingBottom: paddingBottom,
+                  display: 'block',
+                }}
+              />
+            )}
+          </SheetShell>
+          {ContextMenu ? (
+            <div
+              ref={contextMenuRef}
+              style={{ display: menu.showMenu ? '' : 'none' }}
+            >
+              <ContextMenu
+                position={menu.position}
+                cell={menu.cellPosition}
+                onContextMenu={onContextMenu}
+              />
+            </div>
+          ) : null}
+        </span>
+
         <div className="harvest-sheet-control">
           {children}
           {showBackEdit && !startRowVisible ? (

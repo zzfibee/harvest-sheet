@@ -256,7 +256,7 @@ export const useMouseEvent = (
     dispatch({ type: 'doubleClick', payload: currentPos });
   }, []);
   const loseFocus = useCallback((e: MouseEvent) => {
-    if (!elementRef.current?.contains(e.target)) {
+    if (!elementRef.current?.parentElement?.contains(e.target as HTMLElement)) {
       dispatch({ type: 'loseFocus' });
       return;
     }

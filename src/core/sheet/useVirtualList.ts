@@ -63,7 +63,6 @@ export const useVirtualList = (
         return;
       }
 
-      // todo 加入分组之后的 虚拟列表计算
       const actualStart = rowToCountRow(
         start,
         groupConfigRef.current,
@@ -74,13 +73,6 @@ export const useVirtualList = (
 
       const invisibleTop = rowToActualRow(actualStart, groupConfigRef.current);
       const invisibleBottom = maxEnd > end ? maxEnd - end : 0;
-
-      console.log('visiable-count', start, end, maxEnd);
-      console.log('visible-toactual-count', actualStart, actualEnd);
-      console.log('invisible', invisibleTop, invisibleBottom);
-
-      // const minStart = start - (actualStart - start)
-      // const maxEnd =  end - (actualEnd - end);
 
       const updateVirtualConfig = {
         virtualStart: actualStart,
