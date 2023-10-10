@@ -131,10 +131,10 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
         }
 
         // 复制到剪贴板的时候执行 formatter
-        const { value: dataValue, dataEditor } = data[row][col];
+        const { value: dataValue, dataEditor, record } = data[row][col];
         const { formatter: dataFormatter } = dataEditor || {};
         let formattedValue: string | null = (
-          dataFormatter ? dataFormatter(dataValue) : dataValue
+          dataFormatter ? dataFormatter(dataValue, record) : dataValue
         ) as string;
         if (isNil(dataValue)) {
           formattedValue = ' ';
@@ -195,7 +195,9 @@ export const sideEffectReducer: Record<string, asyncActionType> = {
           row,
           col,
           id: data[row][col]?.id,
-          value: editor?.parser ? editor?.parser?.(value) : value,
+          value: editor?.parser
+            ? editor?.parser?.(value, data[row][col].record)
+            : value,
         };
       });
     let lastRow = extChanges?.[0]?.row;

@@ -81,7 +81,10 @@ const Cell = (props: SheetType.CellProps) => {
         // 单元格直接键盘编辑，设置为输入值
         setValue(
           cell.dataEditor?.parser
-            ? (cell?.dataEditor?.parser?.(eventInfo.value) as string)
+            ? (cell?.dataEditor?.parser?.(
+                eventInfo.value,
+                cell.record,
+              ) as string)
             : eventInfo.value,
         );
       }
