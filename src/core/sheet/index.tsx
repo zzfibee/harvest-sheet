@@ -82,21 +82,33 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             ? firstRowCell.offsetLeft - firstRowCell.clientWidth
             : 0;
 
-          const scrollHeight = (actual - 1) * rowHeight;
+          const scrollHeight = actual * rowHeight;
           sheetWrapperRef.current?.scrollTo(
             isNumber(row) ? 0 : colPosition,
             scrollHeight,
           );
 
-          // to do 最后一行的有bug
-          if (isNil(row) && start.row === data.length - 1) {
-            setTimeout(() => {
-              console.log(scrollHeight, sheetWrapperRef.current?.scrollHeight);
+          // 最后一行的bug暂时用 scroll end 事件来处理
+          if (
+            isNil(row) &&
+            start.row === data.length - 1 &&
+            sheetWrapperRef.current
+          ) {
+            const handleScrollEnd = () => {
               sheetWrapperRef.current?.scrollTo(
                 isNumber(row) ? 0 : colPosition,
-                sheetWrapperRef.current?.scrollHeight || scrollHeight,
+                scrollHeight,
               );
-            }, 500);
+              sheetWrapperRef.current?.removeEventListener(
+                'scrollend',
+                handleScrollEnd,
+              );
+            };
+
+            sheetWrapperRef.current.addEventListener(
+              'scrollend',
+              handleScrollEnd,
+            );
           }
         });
       },

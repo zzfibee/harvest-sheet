@@ -262,7 +262,10 @@ export const useMouseEvent = (
     }
     e.preventDefault();
     const currentCell = findParentTd(e.target as HTMLElement) as HTMLElement;
-    if (currentCell.classList.contains('read-only')) {
+    if (
+      !currentCell?.classList ||
+      currentCell.classList.contains('read-only')
+    ) {
       // 只读
       return;
     }

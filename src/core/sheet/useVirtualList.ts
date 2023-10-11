@@ -34,6 +34,7 @@ export const useVirtualList = (
   );
   useEffect(() => {
     groupConfigRef.current = groupConfig;
+    elementRef.current?.scrollBy({ top: 1 });
   }, [groupConfig]);
 
   useEffect(() => {
@@ -69,9 +70,17 @@ export const useVirtualList = (
         data.length,
       );
       const actualEnd = rowToCountRow(end, groupConfigRef.current, data.length);
-      const maxEnd = rowToActualRow(data.length, groupConfigRef.current);
+      const maxEnd = rowToActualRow(
+        data.length,
+        groupConfigRef.current,
+        data.length,
+      );
 
-      const invisibleTop = rowToActualRow(actualStart, groupConfigRef.current);
+      const invisibleTop = rowToActualRow(
+        actualStart,
+        groupConfigRef.current,
+        data.length,
+      );
       const invisibleBottom = maxEnd > end ? maxEnd - end : 0;
 
       const updateVirtualConfig = {

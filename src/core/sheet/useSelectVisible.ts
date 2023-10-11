@@ -18,7 +18,11 @@ export const useSelectVisible = (
         `td.cell[data-row='${start.row}']`,
       ) as HTMLElement;
 
-      if (!startCell) return false;
+      if (!startCell) {
+        // 找不到说明已经不在可视区域了
+        setStartVisible(false);
+        return;
+      }
       const { top = 0, bottom = 0 } =
         sheetWrapper.current?.getBoundingClientRect() || {};
       const { top: cellTop, bottom: cellBottom } =

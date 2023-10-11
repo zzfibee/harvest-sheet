@@ -398,7 +398,7 @@ export const changeGroupConfig = (
 export const rowToActualRow = (
   row: number,
   groupConfig?: SheetType.RowGroupConfig,
-  max = 1000,
+  max = 10000,
 ) => {
   const groupMap = groupConfigToGroupMap(groupConfig);
   if (!groupMap.size || row < 0) return row;
@@ -412,20 +412,13 @@ export const rowToActualRow = (
     ) {
       continue;
     } else {
-      openCount++;
       if (i >= row) {
         break;
       }
+      openCount++;
     }
   }
   return openCount;
-  // 减法的做法 有bug
-  groupMap.forEach((item, index) => {
-    if (index <= row && !item?.isOpen && !item?.isStart) {
-      row--;
-    }
-  });
-  return row;
 };
 
 export const rowToCountRow = (
