@@ -51,6 +51,7 @@ export const getDateEditor = (
   };
 
   DateEditor.formatter = (value) => {
+    if (isNil(value)) return value;
     if (!DateEditor?.checker?.(value)) return null;
     return (value as string).replace('/', '-').replace('/', '-');
   };
