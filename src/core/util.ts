@@ -271,11 +271,11 @@ export const optionsTransferToValue = (
     if (children) {
       values = optionsTransferToValue(children, val, key);
       if (values.length) {
-        values = [`${value}`, ...values];
+        values = [value as string, ...values];
         break;
       }
     } else if (get(options[i], key) === val) {
-      values.push(`${value}`);
+      values.push(value as string);
       break;
     } else {
       values = [];
