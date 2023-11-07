@@ -276,7 +276,11 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
                   : (backEditStyle as any)
               }
             >
-              {direction === 'up' ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              {direction === 'up' ? (
+                <ArrowUpOutlined rev={undefined} />
+              ) : (
+                <ArrowDownOutlined rev={undefined} />
+              )}
               <span style={{ marginLeft: 0 }}>返回编辑行</span>
             </div>
           ) : null}

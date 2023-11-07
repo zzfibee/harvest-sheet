@@ -283,33 +283,6 @@ export const optionsTransferToValue = (
   }
   return values;
 };
-// export const optionsTransferToValue2 = (
-//   options?: SheetType.OptionsType[],
-//   value?: string,
-//   path: string[] = [],
-// ) => {
-//   if (!options?.length || !value) return [...path];
-//   const leaveNode = options?.find(
-//     (item) => !item.children?.length && value === item.value,
-//   );
-//   if (leaveNode) {
-//     return [leaveNode.value];
-//   }
-//   const childrenNodes = options?.filter((item) => item.children?.length);
-//   if (childrenNodes) {
-//     for (const childrenNode of childrenNodes) {
-//       if(childrenNode.children) {
-//         const allPath: string[] = optionsTransferToValue(
-//           childrenNode.children,
-//           value,
-//           [...path, childrenNode.value],
-//         );
-//         return allPath;
-//       }
-//     }
-//   }
-//   return [];
-// };
 
 export const valuesTransferToLabel = (
   options?: SheetType.OptionsType[],

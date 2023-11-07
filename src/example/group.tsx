@@ -9,7 +9,7 @@ const columns = [
   {
     title: 'Address',
     readonly: (value: unknown, record: any, index: number) => {
-      console.log(index);
+      // console.log(index);
       return index % 2 === 0;
     },
     dataIndex: 'address',
@@ -75,7 +75,7 @@ const App: React.FC = () => {
       changes: SheetTableType.TableChange[],
       extChange?: SheetTableType.TableChange[],
     ) => {
-      console.log(extChange);
+      // console.log(extChange);
       const newState: any = cloneDeep(state);
       changes.forEach((change) => {
         const { row, key, value } = change;

@@ -23,7 +23,11 @@ export const GroupViewer: SheetType.CellViewer = (props) => {
         onMouseDown={(e) => e.stopPropagation()}
         onClick={handleChange}
       >
-        {!record?.open ? <PlusSquareOutlined /> : <MinusSquareOutlined />}
+        {!record?.open ? (
+          <PlusSquareOutlined rev={undefined} />
+        ) : (
+          <MinusSquareOutlined rev={undefined} />
+        )}
       </span>
     );
   }
