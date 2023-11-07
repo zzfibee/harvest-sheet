@@ -6,7 +6,9 @@ import { valuesTransferToLabel } from '../../util';
 export const getCascaderViewer = (options: SheetType.OptionsType[]) => {
   const TypeViewer: SheetType.CellViewer = (props) => {
     const { value } = props;
-    return valuesTransferToLabel(options, value as string) || (value as string);
+    const text =
+      valuesTransferToLabel(options, value as string) || (value as string);
+    return <>{text}</>;
   };
   return TypeViewer;
 };

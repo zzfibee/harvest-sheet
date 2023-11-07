@@ -31,7 +31,6 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     rowRenderer: Row = DefaultRow,
     menuRenderer: ContextMenu,
     virtualized = false,
-    sticky,
     className,
     data,
     freePaste = false,
@@ -268,14 +267,14 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             <div
               className="back-edit"
               onClick={() => sheetInstance?.current?.zoomTo()}
-              style={{
-                ...(!backEditStyle
+              style={
+                !backEditStyle
                   ? {
                       top: 0,
                       right: 0,
                     }
-                  : backEditStyle),
-              }}
+                  : (backEditStyle as any)
+              }
             >
               {direction === 'up' ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
               <span style={{ marginLeft: 0 }}>返回编辑行</span>

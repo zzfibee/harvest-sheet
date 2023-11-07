@@ -238,13 +238,13 @@ const BasicSheet: React.FC = () => {
               String.fromCharCode(64 + i / 26) +
               String.fromCharCode(64 + (i % 26)),
             width: 100,
-            align: 'center',
+            align: 'center' as SheetType.CellAlign,
           };
         return {
           title: i === 0 ? '' : String.fromCharCode(64 + i),
           fixed: i === 0 ? 'left' : undefined,
           width: i === 0 ? 50 : 80,
-          align: 'center',
+          align: 'center' as SheetType.CellAlign,
         };
       }),
       className: 'baseTable',

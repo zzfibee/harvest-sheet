@@ -13,6 +13,6 @@ export const DefaultRowMapper: React.FC<DefaultRowMapperProps> = memo(
       return <Cell key={col} row={row} col={col} cell={cell} />;
     });
 
-    return cls;
+    return <>{cls}</>;
   },
 );

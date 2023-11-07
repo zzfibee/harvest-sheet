@@ -271,11 +271,11 @@ export const optionsTransferToValue = (
     if (children) {
       values = optionsTransferToValue(children, val, key);
       if (values.length) {
-        values = [value, ...values];
+        values = [`${value}`, ...values];
         break;
       }
     } else if (get(options[i], key) === val) {
-      values.push(value);
+      values.push(`${value}`);
       break;
     } else {
       values = [];
@@ -283,33 +283,33 @@ export const optionsTransferToValue = (
   }
   return values;
 };
-export const optionsTransferToValue2 = (
-  options?: SheetType.OptionsType[],
-  value?: string,
-  path: string[] = [],
-) => {
-  if (!options?.length || !value) return [...path];
-  const leaveNode = options?.find(
-    (item) => !item.children?.length && value === item.value,
-  );
-  if (leaveNode) {
-    return [leaveNode.value];
-  }
-  const childrenNodes = options?.filter((item) => item.children?.length);
-  if (childrenNodes) {
-    for (const childrenNode of childrenNodes) {
-      const allPath: string[] = optionsTransferToValue(
-        childrenNode.children,
-        value,
-        [...path, childrenNode.value],
-      );
-      if (allPath?.length) {
-        return allPath;
-      }
-    }
-  }
-  return [];
-};
+// export const optionsTransferToValue2 = (
+//   options?: SheetType.OptionsType[],
+//   value?: string,
+//   path: string[] = [],
+// ) => {
+//   if (!options?.length || !value) return [...path];
+//   const leaveNode = options?.find(
+//     (item) => !item.children?.length && value === item.value,
+//   );
+//   if (leaveNode) {
+//     return [leaveNode.value];
+//   }
+//   const childrenNodes = options?.filter((item) => item.children?.length);
+//   if (childrenNodes) {
+//     for (const childrenNode of childrenNodes) {
+//       if(childrenNode.children) {
+//         const allPath: string[] = optionsTransferToValue(
+//           childrenNode.children,
+//           value,
+//           [...path, childrenNode.value],
+//         );
+//         return allPath;
+//       }
+//     }
+//   }
+//   return [];
+// };
 
 export const valuesTransferToLabel = (
   options?: SheetType.OptionsType[],

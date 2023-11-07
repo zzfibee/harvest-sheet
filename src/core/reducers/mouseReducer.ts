@@ -29,7 +29,7 @@ export const mouseReducer: Record<string, reducerAction> = {
         mouseDown: true,
         editing: undefined,
         lastEditing: {
-          ...state.editing,
+          ...(state.editing as any),
           confirm: true,
         },
         start: start ? start : { row, col },
@@ -135,7 +135,7 @@ export const mouseReducer: Record<string, reducerAction> = {
     const { end } = payload as { end: SheetType.CellPosition };
     const { data } = state;
     // fixed 列不选中
-    if (data?.[0]?.[end.col]?.fixed) {
+    if (data?.[0]?.[end.col ?? 0]?.fixed) {
       return state;
     }
 
