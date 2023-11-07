@@ -37,10 +37,10 @@ const ExcelIndexCell: React.FC<{ value: string; row: number; record: any }> = ({
     >
       {!isNil(record?.open) ? (
         record?.open ? (
-          <MinusCircleOutlined />
+          <MinusCircleOutlined rev={undefined} />
         ) : (
           <Tooltip overlay={record.groups} trigger={['hover']}>
-            <PlusCircleOutlined />
+            <PlusCircleOutlined rev={undefined} />
           </Tooltip>
         )
       ) : null}
@@ -306,7 +306,7 @@ const BasicSheet: React.FC = () => {
   const handleMenuClick = useCallback(
     (e: any) => {
       const { type, row } = e as { type: string; row: number };
-      console.log('click', state.length);
+      // console.log('click', state.length);
       if (type === '1') {
         handleNewRow(row);
       }
@@ -320,7 +320,7 @@ const BasicSheet: React.FC = () => {
     [state, groupConfig],
   );
   useEffect(() => {
-    console.log('rendered', performance.now());
+    // console.log('rendered', performance.now());
   }, []);
 
   return (
@@ -346,7 +346,7 @@ const BasicSheet: React.FC = () => {
             (item) => item.groupStart === row,
           );
           if (index >= 0) {
-            console.log('changed');
+            // console.log('changed');
             const groupOpen = [...groupConfig.groupOpen];
             groupOpen[index] = !groupConfig.groupOpen[index];
 

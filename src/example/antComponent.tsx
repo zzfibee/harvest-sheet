@@ -44,7 +44,6 @@ const SelectorOptions = [
 
 const getTypeViewer = (options: SheetType.Options[]) => {
   const TypeViewer: SheetType.CellViewer = (props) => {
-    console.log('getTypeViewer', options);
     return options.find(
       (item) => item.label === props.value || item.value == props.value,
     )?.label;
@@ -205,7 +204,7 @@ const App: React.FC = () => {
       changes: SheetTableType.TableChange[],
       extChange?: SheetTableType.TableChange[],
     ) => {
-      console.log(extChange);
+      // console.log(extChange);
       const newState: any = cloneDeep(state);
       changes.forEach((change) => {
         const { row, key, value } = change;
@@ -277,7 +276,7 @@ const App: React.FC = () => {
           // 处理 行列删除自定义事件
           const { type, rowInfo } = value as SheetType.OperateHistory;
           if (type === 'Custom') {
-            console.log('操作');
+            // console.log('操作');
           } else if (type === 'NewRow') {
             const newState = [...state];
             newState.splice(rowInfo?.newRow as number, 1);

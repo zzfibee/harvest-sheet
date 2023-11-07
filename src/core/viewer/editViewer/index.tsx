@@ -19,7 +19,7 @@ export const EditViewer: SheetType.CellViewer = (props) => {
       }}
     >
       <span>{value as string}</span>
-      <EditFilled onClick={handleClick} />
+      <EditFilled onClick={handleClick} rev={undefined} />
     </span>
   );
 };
