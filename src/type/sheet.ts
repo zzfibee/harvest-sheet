@@ -103,6 +103,7 @@ export type SheetProps = {
   sheetInstance?: React.MutableRefObject<SheetInstance | null>;
   sheetRenderer?: any;
   rowRenderer?: any;
+  emptyRenderer?: any;
   className?: string;
   data: Cell[][];
   freePaste?: boolean;

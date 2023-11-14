@@ -7,7 +7,8 @@ import DefaultRow from './DefaultRow';
 import DefaultShell from './DefaultShell';
 
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
-import { isNil, isNumber } from 'lodash';
+import { Empty } from 'antd';
+import { isEmpty, isNil, isNumber } from 'lodash';
 import {
   SheetEventContext,
   useEventBus,
@@ -28,6 +29,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   const {
     sheetInstance = { current: null },
     sheetRenderer: SheetShell = DefaultShell,
+    emptyRenderer = <Empty description="暂无数据" />,
     rowRenderer: Row = DefaultRow,
     menuRenderer: ContextMenu,
     virtualized = false,
@@ -260,6 +262,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             </div>
           ) : null}
         </span>
+        {isEmpty(state.data) || isNil(state.data) ? (
+          <div style={{ marginTop: 16, marginBottom: 16 }}>{emptyRenderer}</div>
+        ) : null}
 
         <div className="harvest-sheet-control">
           {children}

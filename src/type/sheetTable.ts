@@ -79,6 +79,7 @@ export type TableProps = {
   columns: ColumnProps[];
   virtualized?: boolean;
   dataSource: Record<string, unknown>[];
+  emptyRenderer?: any;
   rowClassName?:
     | string
     | ((record: Record<string, unknown>, index: number) => string);
