@@ -56,5 +56,11 @@ export const getDateEditor = (
     return (value as string).replace('/', '-').replace('/', '-');
   };
 
+  DateEditor.parser = (value) => {
+    if (isNil(value)) return value;
+    if (!DateEditor?.checker?.(value)) return null;
+    return (value as string).replace('/', '-').replace('/', '-');
+  };
+
   return DateEditor;
 };
