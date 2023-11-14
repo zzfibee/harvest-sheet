@@ -7,12 +7,26 @@
     "jsx": "react-jsx",
     "baseUrl": "./",
     "paths": {
-      "@@/*": [".dumi/tmp/*"],
-      "@zhenliang/sheet": ["src"],
-      "@zhenliang/sheet/*": ["src/*", "*"],
-      "@zhenliang/sheet/hooks": ["src/hooks"],
-      "@zhenliang/sheet/type": ["src/type"]
+      "@@/*": [
+        ".dumi/tmp/*"
+      ],
+      "@zhenliang/sheet": [
+        "src"
+      ],
+      "@zhenliang/sheet/*": [
+        "src/*",
+        "*"
+      ],
+      "@zhenliang/sheet/hooks": [
+        "src/hooks"
+      ],
+      "@zhenliang/sheet/type": [
+        "src/type"
+      ]
     }
   },
-  "include": [".dumi/**/*", ".dumirc.ts", "src/**/*"]
+  "include": [
+    ".dumirc.ts",
+    "src/**/*"
+  ]
 }
