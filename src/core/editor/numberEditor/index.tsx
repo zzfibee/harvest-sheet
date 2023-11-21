@@ -13,6 +13,11 @@ type inputProps = Partial<
   >
 >;
 
+const isNumeric = (str: string) => {
+  // 使用正则表达式匹配数字，包括整数和小数
+  return /^-?\d+(\.\d+)?$/.test(str);
+};
+
 export const NumberEditor: SheetType.CellEditor = (props) => {
   const { value, onChange } = props;
   const inputNumberRef = useRef<HTMLInputElement>(null);
@@ -53,15 +58,19 @@ export const getNumberEditor = (
       if (!value) {
         return '';
       }
-      if (typeof value === 'string') {
+      if (!isNumeric(`${value}`)) {
         return value as string;
       }
-      const hasDecimal = value - Math.floor(value) > 0;
+      const hasDecimal = +value - Math.floor(+value) > 0;
       if (hasDecimal) {
         return formatPrecision(value, precision);
       }
       return String(value);
     }, []);
+    /**
+     * 重新声明，后面有需求可以改一下
+     */
+    const valueParser = valueFormatter;
     const handleChange = useCallback(
       (value) => {
         onChange && onChange(value ? value : null);
@@ -74,6 +83,7 @@ export const getNumberEditor = (
         ref={inputNumberRef}
         {...inputArgs}
         formatter={valueFormatter}
+        parser={valueParser}
         controls={false}
         className="number-editor"
         onMouseDown={(e) => e.stopPropagation()}
