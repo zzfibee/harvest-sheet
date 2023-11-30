@@ -244,6 +244,7 @@ export default memo(Cell, (pre, next) => {
     pre.row === next.row &&
     pre.cell.value === next.cell.value &&
     pre.cell.dataEditor === next.cell.dataEditor &&
+    pre.cell.className === next.cell.className &&
     pre.cell.record === next.cell.record;
   return shouldUpdate;
 });
