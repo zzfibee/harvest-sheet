@@ -1,5 +1,5 @@
 import type { SheetType } from '@zhenliang/sheet/type';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 // import ReduxLogger from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 
@@ -7,6 +7,7 @@ import DefaultRow from './DefaultRow';
 import DefaultShell from './DefaultShell';
 
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { useGroup } from '@zhenliang/sheet/hooks/useGroupConfig';
 import { Empty } from 'antd';
 import { isEmpty, isNil, isNumber } from 'lodash';
 import {
@@ -36,7 +37,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     className,
     data,
     freePaste = false,
-    groupConfig = undefined,
+    // groupConfig = undefined,
     onCellsChanged,
     onContextMenu,
     rowClassName,
@@ -48,6 +49,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   const sheetWrapperRef = useRef<SheetType.refAssertion>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const eventBus = useEventBus();
+  const { config: groupConfig } = useGroup();
   const [state, dispatch] = useMiddlewareReducer(
     sheetReducer,
     {
@@ -61,9 +63,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     // [ReduxThunk, ReduxLogger],
     [ReduxThunk],
   );
-
-  useEffect(() => {
-    sheetInstance.current = {
+  useImperativeHandle(
+    sheetInstance,
+    () => ({
       zoomTo: (row?: number) => {
         // 给定 row 回到行
         // 不给定 row 默认回到编辑行和列
@@ -133,8 +135,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           ? history?.[history.length - 1]
           : ({} as SheetType.OperateHistory);
       },
-    };
-  }, [sheetWrapperRef.current, state.history]);
+    }),
+    [state.history],
+  );
 
   useEffect(() => {
     // 同步必要的状态
@@ -170,8 +173,21 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     }
   }, [state.editing, state.start]);
 
+  const visibleData = useMemo(
+    () =>
+      groupConfig?.groups?.length
+        ? state.data?.filter((item, index) =>
+            groupConfig?.configMap.has(index)
+              ? groupConfig?.configMap.get(index)?.isOpen ||
+                groupConfig?.configMap.get(index)?.isStart
+              : true,
+          )
+        : state.data,
+    [state.data, groupConfig],
+  );
+
   const { virtualStart, virtualEnd, paddingTop, paddingBottom } =
-    useVirtualList(sheetWrapperRef, state.data, groupConfig, virtualized);
+    useVirtualList(sheetWrapperRef, visibleData, virtualized);
 
   useEffect(() => {
     dispatch({
@@ -183,29 +199,24 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   }, [groupConfig]);
 
   const rowElements = useMemo(() => {
-    return state?.data
+    return visibleData
       ?.slice(virtualStart, virtualEnd)
       ?.map((rowData: SheetType.Cell[]) => {
-        const row = state?.data?.indexOf(rowData) || 0;
+        const row = rowData[0]?.row || 0;
+
         const rowCN =
           rowClassName instanceof Function
             ? rowClassName?.(rowData?.[rowData.length - 1]?.record as any, row)
             : rowClassName;
         return (
-          <Row
-            key={row}
-            row={row}
-            cells={rowData}
-            groupConfig={groupConfig}
-            rowClassName={rowCN}
-          >
+          <Row key={row} row={row} cells={rowData} rowClassName={rowCN}>
             <DefaultRowMapper rowData={rowData} row={row} />
           </Row>
         );
       });
-  }, [state.data, groupConfig, virtualStart, virtualEnd, rowClassName]);
+  }, [visibleData, groupConfig, virtualStart, virtualEnd, rowClassName]);
 
-  const memoHeight = Math.min((state?.data?.length ?? 0) + 1, 10) * 42 + 43;
+  const memoHeight = Math.min((visibleData?.length ?? 0) + 1, 10) * 42 + 43;
 
   const [startRowVisible, direction] = useSelectVisible(
     sheetWrapperRef,

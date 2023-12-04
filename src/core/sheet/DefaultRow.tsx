@@ -22,11 +22,7 @@ const DefaultRow: React.FC<{
     !groupMap.get(row)?.isStart &&
     !groupMap.get(row)?.isOpen
   ) {
-    return (
-      <tr className={rowClassName} style={{ display: 'none' }}>
-        {children}
-      </tr>
-    );
+    return null;
   }
 
   return <tr className={rowClassName}>{children}</tr>;

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useGroup } from '@zhenliang/sheet/hooks/useGroupConfig';
 import { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { FC } from 'react';
 import { SheetEvent } from '../sheet/Event';
@@ -24,23 +26,18 @@ export const SelectionEvent: FC<{
 
 export const GroupEvent: FC<{
   hasChildren: boolean;
-  rowGroupConfig: SheetType.RowGroupConfig;
   data: SheetType.Cell[][];
   sheetInstance: SheetType.SheetInstance | null;
-  onGroupChange: (value: SheetType.RowGroupConfig) => void;
   onGridChange: (value: SheetType.Cell[][]) => void;
 }> = (props) => {
+  const { hasChildren, sheetInstance } = props;
   const {
-    hasChildren,
-    rowGroupConfig,
-    data,
-    sheetInstance,
-    onGroupChange,
-    onGridChange,
-  } = props;
+    config: rowGroupConfig = {} as SheetType.RowGroupConfig,
+    onChange: onGroupChange,
+  } = useGroup();
   if (!hasChildren) return null;
 
-  const { groups } = rowGroupConfig || {};
+  const { groups } = rowGroupConfig;
   return (
     <>
       <SheetEvent
@@ -48,32 +45,22 @@ export const GroupEvent: FC<{
         name="group-open"
         handler={(e: unknown) => {
           const { row } = e as { row: number };
-          const index = groups.findIndex((item) => item.groupStart === row);
+          const index = groups?.findIndex((item) => item.groupStart === row);
           if (index >= 0) {
-            const groupOpen = [...rowGroupConfig.groupOpen];
-            groupOpen[index] = !rowGroupConfig.groupOpen[index];
-
+            const groupOpen = [...rowGroupConfig?.groupOpen];
+            groupOpen[index] = !rowGroupConfig?.groupOpen[index];
             onGroupChange &&
               onGroupChange({
                 ...rowGroupConfig,
                 groupOpen: groupOpen,
               });
-            const newGrid = [...data];
-            newGrid[row] = [...newGrid[row]];
-            newGrid[row][0] = {
-              ...(newGrid[row][0] as SheetType.Cell),
-              record: {
-                open: !!groupOpen[index],
-              },
-            };
-            onGridChange && onGridChange(newGrid);
+
             sheetInstance?.pushToHistory({
               type: 'Custom' as SheetType.OperateType,
               changes: [],
               extraInfo: {
                 extraType: 'group',
                 groupConfig: rowGroupConfig,
-                data,
               },
             });
           }
@@ -96,7 +83,6 @@ export const GroupEvent: FC<{
             extraInfo: {
               extraType: 'group',
               groupConfig: rowGroupConfig,
-              data,
             },
           });
         }}

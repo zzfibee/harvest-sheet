@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useGroup } from '@zhenliang/sheet/hooks/useGroupConfig';
 import type { SheetType } from '@zhenliang/sheet/type';
-import { isEqual, throttle } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
-import { getRowHeight, rowToActualRow, rowToCountRow } from '../util';
+import { throttle } from 'lodash';
+import { useEffect, useState } from 'react';
+import { getRowHeight } from '../util';
 
 const extra = 20;
 
@@ -16,7 +18,7 @@ type VirtualConfig = {
 export const useVirtualList = (
   elementRef: React.RefObject<SheetType.refAssertion>,
   data: SheetType.Cell[][] = [],
-  groupConfig?: SheetType.RowGroupConfig,
+  // groupConfig?: SheetType.RowGroupConfig,
   virtualized?: boolean,
 ) => {
   const [state, setState] = useState({
@@ -27,14 +29,12 @@ export const useVirtualList = (
     paddingTop: 0,
     paddingBottom: 0,
   });
+
+  const { config: groupConfig } = useGroup();
   const { virtualStart, virtualEnd, paddingTop, paddingBottom } = state;
-  const virtualRef = useRef<VirtualConfig | null>();
-  const groupConfigRef = useRef<SheetType.RowGroupConfig | undefined>(
-    groupConfig,
-  );
+  // const virtualRef = useRef<VirtualConfig | null>();
   useEffect(() => {
-    groupConfigRef.current = groupConfig;
-    elementRef.current?.scrollBy({ top: 1 });
+    elementRef.current?.scrollBy({ top: 0 });
   }, [groupConfig]);
 
   useEffect(() => {
@@ -49,52 +49,15 @@ export const useVirtualList = (
       const start = Math.floor(scrollTop / itemHeight) - extra;
       const end = Math.ceil((scrollTop + clientHeight) / itemHeight) + extra;
 
-      if (!groupConfigRef.current) {
-        const newConfig = {
-          virtualStart: start,
-          virtualEnd: end,
-          paddingTop: start * itemHeight,
-          paddingBottom: (data.length - end) * itemHeight,
-        };
-        if (isEqual(newConfig, virtualRef.current)) {
-          return;
-        }
-        virtualRef.current = newConfig;
-        setState(newConfig);
-        return;
-      }
-
-      const actualStart = rowToCountRow(
-        start,
-        groupConfigRef.current,
-        data.length,
-      );
-      const actualEnd = rowToCountRow(end, groupConfigRef.current, data.length);
-      const maxEnd = rowToActualRow(
-        data.length,
-        groupConfigRef.current,
-        data.length,
-      );
-
-      const invisibleTop = rowToActualRow(
-        actualStart,
-        groupConfigRef.current,
-        data.length,
-      );
-      const invisibleBottom = maxEnd > end ? maxEnd - end : 0;
-
-      const updateVirtualConfig = {
-        virtualStart: actualStart,
-        virtualEnd: actualEnd,
-        paddingTop: invisibleTop * itemHeight,
-        paddingBottom: invisibleBottom * itemHeight,
+      const newConfig = {
+        virtualStart: start,
+        virtualEnd: end,
+        paddingTop: start * itemHeight,
+        paddingBottom: (data.length - end) * itemHeight,
       };
-
-      if (isEqual(updateVirtualConfig, virtualRef.current)) {
-        return;
-      }
-      setState(updateVirtualConfig);
-      virtualRef.current = updateVirtualConfig;
+      // virtualRef.current = newConfig;
+      setState(newConfig);
+      return;
     }, 50);
     // data.length change 的时候用 handleScroll 重设 virtual params
     handleScroll();
