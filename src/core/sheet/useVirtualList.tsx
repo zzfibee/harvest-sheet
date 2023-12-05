@@ -84,3 +84,24 @@ export const useVirtualList = (
     paddingBottom: data.length - 1 <= virtualEnd ? 0 : paddingBottom,
   };
 };
+
+export const VirtualizeStart: React.FC<{
+  virtualized: boolean;
+  paddingTop: number;
+}> = ({ virtualized, paddingTop }) =>
+  virtualized && paddingTop > 0 ? (
+    <tr
+      style={{
+        height: 0,
+        paddingBottom: paddingTop,
+        display: 'block',
+      }}
+    />
+  ) : null;
+
+export const VirtualizeEnd: React.FC<{
+  virtualized: boolean;
+  paddingBottom: number;
+}> = ({ virtualized, paddingBottom }) => (
+  <VirtualizeStart virtualized={virtualized} paddingTop={paddingBottom} />
+);

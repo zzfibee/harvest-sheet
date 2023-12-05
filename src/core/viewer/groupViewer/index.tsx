@@ -6,22 +6,25 @@ import type { SheetType } from '@zhenliang/sheet/type';
 import { useCallback } from 'react';
 
 export const GroupViewer: SheetType.CellViewer = (props) => {
-  const { value, row = 0, record } = props;
+  const { row = 0, record } = props;
+  const { isHeader } = record || {};
   const { config } = useGroup();
   const eventBus = useSheetEvent();
+
+  const isStart = config?.configMap?.get(row)?.isStart;
   const isOpen = config?.configMap?.get(row)?.isOpen;
   const allOpen = !config?.groupOpen?.some((value) => !value);
   const handleChange = useCallback(() => {
     if (!eventBus) return;
 
-    if (record?.isHeader) {
+    if (isHeader) {
       eventBus.emit('group-open-title', !allOpen);
     } else {
       eventBus.emit('group-open', { row, open: !isOpen });
     }
   }, [eventBus, row, isOpen, allOpen]);
 
-  if (value) {
+  if (isStart || isHeader) {
     let currentOpen = record?.isHeader ? allOpen : isOpen;
 
     return (

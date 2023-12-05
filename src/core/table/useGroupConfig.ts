@@ -10,9 +10,7 @@ export const useGroupConfig = (
   tableGroupConfig?: SheetTableType.TableGroupConfig,
   hasChildren?: boolean,
 ) => {
-  const [groupConfig, setGroupConfig] =
-    // useState<SheetType.GroupConfigContext>();
-    useState<SheetType.RowGroupConfig>();
+  const [groupConfig, setGroupConfig] = useState<SheetType.RowGroupConfig>();
   const groupConfigRef = useRef<SheetType.RowGroupConfig>();
   const childrenLength = useMemo(() => {
     if (!dataSource?.length) return 0;
@@ -95,12 +93,9 @@ export const useGroupConfig = (
 };
 
 export const formatGroupData = (
-  param: Pick<
-    SheetTableType.TableProps,
-    'dataSource' | 'columns' | 'rowKey'
-  > & { groupMap: SheetType.GroupMap },
+  param: Pick<SheetTableType.TableProps, 'dataSource' | 'columns' | 'rowKey'>,
 ) => {
-  const { dataSource, columns, rowKey, groupMap } = param;
+  const { dataSource, columns, rowKey } = param;
   const data: SheetType.Cell[][] = [];
 
   let currentIndex = 0;
@@ -132,12 +127,6 @@ export const formatGroupData = (
           : columns?.[0]?.readonly('', itemRow, currentIndex),
         align: 'center',
         fixed: 'unset',
-        value:
-          groupMap.get(currentIndex) && groupMap.get(currentIndex)?.isStart,
-        record: {
-          open:
-            groupMap.get(currentIndex) && groupMap.get(currentIndex)?.isOpen,
-        },
         valueViewer: GroupViewer,
         className: 'sheet-control',
       } as any);

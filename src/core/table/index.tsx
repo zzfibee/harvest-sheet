@@ -46,7 +46,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     { defaultOpen: true, ...groupConfig },
     hasChildren,
   );
-  const { configMap } = rowGroupConfig || {};
 
   useEffect(() => {
     if (!hasChildren) return;
@@ -57,7 +56,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
         dataSource,
         columns,
         rowKey,
-        groupMap: configMap,
       }),
     );
   }, [dataSource, columns, hasChildren, rowKey]);
@@ -111,18 +109,13 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     (value: unknown) => {
       const { type, extraInfo } = value as SheetType.OperateHistory;
       if (type === 'Custom') {
-        const {
-          groupConfig,
-          extraType,
-          data: lastData,
-        } = extraInfo as {
+        const { groupConfig, extraType } = extraInfo as {
           extraType: string;
           groupConfig: SheetType.RowGroupConfig;
           data: SheetType.Cell[][];
         };
         if (extraType === 'group') {
           setGroupConfig(groupConfig);
-          setData(lastData);
         }
       }
     },
@@ -140,10 +133,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     [sheetInstance, checkedRow],
   );
 
-  const headGroupOpen = !rowGroupConfig?.groupOpen?.length
-    ? !!rowGroupConfig?.defaultOpen
-    : !rowGroupConfig?.groupOpen?.some((value: boolean) => !value);
-
   const headSelection = !!rowSelection;
   const WrappedTableShell = useMemo(() => {
     if (draggable) {
@@ -153,9 +142,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
         showGroup: hasChildren,
         showSelect: !!rowSelection,
         controlProps: {
-          group: {
-            open: !!rowGroupConfig?.defaultOpen,
-          },
           check: {
             checked: false,
           },
@@ -168,15 +154,12 @@ const Table: React.FC<SheetTableType.TableProps> = ({
       showGroup: hasChildren,
       showSelect: !!rowSelection,
       controlProps: {
-        group: {
-          open: headGroupOpen,
-        },
         check: {
           checked: false,
         },
       },
     });
-  }, [columns.length, draggable, headSelection, hasChildren, headGroupOpen]);
+  }, [columns.length, draggable, headSelection, hasChildren]);
 
   return (
     <WidthContext.Provider value={{ widths, onChange: setWidth }}>

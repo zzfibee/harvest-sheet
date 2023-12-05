@@ -1,4 +1,5 @@
 import type { EventEmitter } from 'events';
+import { CSSProperties } from 'react';
 import { SheetTableType, SheetType } from '.';
 
 export enum CellAlign {
@@ -117,7 +118,7 @@ export type SheetProps = {
   freePaste?: boolean;
   virtualized?: boolean;
   showBackEdit?: boolean;
-  backEditStyle?: Partial<CSSStyleDeclaration>;
+  backEditStyle?: Partial<CSSProperties>;
   sticky?: boolean;
 
   groupConfig?: RowGroupConfig;
