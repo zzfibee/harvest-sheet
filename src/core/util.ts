@@ -310,7 +310,7 @@ export const valuesTransferToLabel = (
 };
 
 export const groupConfigToGroupMap = (
-  rowGroupConfig?: SheetType.RowGroupConfig,
+  rowGroupConfig?: Partial<SheetType.RowGroupConfig>,
 ) => {
   const groupMap = new Map<
     number,
@@ -324,7 +324,7 @@ export const groupConfigToGroupMap = (
       groupMap.set(i, {
         ...group,
         isStart: i === groupStart,
-        isOpen: rowGroupConfig.groupOpen[index],
+        isOpen: !!rowGroupConfig?.groupOpen?.[index],
       });
     }
   });

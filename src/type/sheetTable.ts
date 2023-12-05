@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import { SheetType } from '.';
 
 export type refAssertion = {
@@ -91,7 +91,7 @@ export type TableProps = {
   draggable?: boolean;
   freePaste?: boolean;
   showBackEdit?: boolean;
-  backEditStyle?: Partial<CSSStyleDeclaration>;
+  backEditStyle?: Partial<CSSProperties>;
   rowSelection?: TableRowSelection;
   groupConfig?: TableGroupConfig;
 

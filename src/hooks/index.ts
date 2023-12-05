@@ -9,4 +9,4 @@ export type {
 export { useMouse } from './useMouse';
 export { useSetState } from './useSetState';
 export { SheetEventContext, useSheetEvent } from './useSheetEvent';
-export { useWidth, WidthContext } from './useWidthConfig';
+export { WidthContext, useWidth } from './useWidthConfig';

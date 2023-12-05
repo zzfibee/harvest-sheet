@@ -1,4 +1,5 @@
 import { Sheet, useSetState } from '@zhenliang/sheet';
+import { GroupContext } from '@zhenliang/sheet/hooks/useGroupConfig';
 import { WidthContext } from '@zhenliang/sheet/hooks/useWidthConfig';
 import { SheetTableType, SheetType } from '@zhenliang/sheet/type';
 import { Button } from 'antd';
@@ -6,12 +7,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SheetEvent } from '../sheet/Event';
 import { DraggableShell } from '../shell/draggableShell';
 import { TableShell } from '../shell/tableShell';
-import { groupConfigToGroupMap } from '../util';
-import { CheckViewer } from '../viewer/checkViewer';
-import { GroupViewer } from '../viewer/groupViewer';
 import { GroupEvent, SelectionEvent } from './events';
-import { useGroupConfig } from './useGroupConfig';
-import { useRowSelection } from './useRowSelection';
+import { formatGroupData, useGroupConfig } from './useGroupConfig';
+import { formatSelectionData, useRowSelection } from './useRowSelection';
 
 const Table: React.FC<SheetTableType.TableProps> = ({
   sheetInstance: sheetRef,
@@ -48,145 +46,34 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     { defaultOpen: true, ...groupConfig },
     hasChildren,
   );
-  const { groups, groupOpen } = rowGroupConfig || {};
 
   useEffect(() => {
     if (!hasChildren) return;
     if (!dataSource || !columns) return;
 
-    const data: SheetType.Cell[][] = [];
-
-    const groupMap = groupConfigToGroupMap({
-      groups,
-      groupOpen,
-    });
-
-    let currentIndex = 0;
-    dataSource.forEach((item: any, row: number) => {
-      let groupList = [item];
-      if (item.children) {
-        groupList = [item, ...item.children];
-      }
-      groupList.forEach((itemRow: any) => {
-        const dataRow: SheetType.Cell[] = [];
-        let rowId: string = itemRow.id || itemRow.key || String(currentIndex);
-        if (rowKey) {
-          if (rowKey instanceof Function) {
-            rowId = rowKey(itemRow, row);
-          } else {
-            rowId = itemRow[rowKey];
-          }
-        }
-
-        dataRow.push({
-          id: rowId,
-          row: currentIndex,
-          col: -1,
-          editable: !(columns?.[0].editable instanceof Function)
-            ? columns?.[0]?.editable
-            : columns?.[0]?.editable('', itemRow, currentIndex),
-          readonly: !(columns?.[0].readonly instanceof Function)
-            ? columns?.[0]?.readonly
-            : columns?.[0]?.readonly('', itemRow, currentIndex),
-          align: 'center',
-          fixed: 'unset',
-          value:
-            groupMap.get(currentIndex) && groupMap.get(currentIndex)?.isStart,
-          record: {
-            open:
-              groupMap.get(currentIndex) && groupMap.get(currentIndex)?.isOpen,
-          },
-          valueViewer: GroupViewer,
-          className: 'sheet-control',
-        } as any);
-
-        columns.forEach((colInfo: SheetTableType.ColumnProps, col: number) => {
-          const value = itemRow[colInfo.dataIndex || ''];
-          dataRow.push({
-            id: rowId,
-            value,
-            record: itemRow,
-            readonly: !(colInfo.readonly instanceof Function)
-              ? colInfo.readonly
-              : colInfo.readonly(value, itemRow, currentIndex, col),
-            align: colInfo.align,
-            fixed: colInfo.fixed,
-            editable: !(colInfo.editable instanceof Function)
-              ? colInfo.editable
-              : colInfo.editable(value, itemRow, currentIndex, col),
-            valueViewer: colInfo.render ? colInfo.render : undefined,
-            dataEditor: colInfo.editor ? colInfo.editor : undefined,
-            row: currentIndex,
-            className: !(colInfo.cellConfig?.className instanceof Function)
-              ? colInfo.cellConfig?.className
-              : colInfo.cellConfig?.className(value, itemRow, currentIndex),
-            col,
-          } as any);
-        });
-        data.push(dataRow);
-
-        currentIndex++;
-      });
-    });
-
-    setData(data);
-  }, [dataSource, columns, groups, hasChildren, rowGroupConfig]);
+    setData(
+      formatGroupData({
+        dataSource,
+        columns,
+        rowKey,
+      }),
+    );
+  }, [dataSource, columns, hasChildren, rowKey]);
 
   useEffect(() => {
     if (hasChildren) return;
     if (!dataSource || !columns) return;
 
     setData(
-      dataSource.map((item: any, row: number) => {
-        let rowId: string = item.id || item.key || String(row);
-        if (rowKey) {
-          if (rowKey instanceof Function) {
-            rowId = rowKey(item, row);
-          } else {
-            rowId = item[rowKey];
-          }
-        }
-        const rows = [];
-        if (rowSelection) {
-          rows.push({
-            id: rowId,
-            row,
-            col: -1,
-            readonly: true,
-            align: 'center' as SheetType.CellAlign,
-            value: checkedRow[row] as unknown as string,
-            valueViewer: CheckViewer,
-            className: 'sheet-control',
-          });
-        }
-
-        columns.forEach((colInfo: SheetTableType.ColumnProps, col: number) => {
-          const value = item[colInfo.dataIndex || ''];
-          rows.push({
-            id: rowId,
-            value,
-            record: item,
-            readonly: !(colInfo.readonly instanceof Function)
-              ? colInfo.readonly
-              : colInfo.readonly(value, item, row, col),
-            align: colInfo.align,
-            fixed: colInfo.fixed,
-            editable: !(colInfo.editable instanceof Function)
-              ? colInfo.editable
-              : colInfo.editable(value, item, row),
-            valueViewer: colInfo.render ? colInfo.render : undefined,
-            dataEditor: colInfo.editor ? colInfo.editor : undefined,
-            className: !(colInfo.cellConfig?.className instanceof Function)
-              ? colInfo.cellConfig?.className
-              : colInfo.cellConfig?.className(value, item, row),
-            row,
-            col,
-          });
-        });
-        return rows;
+      formatSelectionData({
+        dataSource,
+        columns,
+        checked: checkedRow,
+        rowKey,
+        rowSelection,
       }),
     );
-  }, [dataSource, columns, checkedRow, hasChildren]);
+  }, [dataSource, columns, checkedRow, hasChildren, rowKey, rowSelection]);
 
   useEffect(() => {
     if (!dataSource || !columns) {
@@ -218,23 +105,17 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     },
     [columns, onChange, hasControl],
   );
-
   const handleReverse = useCallback(
     (value: unknown) => {
       const { type, extraInfo } = value as SheetType.OperateHistory;
       if (type === 'Custom') {
-        const {
-          groupConfig,
-          extraType,
-          data: lastData,
-        } = extraInfo as {
+        const { groupConfig, extraType } = extraInfo as {
           extraType: string;
           groupConfig: SheetType.RowGroupConfig;
           data: SheetType.Cell[][];
         };
         if (extraType === 'group') {
           setGroupConfig(groupConfig);
-          setData(lastData);
         }
       }
     },
@@ -252,10 +133,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
     [sheetInstance, checkedRow],
   );
 
-  const headGroupOpen = !rowGroupConfig?.groupOpen?.length
-    ? !!rowGroupConfig?.defaultOpen
-    : !rowGroupConfig?.groupOpen?.some((value: boolean) => !value);
-
   const headSelection = !!rowSelection;
   const WrappedTableShell = useMemo(() => {
     if (draggable) {
@@ -265,9 +142,6 @@ const Table: React.FC<SheetTableType.TableProps> = ({
         showGroup: hasChildren,
         showSelect: !!rowSelection,
         controlProps: {
-          group: {
-            open: headGroupOpen,
-          },
           check: {
             checked: false,
           },
@@ -280,53 +154,51 @@ const Table: React.FC<SheetTableType.TableProps> = ({
       showGroup: hasChildren,
       showSelect: !!rowSelection,
       controlProps: {
-        group: {
-          open: headGroupOpen,
-        },
         check: {
           checked: false,
         },
       },
     });
-  }, [columns.length, draggable, headSelection, hasChildren, headGroupOpen]);
+  }, [columns.length, draggable, headSelection, hasChildren]);
 
   return (
     <WidthContext.Provider value={{ widths, onChange: setWidth }}>
-      <Sheet
-        {...args}
-        sheetInstance={sheetInstance}
-        sheetRenderer={WrappedTableShell}
-        groupConfig={rowGroupConfig}
-        data={data}
-        onCellsChanged={handleChanges}
+      <GroupContext.Provider
+        value={{ config: rowGroupConfig, onChange: setGroupConfig }}
       >
-        <SelectionEvent
-          hasChildren={hasChildren}
-          rowSelection={rowSelection}
-          onChange={handleRowSelect}
-        />
-        <GroupEvent
-          hasChildren={hasChildren}
+        <Sheet
+          {...args}
+          sheetInstance={sheetInstance}
+          sheetRenderer={WrappedTableShell}
           data={data}
-          rowGroupConfig={rowGroupConfig}
-          sheetInstance={sheetInstance.current}
-          onGridChange={setData}
-          onGroupChange={setGroupConfig}
-        />
-        <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
-        {Object.keys(eventHandler || {}).map((key) => (
-          <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
-        ))}
-        {handleAdd ? (
-          <Button
-            type="dashed"
-            style={{ width: '100%', height: 32 }}
-            onClick={handleAdd}
-          >
-            + 添加
-          </Button>
-        ) : null}
-      </Sheet>
+          onCellsChanged={handleChanges}
+        >
+          <SelectionEvent
+            hasChildren={hasChildren}
+            rowSelection={rowSelection}
+            onChange={handleRowSelect}
+          />
+          <GroupEvent
+            hasChildren={hasChildren}
+            data={data}
+            sheetInstance={sheetInstance.current}
+            onGridChange={setData}
+          />
+          <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
+          {Object.keys(eventHandler || {}).map((key) => (
+            <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
+          ))}
+          {handleAdd ? (
+            <Button
+              type="dashed"
+              style={{ width: '100%', height: 32 }}
+              onClick={handleAdd}
+            >
+              + 添加
+            </Button>
+          ) : null}
+        </Sheet>
+      </GroupContext.Provider>
     </WidthContext.Provider>
   );
 };

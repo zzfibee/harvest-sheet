@@ -1,12 +1,12 @@
 import type { SheetType } from '@zhenliang/sheet/type';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 // import ReduxLogger from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 
 import DefaultRow from './DefaultRow';
 import DefaultShell from './DefaultShell';
 
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { useGroup } from '@zhenliang/sheet/hooks/useGroupConfig';
 import { Empty } from 'antd';
 import { isEmpty, isNil, isNumber } from 'lodash';
 import {
@@ -16,14 +16,20 @@ import {
 } from '../../hooks';
 import sheetReducer from '../reducers';
 import { classNames, getRowHeight, rowToActualRow } from '../util';
+import { Control } from './Control';
 import { DefaultRowMapper } from './DefaultRowMapper';
+import { Menu } from './Menu';
 import './index.less';
 import { useCellEvent } from './useCellEvent';
 import { useContextMenu } from './useContextMenu';
 import { useKeyBoardEvent } from './useKeyBoardEvent';
 import { useMouseEvent } from './useMouseEvent';
 import { useSelectVisible } from './useSelectVisible';
-import { useVirtualList } from './useVirtualList';
+import {
+  VirtualizeEnd,
+  VirtualizeStart,
+  useVirtualList,
+} from './useVirtualList';
 
 const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   const {
@@ -36,7 +42,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     className,
     data,
     freePaste = false,
-    groupConfig = undefined,
+    // groupConfig = undefined,
     onCellsChanged,
     onContextMenu,
     rowClassName,
@@ -48,6 +54,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   const sheetWrapperRef = useRef<SheetType.refAssertion>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const eventBus = useEventBus();
+  const { config: groupConfig } = useGroup();
   const [state, dispatch] = useMiddlewareReducer(
     sheetReducer,
     {
@@ -61,9 +68,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     // [ReduxThunk, ReduxLogger],
     [ReduxThunk],
   );
-
-  useEffect(() => {
-    sheetInstance.current = {
+  useImperativeHandle(
+    sheetInstance,
+    () => ({
       zoomTo: (row?: number) => {
         // 给定 row 回到行
         // 不给定 row 默认回到编辑行和列
@@ -133,8 +140,9 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           ? history?.[history.length - 1]
           : ({} as SheetType.OperateHistory);
       },
-    };
-  }, [sheetWrapperRef.current, state.history]);
+    }),
+    [state.history],
+  );
 
   useEffect(() => {
     // 同步必要的状态
@@ -170,8 +178,21 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     }
   }, [state.editing, state.start]);
 
+  const visibleData = useMemo(() => {
+    if (!groupConfig?.groups?.length) {
+      return state.data;
+    }
+    return state.data?.filter((item, index) => {
+      if (!groupConfig?.configMap.has(index)) {
+        return true;
+      }
+      const rowConfig = groupConfig.configMap.get(index);
+      return rowConfig?.isOpen || rowConfig?.isStart;
+    });
+  }, [state.data, groupConfig]);
+
   const { virtualStart, virtualEnd, paddingTop, paddingBottom } =
-    useVirtualList(sheetWrapperRef, state.data, groupConfig, virtualized);
+    useVirtualList(sheetWrapperRef, visibleData, virtualized);
 
   useEffect(() => {
     dispatch({
@@ -183,34 +204,40 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
   }, [groupConfig]);
 
   const rowElements = useMemo(() => {
-    return state?.data
+    return visibleData
       ?.slice(virtualStart, virtualEnd)
       ?.map((rowData: SheetType.Cell[]) => {
-        const row = state?.data?.indexOf(rowData) || 0;
+        const row = rowData[0]?.row || 0;
+
         const rowCN =
           rowClassName instanceof Function
             ? rowClassName?.(rowData?.[rowData.length - 1]?.record as any, row)
             : rowClassName;
         return (
-          <Row
-            key={row}
-            row={row}
-            cells={rowData}
-            groupConfig={groupConfig}
-            rowClassName={rowCN}
-          >
+          <Row key={row} row={row} cells={rowData} rowClassName={rowCN}>
             <DefaultRowMapper rowData={rowData} row={row} />
           </Row>
         );
       });
-  }, [state.data, groupConfig, virtualStart, virtualEnd, rowClassName]);
+  }, [visibleData, groupConfig, virtualStart, virtualEnd, rowClassName]);
 
-  const memoHeight = Math.min((state?.data?.length ?? 0) + 1, 10) * 42 + 43;
+  const memoHeight = Math.min((visibleData?.length ?? 0) + 1, 10) * 42 + 43;
 
   const [startRowVisible, direction] = useSelectVisible(
     sheetWrapperRef,
     state.start,
   );
+
+  const isEmptyData = isEmpty(state.data);
+
+  const EmptyElement = useMemo(() => {
+    if (isEmptyData) {
+      return (
+        <div style={{ marginTop: 16, marginBottom: 16 }}>{emptyRenderer}</div>
+      );
+    }
+    return null;
+  }, [isEmptyData, emptyRenderer]);
 
   return (
     <SheetEventContext.Provider value={eventBus}>
@@ -228,67 +255,36 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             key="sheet"
             className={classNames('harvest-sheet', className)}
           >
-            {virtualized && paddingTop > 0 && (
-              <tr
-                style={{
-                  height: 0,
-                  paddingBottom: paddingTop,
-                  display: 'block',
-                }}
-              />
-            )}
-            {/* {rowElements?.slice(virtualStart, virtualEnd)} */}
+            <VirtualizeStart
+              virtualized={virtualized}
+              paddingTop={paddingTop}
+            />
             {rowElements}
-            {virtualized && paddingBottom > 0 && (
-              <tr
-                style={{
-                  height: 0,
-                  paddingBottom: paddingBottom,
-                  display: 'block',
-                }}
-              />
-            )}
+            <VirtualizeEnd
+              virtualized={virtualized}
+              paddingBottom={paddingBottom}
+            />
           </SheetShell>
-          {ContextMenu ? (
-            <div
-              ref={contextMenuRef}
-              style={{ display: menu.showMenu ? '' : 'none' }}
-            >
-              <ContextMenu
-                position={menu.position}
-                cell={menu.cellPosition}
-                onContextMenu={onContextMenu}
-              />
-            </div>
-          ) : null}
+          <Menu
+            ref={contextMenuRef}
+            position={menu.position}
+            cell={menu.cellPosition}
+            showMenu={menu.showMenu}
+            contextMenu={ContextMenu}
+            onContextMenu={onContextMenu}
+          />
         </span>
-        {isEmpty(state.data) || isNil(state.data) ? (
-          <div style={{ marginTop: 16, marginBottom: 16 }}>{emptyRenderer}</div>
-        ) : null}
+        {EmptyElement}
 
         <div className="harvest-sheet-control">
           {children}
-          {showBackEdit && !startRowVisible ? (
-            <div
-              className="back-edit"
-              onClick={() => sheetInstance?.current?.zoomTo()}
-              style={
-                !backEditStyle
-                  ? {
-                      top: 0,
-                      right: 0,
-                    }
-                  : (backEditStyle as any)
-              }
-            >
-              {direction === 'up' ? (
-                <ArrowUpOutlined rev={undefined} />
-              ) : (
-                <ArrowDownOutlined rev={undefined} />
-              )}
-              <span style={{ marginLeft: 0 }}>返回编辑行</span>
-            </div>
-          ) : null}
+          <Control
+            showBackEdit={showBackEdit}
+            startRowVisible={startRowVisible}
+            handelClick={() => sheetInstance?.current?.zoomTo()}
+            direction={direction}
+            backEditStyle={backEditStyle}
+          />
         </div>
       </span>
     </SheetEventContext.Provider>

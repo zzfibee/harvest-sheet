@@ -1,4 +1,5 @@
 import type { EventEmitter } from 'events';
+import { CSSProperties } from 'react';
 import { SheetTableType, SheetType } from '.';
 
 export enum CellAlign {
@@ -10,6 +11,8 @@ export enum CellAlign {
 
 export type Cell = {
   id: string;
+  row?: number;
+  col?: number;
   key?: string;
   readonly?: boolean;
   component?: CellViewer;
@@ -82,6 +85,12 @@ export type RowGroupConfig = {
   groups: RowGroup[];
   groupOpen: boolean[];
 };
+
+export type GroupMap = Map<
+  number,
+  SheetType.RowGroup & { isStart: boolean; isOpen: boolean }
+>;
+
 export type MenuRenderProps = {
   position?: { top: number; left: number };
   cell?: CellPosition;
@@ -109,7 +118,7 @@ export type SheetProps = {
   freePaste?: boolean;
   virtualized?: boolean;
   showBackEdit?: boolean;
-  backEditStyle?: Partial<CSSStyleDeclaration>;
+  backEditStyle?: Partial<CSSProperties>;
   sticky?: boolean;
 
   groupConfig?: RowGroupConfig;
@@ -124,9 +133,14 @@ export type SheetProps = {
     | ((record: Record<string, unknown>, index: number) => string);
   children?: any[];
 };
-export type WidthConfig = {
+export type WidthConfigContext = {
   onChange?: (value: Record<number | string, number>) => void;
   widths?: Record<number | string, number>;
+};
+
+export type GroupConfigContext = {
+  onChange?: (value: RowGroupConfig) => void;
+  config?: RowGroupConfig & { configMap: GroupMap };
 };
 
 export type SheetShell = Pick<SheetTableType.TableProps, 'columns'> & {

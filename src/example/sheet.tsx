@@ -332,7 +332,7 @@ const BasicSheet: React.FC = () => {
       showBackEdit
       data={state as any}
       groupConfig={groupConfig}
-      scroll={{ x: '100%', y: '100vh' }}
+      scroll={{ x: '100%', y: 'calc(100vh - 290px)' }}
       sheetRenderer={WrappedTableShell}
       menuRenderer={MenuRender}
       onCellsChanged={onCellsChanged}
