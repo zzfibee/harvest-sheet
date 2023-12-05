@@ -178,18 +178,18 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     }
   }, [state.editing, state.start]);
 
-  const visibleData = useMemo(
-    () =>
-      groupConfig?.groups?.length
-        ? state.data?.filter((item, index) =>
-            groupConfig?.configMap.has(index)
-              ? groupConfig?.configMap.get(index)?.isOpen ||
-                groupConfig?.configMap.get(index)?.isStart
-              : true,
-          )
-        : state.data,
-    [state.data, groupConfig],
-  );
+  const visibleData = useMemo(() => {
+    if (!groupConfig?.groups?.length) {
+      return state.data;
+    }
+    return state.data?.filter((item, index) => {
+      if (!groupConfig?.configMap.has(index)) {
+        return true;
+      }
+      const rowConfig = groupConfig.configMap.get(index);
+      return rowConfig?.isOpen || rowConfig?.isStart;
+    });
+  }, [state.data, groupConfig]);
 
   const { virtualStart, virtualEnd, paddingTop, paddingBottom } =
     useVirtualList(sheetWrapperRef, visibleData, virtualized);
