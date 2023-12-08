@@ -57,7 +57,7 @@ export const getSelectEditor = (
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         options={customOptions}
-        popupClassName={'excelTablePopupClassName'}
+        popupClassName="select-editor-dropdown"
         dropdownRender={dropdown}
       />
     );

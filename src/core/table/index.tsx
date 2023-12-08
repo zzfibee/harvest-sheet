@@ -2,7 +2,7 @@ import { Sheet, useSetState } from '@zhenliang/sheet';
 import { GroupContext } from '@zhenliang/sheet/hooks/useGroupConfig';
 import { WidthContext } from '@zhenliang/sheet/hooks/useWidthConfig';
 import { SheetTableType, SheetType } from '@zhenliang/sheet/type';
-import { Button } from 'antd';
+import { Button, ConfigProvider, Empty } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SheetEvent } from '../sheet/Event';
 import { DraggableShell } from '../shell/draggableShell';
@@ -162,44 +162,48 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   }, [columns.length, draggable, headSelection, hasChildren]);
 
   return (
-    <WidthContext.Provider value={{ widths, onChange: setWidth }}>
-      <GroupContext.Provider
-        value={{ config: rowGroupConfig, onChange: setGroupConfig }}
-      >
-        <Sheet
-          {...args}
-          sheetInstance={sheetInstance}
-          sheetRenderer={WrappedTableShell}
-          data={data}
-          onCellsChanged={handleChanges}
+    <ConfigProvider
+      renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+    >
+      <WidthContext.Provider value={{ widths, onChange: setWidth }}>
+        <GroupContext.Provider
+          value={{ config: rowGroupConfig, onChange: setGroupConfig }}
         >
-          <SelectionEvent
-            hasChildren={hasChildren}
-            rowSelection={rowSelection}
-            onChange={handleRowSelect}
-          />
-          <GroupEvent
-            hasChildren={hasChildren}
+          <Sheet
+            {...args}
+            sheetInstance={sheetInstance}
+            sheetRenderer={WrappedTableShell}
             data={data}
-            sheetInstance={sheetInstance.current}
-            onGridChange={setData}
-          />
-          <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
-          {Object.keys(eventHandler || {}).map((key) => (
-            <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
-          ))}
-          {handleAdd ? (
-            <Button
-              type="dashed"
-              style={{ width: '100%', height: 32 }}
-              onClick={handleAdd}
-            >
-              + 添加
-            </Button>
-          ) : null}
-        </Sheet>
-      </GroupContext.Provider>
-    </WidthContext.Provider>
+            onCellsChanged={handleChanges}
+          >
+            <SelectionEvent
+              hasChildren={hasChildren}
+              rowSelection={rowSelection}
+              onChange={handleRowSelect}
+            />
+            <GroupEvent
+              hasChildren={hasChildren}
+              data={data}
+              sheetInstance={sheetInstance.current}
+              onGridChange={setData}
+            />
+            <SheetEvent key="_reverse" name="reverse" handler={handleReverse} />
+            {Object.keys(eventHandler || {}).map((key) => (
+              <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
+            ))}
+            {handleAdd ? (
+              <Button
+                type="dashed"
+                style={{ width: '100%', height: 32 }}
+                onClick={handleAdd}
+              >
+                + 添加
+              </Button>
+            ) : null}
+          </Sheet>
+        </GroupContext.Provider>
+      </WidthContext.Provider>
+    </ConfigProvider>
   );
 };
 
