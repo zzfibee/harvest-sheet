@@ -98,7 +98,7 @@ export function stringToClipboardData(str: string, count: number) {
 }
 
 export const defaultParsePaste = (str: string) =>
-  str.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
+  str.trim().split(/\r\n|\n|\r/).map((row) => row.split('\t'));
 export function clipboardDataToString() {
   return new Promise<string[][]>((resolve) => {
     navigator.clipboard.readText().then((res) => {
@@ -199,7 +199,7 @@ export function formatDataToCell({
       });
     });
     if (hasStartAndNotOpen) {
-      console.error('有折叠单元格，不可粘贴');
+      message.error('有折叠单元格，不可粘贴');
       return { changes: [], extChanges: [] };
     }
 
