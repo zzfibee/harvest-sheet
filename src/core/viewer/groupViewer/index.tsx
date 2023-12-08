@@ -29,7 +29,7 @@ export const GroupViewer: SheetType.CellViewer = (props) => {
 
     return (
       <span
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', pointerEvents: 'all' }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={handleChange}
       >

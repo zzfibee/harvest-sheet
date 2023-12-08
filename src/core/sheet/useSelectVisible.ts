@@ -12,6 +12,7 @@ export const useSelectVisible = (
   useEffect(() => {
     const handleScroll = throttle(() => {
       if (!start) {
+        setStartVisible(true);
         return;
       }
       const startCell = sheetWrapper.current?.querySelector(

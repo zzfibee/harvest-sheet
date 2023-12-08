@@ -371,7 +371,7 @@ export const changeGroupConfig = (
 export const rowToActualRow = (
   row: number,
   groupConfig?: SheetType.RowGroupConfig,
-  max = 10000,
+  max = 100000, // 业务从10000 上限增长到数万
 ) => {
   const groupMap = groupConfigToGroupMap(groupConfig);
   if (!groupMap.size || row < 0) return row;

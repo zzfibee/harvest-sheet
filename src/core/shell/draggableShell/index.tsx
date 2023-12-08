@@ -185,10 +185,15 @@ export const DraggableShell = ({
 
             const cellList = ([] as any[]).slice.call(headRef.current?.cells);
             const changeIndex = cellList.indexOf(downRef.current);
+            const actualIndex = hasControl ? changeIndex - 1 : changeIndex;
+            const isDoubleSpan =
+              (columns[actualIndex].titleConfig?.colSpan || 0) > 1;
+            const nextColumn = columns[actualIndex + 1] || {};
+            const nextWidth = +String(nextColumn?.width).replace('px', '');
             //调整该列中的每个Cell
             const widths = {
               length: columns.length,
-              [hasControl ? changeIndex - 1 : changeIndex]: newWidth,
+              [actualIndex]: isDoubleSpan ? newWidth - nextWidth : newWidth,
             };
 
             setWidth(widths as any);
@@ -211,7 +216,7 @@ export const DraggableShell = ({
           style={{ position: 'sticky', top: 0, zIndex: 3 }}
         >
           <colgroup>{colItems}</colgroup>
-          <thead>
+          <thead style={{ pointerEvents: 'all' }}>
             <tr ref={headRef}>{thItems}</tr>
           </thead>
         </table>

@@ -11,7 +11,7 @@ export const keyboardReducer: Record<string, reducerAction> = {
     if (groupConfig) {
       newRow = getNextVisibleRow(
         newRow as number,
-        data.length,
+        data?.[data.length - 1]?.[0].row || data.length,
         groupConfigToGroupMap(groupConfig),
         row < 0 ? -1 : 1,
       );

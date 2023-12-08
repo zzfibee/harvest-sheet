@@ -81,6 +81,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
           const actual = rowToActualRow(
             (row as number) ?? start?.row,
             groupConfig,
+            data.length,
           );
           const rowHeight = getRowHeight(container);
           const firstRowCell = container.querySelector(
