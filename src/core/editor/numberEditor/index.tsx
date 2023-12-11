@@ -54,7 +54,7 @@ export const getNumberEditor = (
     const { precision, ...inputArgs } = getExtraProps
       ? getExtraProps(props)
       : extraProps ?? {};
-    const valueFormatter = useCallback((value: string | number | undefined) => {
+    const baseFormatter = useCallback((value: string | number | undefined) => {
       if (!value) {
         return '';
       }
@@ -67,10 +67,15 @@ export const getNumberEditor = (
       }
       return String(value);
     }, []);
+    // 去掉多余的0
+    const valueFormatter = useCallback((value: string | number | undefined) => {
+      const baseValue = baseFormatter(value);
+      return baseValue ? `${parseFloat(baseValue)}` : '';
+    }, []);
     /**
      * 重新声明，后面有需求可以改一下
      */
-    const valueParser = valueFormatter;
+    const valueParser = baseFormatter;
     const handleChange = useCallback(
       (value) => {
         onChange && onChange(value ? value : null);
