@@ -72,6 +72,8 @@ export const formatSelectionData = (
           : colInfo.cellConfig?.className(value, item, row),
         row,
         col,
+        dataIndex: colInfo.dataIndex,
+        key: colInfo.key,
       });
     });
     return rows;

@@ -132,6 +132,7 @@ export type SheetProps = {
     | string
     | ((record: Record<string, unknown>, index: number) => string);
   children?: any[];
+  boldScroll?: boolean;
 };
 export type WidthConfigContext = {
   onChange?: (value: Record<number | string, number>) => void;

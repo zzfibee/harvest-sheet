@@ -1,6 +1,7 @@
 import type { SheetType } from '@zhenliang/sheet/type';
 import { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 // import ReduxLogger from 'redux-logger';
+import cls from 'classnames';
 import ReduxThunk from 'redux-thunk';
 
 import DefaultRow from './DefaultRow';
@@ -50,6 +51,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     children,
     showBackEdit,
     backEditStyle,
+    boldScroll = true,
   } = props;
   const sheetWrapperRef = useRef<SheetType.refAssertion>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -240,13 +242,23 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     return null;
   }, [isEmptyData, emptyRenderer]);
 
+  const hasHorizontalScrollbar =
+    sheetWrapperRef.current &&
+    sheetWrapperRef.current.scrollWidth > sheetWrapperRef.current.clientWidth;
+
   return (
     <SheetEventContext.Provider value={eventBus}>
       <span>
         <span
           ref={sheetWrapperRef}
           tabIndex={0}
-          className={classNames('harvest harvest-sheet-container', className)}
+          className={classNames(
+            'harvest harvest-sheet-container',
+            className,
+            cls({
+              tableWarpScroll: hasHorizontalScrollbar && boldScroll,
+            }),
+          )}
           style={{
             maxHeight: scroll?.y ?? memoHeight,
             width: scroll?.x ?? '100%',
