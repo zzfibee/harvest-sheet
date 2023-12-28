@@ -78,7 +78,7 @@ export const getNumberEditor = (
     const valueParser = baseFormatter;
     const handleChange = useCallback(
       (value) => {
-        onChange && onChange(value ? value : null);
+        onChange && onChange(!isNil(value) ? value : null);
       },
       [onChange],
     );
