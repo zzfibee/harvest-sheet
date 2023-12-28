@@ -1,10 +1,32 @@
 @import './var.less';
 
+.tableWarpScroll {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  &:hover {
+    margin-bottom: 10px;
+
+    &::-webkit-scrollbar {
+      display: block;
+      height: 20px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-top: 10px solid #fff;
+      height: 10px;
+    }
+  
+  }
+  
+}
+
 .harvest-sheet-container{
-  overflow: auto;
   display: block;
   position:  relative ;
   // scroll-behavior:smooth;
+  overflow: auto;
 }
 
 .harvest-sheet-container .header{
@@ -17,7 +39,7 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 }
 
 .harvest-sheet-container .harvest-sheet {
-  width: 100%;
+  width: calc(100% - 1px);
   border-collapse: collapse;
   table-layout: fixed;
   
@@ -46,10 +68,7 @@ span.harvest-sheet-container, span.harvest-sheet-container:focus {
 .harvest-sheet-container .harvest-sheet .cell {
   height: 17px;
   font-size: var(--cell-font-size);
-  padding-left:var(--cell-padding-horizontal);
-  padding-right:var(--cell-padding-horizontal);
-  padding-top:var(--cell-padding-vertical);
-  padding-bottom:var(--cell-padding-vertical);
+  padding:var(--cell-padding-vertical) var(--cell-padding-horizontal) var(--cell-padding-vertical) var(--cell-padding-horizontal);
   border: 1px solid var(--cell-border-color);
   background-color: var(--cell-background-color);
   cursor: cell;

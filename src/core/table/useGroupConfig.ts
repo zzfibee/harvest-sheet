@@ -151,6 +151,8 @@ export const formatGroupData = (
           className: !(colInfo.cellConfig?.className instanceof Function)
             ? colInfo.cellConfig?.className
             : colInfo.cellConfig?.className(value, itemRow, currentIndex),
+          dataIndex: colInfo.dataIndex,
+          key: colInfo.key,
           col,
         } as any);
       });

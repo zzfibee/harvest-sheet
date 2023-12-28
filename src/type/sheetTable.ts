@@ -104,4 +104,5 @@ export type TableProps = {
     'reverse' | 'btn-click' | 'cell-edit' | 'cell-switch' | string,
     undefined | EventHandler
   >;
+  boldScroll?: boolean;
 };
