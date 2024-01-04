@@ -52,6 +52,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
     showBackEdit,
     backEditStyle,
     boldScroll = true,
+    hideColBar = true,
   } = props;
   const sheetWrapperRef = useRef<SheetType.refAssertion>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -257,6 +258,7 @@ const Sheet: React.FC<SheetType.SheetProps> = (props) => {
             className,
             cls({
               tableWarpScroll: hasHorizontalScrollbar && boldScroll,
+              hideColBar: hideColBar,
             }),
           )}
           style={{
