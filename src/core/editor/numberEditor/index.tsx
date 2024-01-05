@@ -2,7 +2,7 @@ import { formatPrecision } from '@zhenliang/sheet/standardUtils';
 import type { SheetType } from '@zhenliang/sheet/type';
 import { InputNumber as AntInputNumber, InputNumberProps } from 'antd';
 import 'antd/es/input-number/style/index.css';
-import { isNil } from 'lodash';
+import { isNil, isNumber } from 'lodash';
 import { useCallback, useEffect, useRef } from 'react';
 import './index.less';
 
@@ -46,14 +46,21 @@ export const getNumberEditor = (
   const NumberEditor: SheetType.CellEditor = (props) => {
     const { value, onChange } = props;
     const inputNumberRef = useRef<HTMLInputElement>(null);
+    const { precision, ...inputArgs } = getExtraProps
+      ? getExtraProps(props)
+      : extraProps ?? {};
+    const { max, min } = inputArgs;
+    const handleChange = useCallback(
+      (value) => {
+        onChange(!isNil(value) ? value : null);
+      },
+      [onChange],
+    );
 
     useEffect(() => {
       inputNumberRef?.current?.focus();
     }, []);
 
-    const { precision, ...inputArgs } = getExtraProps
-      ? getExtraProps(props)
-      : extraProps ?? {};
     const baseFormatter = useCallback((value: string | number | undefined) => {
       if (!value) {
         return '';
@@ -76,13 +83,6 @@ export const getNumberEditor = (
      * 重新声明，后面有需求可以改一下
      */
     const valueParser = baseFormatter;
-    const handleChange = useCallback(
-      (value) => {
-        onChange && onChange(!isNil(value) ? value : null);
-      },
-      [onChange],
-    );
-
     return (
       <AntInputNumber
         ref={inputNumberRef}
@@ -94,6 +94,17 @@ export const getNumberEditor = (
         onMouseDown={(e) => e.stopPropagation()}
         value={value as number}
         onChange={handleChange}
+        onInput={(value) => {
+          // 将截断最大最小放到 input 事件中
+          if (!isNumber(+value)) {
+            return;
+          }
+          if (max && +value > (max as number)) {
+            handleChange(max);
+          } else if (min && +value < (min as number)) {
+            handleChange(min);
+          }
+        }}
       />
     );
   };
