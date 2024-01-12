@@ -32,8 +32,8 @@ const data = [
     age: 32,
     address: 'New York No. 1 Lake Park',
     children: [
-      { id: 11, key: '1-1' },
-      { id: 12, key: '1-2' },
+      { id: 11, key: '1-1', parentId: 1 },
+      { id: 12, key: '1-2', parentId: 1 },
     ],
   },
   {
@@ -43,8 +43,8 @@ const data = [
     age: 42,
     address: 'London No. 1 Lake Park',
     children: [
-      { id: 21, key: '2-1' },
-      { id: 22, key: '2-2' },
+      { id: 21, key: '2-1', parentId: 2 },
+      { id: 22, key: '2-2', parentId: 2 },
     ],
   },
   {
@@ -61,8 +61,8 @@ const data = [
     age: 32,
     address: 'Sidney No. 1 Lake Park',
     children: [
-      { id: 41, key: '4-1' },
-      { id: 42, key: '4-2' },
+      { id: 41, key: '4-1', parentId: 4 },
+      { id: 42, key: '4-2', parentId: 4 },
     ],
   },
 ];
@@ -76,10 +76,19 @@ const App: React.FC = () => {
       extChange?: SheetTableType.TableChange[],
     ) => {
       // console.log(extChange);
-      const newState: any = cloneDeep(state);
+      const newState: any[] = cloneDeep(state);
+      const flatNewState = newState.reduce((left, right) => {
+        return [...left, right, ...(right.children as any) || []]
+
+      }, [])
+
       changes.forEach((change) => {
-        const { row, key, value } = change;
-        newState[row][key] = value;
+        const { key, value, id } = change;
+        const changedItem = flatNewState.find(item => item.id === id)
+        const parentIndex = newState.findIndex(item => item.id === changedItem.parentId)
+        const childIndex = newState[parentIndex].children.findIndex(item => item.id === id)
+        newState[parentIndex].children[childIndex][key] = value
+        // newState[row][key] = value;
       });
       setState(newState);
     },
@@ -102,7 +111,7 @@ const App: React.FC = () => {
       //   ),
       //   rowExpandable: (record) => record.name !== 'Not Expandable',
       // }}
-      dataSource={data}
+      dataSource={state}
       onChange={handleChange}
     />
   );

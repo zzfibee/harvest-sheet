@@ -98,7 +98,7 @@ export function stringToClipboardData(str: string, count: number) {
 }
 
 export const defaultParsePaste = (str: string) =>
-  str.trim().split(/\r\n|\n|\r/).map((row) => row.split('\t'));
+  str.trimEnd().split(/\r\n|\n|\r/).map((row) => row.split('\t'));
 export function clipboardDataToString() {
   return new Promise<string[][]>((resolve) => {
     navigator.clipboard.readText().then((res) => {
@@ -212,7 +212,7 @@ export function formatDataToCell({
     if (
       actualRowCount !== pasteData.length ||
       (cells.length / rowCount) * actualRowCount !==
-        pasteData.length * pasteData[0].length
+      pasteData.length * pasteData[0].length
     ) {
       // 单元格数量不对
       return;
