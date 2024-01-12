@@ -73,7 +73,6 @@ const App: React.FC = () => {
   const handleChange = useCallback(
     (
       changes: SheetTableType.TableChange[],
-      extChange?: SheetTableType.TableChange[],
     ) => {
       // console.log(extChange);
       const newState: any[] = cloneDeep(state);
@@ -84,9 +83,9 @@ const App: React.FC = () => {
 
       changes.forEach((change) => {
         const { key, value, id } = change;
-        const changedItem = flatNewState.find(item => item.id === id)
+        const changedItem = flatNewState.find((item: any) => item.id === id)
         const parentIndex = newState.findIndex(item => item.id === changedItem.parentId)
-        const childIndex = newState[parentIndex].children.findIndex(item => item.id === id)
+        const childIndex = newState[parentIndex].children.findIndex((item: any) => item.id === id)
         newState[parentIndex].children[childIndex][key] = value
         // newState[row][key] = value;
       });
