@@ -134,6 +134,9 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   );
 
   const headSelection = !!rowSelection;
+  const columnsTitle = useMemo(() => {
+    return columns.filter(item => typeof item.title === 'string').map(item => item.title).join('_')
+  }, [columns])
   const WrappedTableShell = useMemo(() => {
     if (draggable) {
       return DraggableShell({
@@ -159,7 +162,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
         },
       },
     });
-  }, [columns.length, draggable, headSelection, hasChildren]);
+  }, [columns.length, columnsTitle, draggable, headSelection, hasChildren]);
 
   return (
     <ConfigProvider
