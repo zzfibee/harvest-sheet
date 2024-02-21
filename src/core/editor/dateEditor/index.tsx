@@ -31,6 +31,18 @@ export const getDateEditor = (
     return (
       <DatePicker
         open
+        inputRender={(props) =>
+          <input {...props}
+            onKeyDownCapture={(e) => {
+              if (e.key !== 'Enter') {
+                e.nativeEvent.stopImmediatePropagation()
+              }
+              else {
+                onChange((e.target as any).value)
+                onConfirm((e.target as any).value)
+              }
+            }}
+          />}
         ref={dateRef}
         className="date-editor"
         value={val as any}
