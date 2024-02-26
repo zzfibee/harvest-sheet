@@ -26,10 +26,24 @@ export const useGroupConfig = (
   }, [dataSource]);
   useEffect(() => {
     if (!hasChildren) return;
-    const rowConfig = dataSourceToRowConfig(
+    let computedRowGroup = dataSourceToRowConfig(
       dataSource,
       tableGroupConfig?.defaultOpen,
     );
+    let rowConfig = computedRowGroup
+    const { rowGroup } = tableGroupConfig || {}
+    if (rowGroup) {
+      const notEqual = rowGroup.groups.length !== computedRowGroup.groups.length
+      const notSameGroup = notEqual || rowGroup.groups.some((group, index) => computedRowGroup.groups[index].groupStart !== group.groupStart
+        || computedRowGroup.groups[index].groupEnd !== group.groupEnd)
+      if (!notSameGroup) {
+        console.log(notSameGroup, rowGroup.groups, computedRowGroup)
+        rowConfig = rowGroup
+      }
+      else {
+        tableGroupConfig?.onChange?.(computedRowGroup)
+      }
+    }
     if (groupConfigRef.current) {
       rowConfig.groups.forEach(
         (
@@ -73,6 +87,7 @@ export const useGroupConfig = (
   const handleGroupChange = useCallback(
     (value: SheetType.RowGroupConfig) => {
       setGroupConfig(value);
+      tableGroupConfig?.onChange?.(value)
       groupConfigRef.current = value;
     },
     [setGroupConfig],
