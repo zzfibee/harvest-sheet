@@ -45,7 +45,7 @@ export const AddButton: React.FC<{ handleAdd?: () => void, handleBatchAdd?: (cou
     type="dashed"
     style={{ width: '100%', height: 32 }}
     onClick={(e) => {
-      handleAdd()
+      handleAdd && handleAdd()
     }}
   >
     + 添加
