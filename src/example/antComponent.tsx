@@ -1,5 +1,5 @@
 import { Button, Modal } from 'antd';
-import { cloneDeep, random } from 'lodash';
+import { cloneDeep, random, range } from 'lodash';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   getCascaderEditor,
@@ -176,7 +176,7 @@ const data = [
     name: 'John Brown',
     date: '2020-01-01',
     open: true,
-    age: 32,
+    age: 1,
     address1: 'West Lake',
     address2: '打开对话框1',
     select: '111111',
@@ -188,7 +188,7 @@ const data = [
     open: false,
     date: '1990-01-01',
     address2: '打开对话框2',
-    age: 40,
+    age: 2,
     select: '222222',
     address: 'London Park',
   },
@@ -214,7 +214,7 @@ const App: React.FC = () => {
     },
     [state],
   );
-  const handleAdd = useCallback(() => {
+  const handleAdd = useCallback((count = 1) => {
     const newState: any = cloneDeep(state);
     sheetInstance.current?.pushToHistory({
       type: 'NewRow',
@@ -223,17 +223,25 @@ const App: React.FC = () => {
     });
     setState([
       ...newState,
-      {
+      ...range(0, count).map((a, i) => ({
         key: String(random()),
         name: 'new',
         open: false,
         date: '1990-01-01',
-        address2: `打开对话框2${newState.length + 2}`,
-        age: 40 + newState.length,
+        address2: `打开对话框2${newState.length + 2 + i}`,
+        age: newState[newState.length - 1].age + i + 1,
         select: '111111',
         address: 'London Park',
-      },
+      }
+      ))
     ]);
+
+    setTimeout(() => {
+      console.log('select', newState.length + count - 1)
+      sheetInstance.current?.selectRow(newState.length + count - 1)
+      console.log('zoomTO', newState.length + count - 1)
+      sheetInstance.current?.zoomTo(newState.length + count - 1)
+    }, 100)
   }, [state]);
 
   const handleOptionsAdd = useCallback(() => {
@@ -271,6 +279,7 @@ const App: React.FC = () => {
       scroll={{ x: '100%' }}
       onChange={handleChange}
       handleAdd={handleAdd}
+      handleBatchAdd={handleAdd}
       eventHandler={{
         reverse: (value: unknown) => {
           // 处理 行列删除自定义事件

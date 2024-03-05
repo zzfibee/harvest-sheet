@@ -2,7 +2,7 @@ import { Sheet, useSetState } from '@zhenliang/sheet';
 import { GroupContext } from '@zhenliang/sheet/hooks/useGroupConfig';
 import { WidthContext } from '@zhenliang/sheet/hooks/useWidthConfig';
 import { SheetTableType, SheetType } from '@zhenliang/sheet/type';
-import { Button, ConfigProvider, Empty } from 'antd';
+import { ConfigProvider, Empty } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SheetEvent } from '../sheet/Event';
 import { DraggableShell } from '../shell/draggableShell';
@@ -10,6 +10,7 @@ import { TableShell } from '../shell/tableShell';
 import { GroupEvent, SelectionEvent } from './events';
 import { formatGroupData, useGroupConfig } from './useGroupConfig';
 import { formatSelectionData, useRowSelection } from './useRowSelection';
+import { AddButton } from './addButton';
 
 const Table: React.FC<SheetTableType.TableProps> = ({
   sheetInstance: sheetRef,
@@ -20,6 +21,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
   groupConfig,
   onChange,
   handleAdd,
+  handleBatchAdd,
   draggable,
   eventHandler,
   ...args
@@ -194,15 +196,7 @@ const Table: React.FC<SheetTableType.TableProps> = ({
             {Object.keys(eventHandler || {}).map((key) => (
               <SheetEvent key={key} name={key} handler={eventHandler?.[key]} />
             ))}
-            {handleAdd ? (
-              <Button
-                type="dashed"
-                style={{ width: '100%', height: 32 }}
-                onClick={handleAdd}
-              >
-                + 添加
-              </Button>
-            ) : null}
+            <AddButton handleAdd={handleAdd} handleBatchAdd={handleBatchAdd} />
           </Sheet>
         </GroupContext.Provider>
       </WidthContext.Provider>
