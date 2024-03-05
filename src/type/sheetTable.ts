@@ -81,11 +81,11 @@ export type TableProps = {
   dataSource: Record<string, unknown>[];
   emptyRenderer?: any;
   rowClassName?:
-    | string
-    | ((record: Record<string, unknown>, index: number) => string);
+  | string
+  | ((record: Record<string, unknown>, index: number) => string);
   rowKey?:
-    | string
-    | ((record: Record<string, unknown>, index: number) => string);
+  | string
+  | ((record: Record<string, unknown>, index: number) => string);
   scroll?: { x?: number | string; y?: number | string };
   sticky?: boolean;
   draggable?: boolean;
@@ -100,6 +100,7 @@ export type TableProps = {
 
   onChange: (changes: TableChange[], extChanges?: TableChange[]) => void;
   handleAdd?: () => void;
+  handleBatchAdd?: () => void;
   eventHandler?: Record<
     'reverse' | 'btn-click' | 'cell-edit' | 'cell-switch' | string,
     undefined | EventHandler
