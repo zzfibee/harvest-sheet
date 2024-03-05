@@ -1,6 +1,6 @@
 {
   "name": "@zhenliang/sheet",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "description": "A react library developed with dumi",
   "license": "MIT",
   "module": "dist/index.js",
