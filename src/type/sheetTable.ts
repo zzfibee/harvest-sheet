@@ -100,7 +100,7 @@ export type TableProps = {
 
   onChange: (changes: TableChange[], extChanges?: TableChange[]) => void;
   handleAdd?: () => void;
-  handleBatchAdd?: () => void;
+  handleBatchAdd?: (value: number) => void;
   eventHandler?: Record<
     'reverse' | 'btn-click' | 'cell-edit' | 'cell-switch' | string,
     undefined | EventHandler
