@@ -1,6 +1,7 @@
 import { MoreOutlined } from "@ant-design/icons";
 import { Form, InputNumber, Popover, Button } from "antd";
 import React, { useEffect, useRef, useState } from "react";
+import './index.less'
 
 const RowPop: React.FC<{ handleBatchAdd?: (count: number) => void }> = (props) => {
   const { handleBatchAdd } = props
@@ -27,7 +28,6 @@ const RowPop: React.FC<{ handleBatchAdd?: (count: number) => void }> = (props) =
     <Form.Item style={{ marginBottom: 0 }} label="行数" name="count">
       <InputNumber style={{ width: 100 }} ref={inputRef} min={1} max={100}
         onClick={(e) => {
-          (e.nativeEvent.target as HTMLInputElement).focus()
           e.stopPropagation()
         }}
       />
@@ -53,9 +53,19 @@ export const AddButton: React.FC<{ handleAdd?: () => void, handleBatchAdd?: (cou
     }}
   >
     + 添加
-    <Popover open={open} getPopupContainer={(node) => node.parentNode as HTMLElement} onOpenChange={setOpen} trigger={['click']} destroyTooltipOnHide content={
-      <RowPop handleBatchAdd={handleBatchAdd} />
-    }>
+    <Popover open={open}
+      onOpenChange={setOpen}
+      trigger={['click']}
+      destroyTooltipOnHide
+      overlayClassName="batch-add-pop"
+      content={
+        <div className="batch-add-pop-content" onClick={(e) => e.stopPropagation()}>
+          <RowPop handleBatchAdd={(value: number) => {
+            handleBatchAdd && handleBatchAdd(value)
+            setOpen(false)
+          }} />
+        </div>
+      }>
       <MoreOutlined style={{ marginLeft: 0 }} onClick={(e) => {
         e.stopPropagation()
       }} />

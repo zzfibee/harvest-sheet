@@ -214,6 +214,7 @@ export function formatDataToCell({
       (cells.length / rowCount) * actualRowCount !==
       pasteData.length * pasteData[0].length
     ) {
+      message.warning('选中单元格数量与粘贴数据不匹配');
       // 单元格数量不对
       return;
     }
