@@ -16,6 +16,10 @@ const RowPop: React.FC<{ handleBatchAdd?: (count: number) => void }> = (props) =
     }
   }, [])
 
+  if (!handleBatchAdd) {
+    return null
+  }
+
   return <Form initialValues={{ count: 10 }} onFinish={(values) => {
     handleBatchAdd && handleBatchAdd(values.count)
   }}
