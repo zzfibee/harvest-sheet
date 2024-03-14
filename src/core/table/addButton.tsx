@@ -53,7 +53,7 @@ export const AddButton: React.FC<{ handleAdd?: () => void, handleBatchAdd?: (cou
     }}
   >
     + 添加
-    <Popover open={open}
+    {handleBatchAdd && <Popover open={open}
       onOpenChange={setOpen}
       trigger={['click']}
       destroyTooltipOnHide
@@ -69,7 +69,7 @@ export const AddButton: React.FC<{ handleAdd?: () => void, handleBatchAdd?: (cou
       <MoreOutlined style={{ marginLeft: 0 }} onClick={(e) => {
         e.stopPropagation()
       }} />
-    </Popover>
+    </Popover>}
   </Button>
 
 }
